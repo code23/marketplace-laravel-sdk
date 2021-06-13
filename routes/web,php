@@ -1,0 +1,20 @@
+<?php
+
+/*
+|--------------------------------------------------------------------------
+| Marketplace Web Routes
+|--------------------------------------------------------------------------
+|
+| These routes are loaded by the MarketplaceSDKServiceProvider within
+| a group which contains the "web" middleware group.
+|
+*/
+
+use Code23\MarketplaceSDK\Http\Controllers\Auth\LoginController;
+use Code23\MarketplaceSDK\Http\Controllers\Auth\RegisterController;
+
+Route::get('/login',        [LoginController::class,    'index'])->name('login');
+Route::get('/register',     [RegisterController::class, 'index'])->name('register');
+
+Route::post('/login',       [LoginController::class,    'login'])->name('login.authenticate');
+Route::post('/register',    [RegisterController::class, 'register'])->name('register.new');
