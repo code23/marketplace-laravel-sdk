@@ -1,4 +1,4 @@
-# Very short description of the package
+# Marketplace SDK
 
 ![GitHub Actions](https://github.com/code23/marketplace-sdk/actions/workflows/main.yml/badge.svg)
 
