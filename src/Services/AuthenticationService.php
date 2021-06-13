@@ -11,7 +11,7 @@ class AuthenticationService extends Service
     /**
      * login
      *
-     * @param $request - must contain email and password
+     * @param Request $request - must contain email and password
      */
     public function login(Request $request): object
     {
@@ -39,7 +39,50 @@ class AuthenticationService extends Service
     }
 
     /**
+     * reset password link request
+     *
+     * @param String $email
+     */
+    public function resetPasswordLinkRequest($email): object
+    {
+        // send request
+        $response = $this->http->post($this->getPath() . '/reset', [
+            'email' => $email,
+        ]);
+
+        // failed
+        if ($response->failed()) throw new Exception('Unable to request a password reset link!', 422);
+
+        return $this->response([
+            'message' => 'Reset link request sent!',
+        ]);
+    }
+
+    /**
+     * update password
+     *
+     * @param Request $request - must contain password and token
+     */
+    public function updatePassword(Request $request): object
+    {
+        // update password
+        $response = $this->http->post($this->getPath() . '/reset', [
+            'password'  => $request->password,
+            'token'     => $request->token,
+        ]);
+
+        // failed
+        if ($response->failed()) throw new Exception('Unable to update your password!', 422);
+
+        return $this->response([
+            'message' => 'Password updated!',
+        ]);
+    }
+
+    /**
      * set session
+     *
+     * @param json $request - oAuth Passport token response
      */
     private function setSession($oAuth)
     {

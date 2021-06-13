@@ -38,11 +38,6 @@ class MarketplaceSDKServiceProvider extends ServiceProvider
                 __DIR__.'/../config/config.php' => config_path('marketplace-sdk.php'),
             ], 'mpe-config');
 
-            // publish the form validation requests
-            $this->publishes([
-                __DIR__.'/../src/Http/Requests' => app_path('Http/Requests'),
-            ], 'mpe-requests');
-
             // publish the authentication views
             $this->publishes([
                 __DIR__.'/../resources/views' => resource_path('views/vendor/marketplace-sdk'),

@@ -8,82 +8,80 @@
                 Marketplace SDK
             </div>
 
-            <div class="mb-8">
-                <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
-                    Registration
-                </h2>
-                <p class="mt-2 text-sm text-gray-600 max-w">
-                    Already have an account?
-                    <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
-                        Sign in
-                    </a>
-                </p>
-            </div>
+            <div class="mx-auto w-full max-w-sm lg:w-96">
 
-            @if (session('status'))
-                <div class="mb-4 font-medium text-sm text-green-600">
-                    {{ session('status') }}
-                </div>
-            @endif
-
-            <form method="POST" action="{{ route('register') }}">
-                @csrf
-
-                <div>
-                    <label for="first_name">{{ __('First name') }}</label>
-                    <input id="first_name" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="text" name="first_name" :value="old('first_name')" autofocus autocomplete="first_name" />
-                    @error('first_name') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
+                <div class="mb-8">
+                    <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+                        Registration
+                    </h2>
+                    <p class="mt-2 text-sm text-gray-600 max-w">
+                        Already have an account?
+                        <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                            Sign in
+                        </a>
+                    </p>
                 </div>
 
-                <div  class="mt-4">
-                    <label for="last_name">{{ __('Surname') }}</label>
-                    <input id="last_name" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="text" name="last_name" :value="old('last_name')" autocomplete="last_name" />
-                    @error('last_name') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
-                </div>
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
 
-                <div class="mt-4">
-                    <label for="email">{{ __('Email address') }}</label>
-                    <input id="email" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="email" name="email" :value="old('email')" />
-                    @error('email') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
-                </div>
-
-                <div class="mt-4">
-                    <label for="email">{{ __('Marketplace Name') }}</label>
-                    <input id="team_name" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="text" name="team_name" :value="old('team_name')" />
-                    @error('team_name') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
-                </div>
-
-                <div class="mt-4">
-                    <label for="password">{{ __('Password') }}</label>
-                    <input id="password" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="password" name="password" autocomplete="new-password" />
-                    @error('password') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
-                </div>
-
-                <div class="mt-4">
-                    <label for="password_confirmation">{{ __('Confirm password') }}</label>
-                    <input id="password_confirmation" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="password" name="password_confirmation" autocomplete="new-password" />
-                    @error('password_confirmation') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
-                </div>
-
-                <div class="mt-4">
-                    <div class="flex items-center">
-                        <input id="agree_terms" name="agree_terms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                        <label for="agree_terms" class="ml-2 block text-sm text-gray-900">
-                            I agree to the
-                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Terms of Service</a>
-                            and
-                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
-                        </label>
+                    <div>
+                        <label for="first_name">{{ __('First name') }}</label>
+                        <input id="first_name" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="text" name="first_name" :value="old('first_name')" autofocus autocomplete="first_name" />
+                        @error('first_name') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
                     </div>
-                    @error('agree_terms') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
-                </div>
 
-                <div class="flex items-center mt-4">
-                    <button class="flex justify-center py-2 px-3 border border-gray-700 rounded-md">
-                        {{ __('Register') }}
-                    </button>
-                </div>
-            </form>
+                    <div  class="mt-4">
+                        <label for="last_name">{{ __('Surname') }}</label>
+                        <input id="last_name" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="text" name="last_name" :value="old('last_name')" autocomplete="last_name" />
+                        @error('last_name') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="email">{{ __('Email address') }}</label>
+                        <input id="email" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="email" name="email" :value="old('email')" />
+                        @error('email') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="email">{{ __('Marketplace Name') }}</label>
+                        <input id="team_name" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="text" name="team_name" :value="old('team_name')" />
+                        @error('team_name') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="password">{{ __('Password') }}</label>
+                        <input id="password" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="password" name="password" autocomplete="new-password" />
+                        @error('password') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mt-4">
+                        <label for="password_confirmation">{{ __('Confirm password') }}</label>
+                        <input id="password_confirmation" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="password" name="password_confirmation" autocomplete="new-password" />
+                        @error('password_confirmation') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="flex items-center">
+                            <input id="agree_terms" name="agree_terms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                            <label for="agree_terms" class="ml-2 block text-sm text-gray-900">
+                                I agree to the
+                                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Terms of Service</a>
+                                and
+                                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
+                            </label>
+                        </div>
+                        @error('agree_terms') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
+                    </div>
+
+                    <div class="flex items-center mt-4">
+                        <button class="flex justify-center py-2 px-3 border border-gray-700 rounded-md">
+                            {{ __('Register') }}
+                        </button>
+                    </div>
+                </form>
+
+            </div>
 
         </div>
 

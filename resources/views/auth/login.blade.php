@@ -22,12 +22,6 @@
                     </p>
                 </div>
 
-                @if (session('status'))
-                    <div class="mb-4 font-medium text-sm text-green-600">
-                        {{ session('status') }}
-                    </div>
-                @endif
-
                 <form method="POST" action="{{ route('login.authenticate') }}">
                     @csrf
 
@@ -50,15 +44,15 @@
                         </label>
 
                         <div class="text-sm">
-                            @if (Route::has('password.request'))
-                                <a class="font-medium text-indigo-600 hover:text-indigo-500" href="{{ route('password.request') }}">
+                            @if (Route::has('password.forgot'))
+                                <a class="font-medium text-indigo-600 hover:text-indigo-500" href="{{ route('password.forgot') }}">
                                     {{ __('Forgot your password?') }}
                                 </a>
                             @endif
                         </div>
                     </div>
 
-                    <div class="flex justify-center items-center mt-4">
+                    <div class="flex items-center mt-4">
                         <button class="flex justify-center py-2 px-3 border border-gray-700 rounded-md">
                             {{ __('Sign In') }}
                         </button>

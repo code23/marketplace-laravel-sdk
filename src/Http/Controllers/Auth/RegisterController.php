@@ -3,11 +3,15 @@
 namespace Code23\MarketplaceSDK\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\RegistrationForm;
 use Code23\MarketplaceSDK\Facades\MPERegistration;
+use Code23\MarketplaceSDK\Traits\PasswordValidationRules;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
+    use PasswordValidationRules;
+
     /**
      * index
      */
@@ -19,8 +23,17 @@ class RegisterController extends Controller
     /**
      * login to MPE
      */
-    public function register(RegistrationForm $request)
+    public function register(Request $request)
     {
+        Validator::make($request->all(), [
+            'agree_terms'   => ['required'],
+            'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'first_name'    => ['required', 'string', 'max:255'],
+            'last_name'     => ['required', 'string', 'max:255'],
+            'password'      => $this->passwordRules(),
+            'team_name'     => ['required', 'string', 'max:255'],
+        ])->validate();
+
         // register
         $user = MPERegistration::register($request);
 
