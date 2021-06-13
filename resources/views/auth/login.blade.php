@@ -3,10 +3,13 @@
     <div class="min-h-screen bg-white flex">
 
         <div class="flex-1 flex flex-col justify-start py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
+
             <div>
-                Login
+                Marketplace SDK
             </div>
+
             <div class="mx-auto w-full max-w-sm lg:w-96">
+
                 <div class="mb-8">
                     <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
                         Sign in
@@ -30,12 +33,14 @@
 
                     <div>
                         <label for="email">{{ __('Email') }}</label>
-                        <input id="email" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="email" name="email" required autofocus />
+                        <input id="email" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="email" name="email" autofocus />
+                        @error('email') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="mt-4">
                         <label for="password">{{ __('Password') }}</label>
-                        <input id="password" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="password" name="password" required autocomplete="current-password" />
+                        <input id="password" class="block mt-1 p-1 px-2 w-full border border-gray-300 rounded" type="password" name="password" autocomplete="current-password" />
+                        @error('password') <div class="text-sm text-red-400">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="flex items-center justify-between mt-4">

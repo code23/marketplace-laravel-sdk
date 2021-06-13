@@ -13,8 +13,11 @@
 use Code23\MarketplaceSDK\Http\Controllers\Auth\LoginController;
 use Code23\MarketplaceSDK\Http\Controllers\Auth\RegisterController;
 
-Route::get('/login',        [LoginController::class,    'index'])->name('login');
-Route::get('/register',     [RegisterController::class, 'index'])->name('register');
+Route::group(['middleware' => ['web']], function () {
 
-Route::post('/login',       [LoginController::class,    'login'])->name('login.authenticate');
-Route::post('/register',    [RegisterController::class, 'register'])->name('register.new');
+    Route::get('/login',        [LoginController::class,    'index'])->name('login');
+    Route::get('/register',     [RegisterController::class, 'index'])->name('register');
+
+    Route::post('/login',       [LoginController::class,    'login'])->name('login.authenticate');
+    Route::post('/register',    [RegisterController::class, 'register'])->name('register.new');
+});

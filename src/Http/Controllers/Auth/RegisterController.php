@@ -3,8 +3,8 @@
 namespace Code23\MarketplaceSDK\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Code23\MarketplaceSDK\Facades\MPEAuthentication;
-use Illuminate\Http\Request;
+use App\Http\Requests\Auth\RegistrationForm;
+use Code23\MarketplaceSDK\Facades\MPERegistration;
 
 class RegisterController extends Controller
 {
@@ -19,14 +19,14 @@ class RegisterController extends Controller
     /**
      * login to MPE
      */
-    public function register(Request $request)
+    public function register(RegistrationForm $request)
     {
-        // authenticate
-        // $user = MPEAuthentication::login($request);
+        // register
+        $user = MPERegistration::register($request);
 
-        // // return
-        // return view('marketplace-sdk::auth.login', [
-        //     'user' => $user,
-        // ]);
+        // return
+        return view('marketplace-sdk::auth.register', [
+            'user' => $user,
+        ]);
     }
 }

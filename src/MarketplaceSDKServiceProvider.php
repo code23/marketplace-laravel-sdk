@@ -6,9 +6,9 @@ use App\View\Components\GuestLayout;
 
 use Code23\MarketplaceSDK\View\Components\Layout;
 use Code23\MarketplaceSDK\Services\AuthenticationService;
+use Code23\MarketplaceSDK\Services\RegistrationService;
 use Code23\MarketplaceSDK\Services\UserService;
 use Code23\MarketplaceSDK\Console\InstallCommand;
-
 use Illuminate\Support\ServiceProvider;
 
 class MarketplaceSDKServiceProvider extends ServiceProvider
@@ -22,7 +22,7 @@ class MarketplaceSDKServiceProvider extends ServiceProvider
          * load package assets
          */
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'marketplace-sdk');
-        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
+        $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         /*
          * load view components if they do not already exist
@@ -38,9 +38,14 @@ class MarketplaceSDKServiceProvider extends ServiceProvider
                 __DIR__.'/../config/config.php' => config_path('marketplace-sdk.php'),
             ], 'mpe-config');
 
+            // publish the form validation requests
+            $this->publishes([
+                __DIR__.'/../src/Http/Requests' => app_path('Http/Requests'),
+            ], 'mpe-requests');
+
             // publish the authentication views
             $this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/code32/marketplace-sdk'),
+                __DIR__.'/../resources/views' => resource_path('views/vendor/marketplace-sdk'),
             ], 'mpe-views');
 
             // Publishing view components.
@@ -66,6 +71,11 @@ class MarketplaceSDKServiceProvider extends ServiceProvider
         // bind the service to an alias
         $this->app->bind('mpe-authentication', function () {
             return new AuthenticationService();
+        });
+
+        // bind the service to an alias
+        $this->app->bind('mpe-registration', function () {
+            return new RegistrationService();
         });
 
         // bind the service to an alias

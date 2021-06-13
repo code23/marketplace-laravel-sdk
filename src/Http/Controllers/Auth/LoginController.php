@@ -3,8 +3,8 @@
 namespace Code23\MarketplaceSDK\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginForm;
 use Code23\MarketplaceSDK\Facades\MPEAuthentication;
-use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -19,7 +19,7 @@ class LoginController extends Controller
     /**
      * login to MPE
      */
-    public function login(Request $request)
+    public function login(LoginForm $request)
     {
         // authenticate
         $user = MPEAuthentication::login($request);

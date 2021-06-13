@@ -34,6 +34,13 @@ class InstallCommand extends Command
             '--force' => true
         ]);
 
+        // config
+        $this->comment('Publishing form requests...');
+        $this->callSilent('vendor:publish', [
+            '--tag' => 'mpe-requests',
+            '--force' => true
+        ]);
+
         // view components
         $this->comment('Publishing view components...');
         $this->callSilent('vendor:publish', [
