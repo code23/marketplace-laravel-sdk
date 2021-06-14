@@ -12,8 +12,10 @@ class AuthenticationService extends Service
      * login
      *
      * @param Request $request - must contain email and password
+     *
+     * @return Array
      */
-    public function login(Request $request): object
+    public function login(Request $request): array
     {
         // prepare payload
         $payload = [
@@ -32,10 +34,10 @@ class AuthenticationService extends Service
         if ($response->failed()) throw new Exception('Unable to retrieve oAuth tokens!', 422);
 
         // set session
-        $this->setSession($response);
+        $this->setSession($response->json());
 
         // return user
-        return $response;
+        return $response->json();
     }
 
     /**
@@ -46,7 +48,7 @@ class AuthenticationService extends Service
     public function resetPasswordLinkRequest($email): object
     {
         // send request
-        $response = $this->http->post($this->getPath() . '/reset', [
+        $response = $this->http->post($this->getPath() . '/password/reset', [
             'email' => $email,
         ]);
 
@@ -66,7 +68,7 @@ class AuthenticationService extends Service
     public function updatePassword(Request $request): object
     {
         // update password
-        $response = $this->http->post($this->getPath() . '/reset', [
+        $response = $this->http->post($this->getPath() . '/password/reset', [
             'password'  => $request->password,
             'token'     => $request->token,
         ]);

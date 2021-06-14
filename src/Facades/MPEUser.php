@@ -2,13 +2,11 @@
 
 namespace Code23\MarketplaceSDK\Facades;
 
-use Code23\MarketplaceSDK\Services\AuthenticationService;
-use Code23\MarketplaceSDK\Services\UserService;
-
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static json get() return user
+ * @method static Authenticatable get() return user
  *
  * @see \Code23\MarketplaceSDK\Services\UserService
  */

@@ -37,7 +37,7 @@ class LoginController extends Controller
         ])->validate();
 
         // authenticate
-        $tokens = MPEAuthentication::login($request);
+        MPEAuthentication::login($request);
 
         // retrieve user
         $user = MPEUser::get();

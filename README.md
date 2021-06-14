@@ -30,8 +30,32 @@ php artisan vendor:publish --tag=mpe-view-components
 
 ## Usage
 
+Add the MPEAuthenticatable trait to the user model
 ```php
-//
+class User extends Model {
+
+    use MPEAuthenticatable;
+
+    ...
+```
+
+Update config.auth by commenting out the current driver for users and adding the custom driver provided by Marketplace SDK
+```php
+<?php
+
+return [
+    // 'users' => [
+    //     'driver' => 'eloquent',
+    //     'model' => App\Models\User::class,
+    // ],
+
+    'providers' => [
+        'users' => [
+            'driver' => 'mpe-custom'
+        ],
+    ],
+
+    ....
 ```
 
 ### Testing

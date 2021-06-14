@@ -3,16 +3,15 @@
 namespace Code23\MarketplaceSDK\Services;
 
 use App\Models\User;
-
+use Illuminate\Support\Facades\Auth;
 use Exception;
-use Illuminate\Http\Request;
 
 class UserService extends Service
 {
     /**
      * retrieve user
      *
-     * @return User $user
+     * @return Authenticatable
      */
     public function get(): User
     {
@@ -23,6 +22,51 @@ class UserService extends Service
         if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);
 
         // return user as user model
-        return (new User())->forceFill($response->json()['data']);
+        return static::auth((new User())->forceFill($response->json()['data']));
+    }
+
+    /**
+     * authenticate the user on the consuming application
+     *
+     * @param User $user
+     *
+     * @return User
+     */
+    protected static function auth(User $user): User
+    {
+        static::bind($user);
+        static::login($user);
+
+        return $user;
+    }
+
+    /**
+     * bind the response to the user and token singletons
+     *
+     * @param User $user
+     *
+     * @return void
+     */
+    protected static function bind(User $user): void
+    {
+        app()->bind('user', static function () use ($user): User {
+            return $user;
+        });
+
+        app()->bind('token', static function (): string {
+            return session()->get('oAuth')['access_token'];
+        });
+    }
+
+    /**
+     * login user using auth facade
+     *
+     * @param User $user
+     *
+     * @return void
+     */
+    protected static function login(User $user): void
+    {
+        Auth::login($user, true);
     }
 }

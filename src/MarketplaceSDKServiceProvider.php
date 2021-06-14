@@ -10,6 +10,8 @@ use Code23\MarketplaceSDK\Services\RegistrationService;
 use Code23\MarketplaceSDK\Services\UserService;
 use Code23\MarketplaceSDK\Console\InstallCommand;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Auth;
+use Code23\MarketplaceSDK\Services\Auth\UserProviderService;
 
 class MarketplaceSDKServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,16 @@ class MarketplaceSDKServiceProvider extends ServiceProvider
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'marketplace-sdk');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
+        /**
+         * customer user provider - enables us to use User model with api instead of database
+         */
+        $this->customDriver();
+
+        /**
+         * custom singletons
+         */
+        $this->singletons();
+
         /*
          * load view components if they do not already exist
          */
@@ -37,6 +49,16 @@ class MarketplaceSDKServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/config.php' => config_path('marketplace-sdk.php'),
             ], 'mpe-config');
+
+            // publish interfaces
+            $this->publishes([
+                __DIR__.'/../src/Interfaces' => app_path('Interfaces'),
+            ], 'mpe-interfaces');
+
+            // publish the user model
+            $this->publishes([
+                __DIR__.'/../src/Models' => app_path('Models'),
+            ], 'mpe-models');
 
             // publish the authentication views
             $this->publishes([
@@ -76,6 +98,30 @@ class MarketplaceSDKServiceProvider extends ServiceProvider
         // bind the service to an alias
         $this->app->bind('mpe-user', function () {
             return new UserService();
+        });
+    }
+
+    /**
+     * create a custom driver for user model
+     */
+    private function customDriver()
+    {
+        Auth::provider('mpe-custom', static function (): UserProviderService {
+            return new UserProviderService();
+        });
+    }
+
+    /**
+     * customer singletons
+     */
+    protected function singletons()
+    {
+        $this->app->bind('user', static function (): ?Models\User {
+            return Auth::user();
+        });
+
+        $this->app->bind('token', static function (): ?string {
+            return session('token');
         });
     }
 }
