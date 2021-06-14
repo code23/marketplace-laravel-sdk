@@ -4,8 +4,10 @@ namespace Code23\MarketplaceSDK\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Code23\MarketplaceSDK\Facades\MPEAuthentication;
+use Code23\MarketplaceSDK\Facades\MPEUser;
 use Code23\MarketplaceSDK\Traits\PasswordValidationRules;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
@@ -31,11 +33,17 @@ class LoginController extends Controller
         // validate
         Validator::make($request->all(), [
             'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => $this->passwordRules(),
+            'password' => ['required', 'string'],
         ])->validate();
 
         // authenticate
-        $user = MPEAuthentication::login($request);
+        $tokens = MPEAuthentication::login($request);
+
+        // retrieve user
+        $user = MPEUser::get();
+
+        // login user
+        // Auth::login($user);
 
         return view('marketplace-sdk::auth.login', [
             'user' => $user,

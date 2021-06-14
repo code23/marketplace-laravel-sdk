@@ -35,7 +35,7 @@ class AuthenticationService extends Service
         $this->setSession($response);
 
         // return user
-        return $this->response(MPEUser::get());
+        return $response;
     }
 
     /**

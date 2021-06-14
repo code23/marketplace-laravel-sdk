@@ -31,7 +31,7 @@ php artisan vendor:publish --tag=mpe-view-components
 ## Usage
 
 ```php
-// Usage description here
+//
 ```
 
 ### Testing
