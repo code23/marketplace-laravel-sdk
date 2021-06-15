@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Code23\MarketplaceSDK\Facades\MPEAuthentication;
 use Code23\MarketplaceSDK\Traits\PasswordValidationRules;
 
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -37,8 +38,12 @@ class LoginController extends Controller
             'password' => ['required', 'string'],
         ])->validate();
 
-        // authenticate
-        $user = MPEAuthentication::login($request);
+        try {
+            // authenticate
+            $user = MPEAuthentication::login($request);
+        } catch (Exception $e) {
+            return back()->with('status', $e->getMessage());
+        }
 
         // flash session
         $request->session()->flash('status', 'Welcome ' . $user->first_name);

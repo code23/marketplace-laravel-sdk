@@ -33,7 +33,7 @@ class AuthenticationService extends Service
         $response = $this->http->post($this->getAuthPath() . '/token', $payload);
 
         // failed
-        if ($response->failed()) throw new Exception('Unable to retrieve oAuth tokens!', 422);
+        if ($response->failed()) throw new Exception('Please check your username and password.', 422);
 
         // set session
         $this->setOAuthSession($response->json());
