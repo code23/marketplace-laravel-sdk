@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Code23\MarketplaceSDK\Facades\MPEAuthentication;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,17 +13,11 @@ class User extends Model implements Authenticatable
      */
     protected $guarded = [];
 
-    /**
-     * @param string
-     */
     public function getAuthIdentifierName(): string
     {
         return 'id';
     }
 
-    /**
-     * @param string
-     */
     public function getAuthIdentifier(): string
     {
         return $this->id;
@@ -43,8 +38,27 @@ class User extends Model implements Authenticatable
         return 'remember_token';
     }
 
+    /**
+     * @param String $value
+     */
     public function setRememberToken($value)
     {
         $this->remember_token = $value;
+    }
+
+    /**
+     * enable 2FA
+     */
+    public function enable2FA()
+    {
+        return MPEAuthentication::twoFactorAuthentication('enable');
+    }
+
+    /**
+     * disable 2FA
+     */
+    public function disable2FA()
+    {
+        return MPEAuthentication::twoFactorAuthentication('disable');
     }
 }

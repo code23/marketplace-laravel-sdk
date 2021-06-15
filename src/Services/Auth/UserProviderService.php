@@ -15,17 +15,21 @@ class UserProviderService implements AuthProvider
 
     public function retrieveByToken($identifier, $token)
     {
+        //
     }
 
     public function updateRememberToken(Authenticatable $user, $token)
     {
+        //
     }
 
     public function retrieveByCredentials(array $credentials)
     {
+        //
     }
 
     public function validateCredentials(Authenticatable $user, array $credentials)
     {
+        //
     }
 }

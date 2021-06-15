@@ -70,7 +70,7 @@
         <div class="hidden lg:block relative w-0 flex-1 bg-gray-900">
             <div class="relative h-full flex justify-center z-10">
                 <div class="p-40 w-full text-white">
-                    //
+
                 </div>
             </div>
         </div>
