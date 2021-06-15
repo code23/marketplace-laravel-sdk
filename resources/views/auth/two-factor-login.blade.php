@@ -22,11 +22,11 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('two-factor-confirmation') }}">
+                <form method="POST" action="{{ route('two-factor.validation') }}">
 
                     @csrf
 
-                    <input id="return_url"          type="hidden" name="return_url"             value="{{ $returnURL }}" />
+                    <input id="return_url"          type="hidden" name="return_url"             value="{{ $return_url }}" />
                     <input id="authentication_type" type="hidden" name="authentication_type"    value="code" />
 
                     <div>

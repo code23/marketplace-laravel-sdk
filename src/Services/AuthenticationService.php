@@ -4,7 +4,6 @@ namespace Code23\MarketplaceSDK\Services;
 
 use App\Models\User;
 use Code23\MarketplaceSDK\Facades\MPEUser;
-
 use Exception;
 use Illuminate\Http\Request;
 
@@ -17,7 +16,7 @@ class AuthenticationService extends Service
      *
      * @return Array
      */
-    public function login(Request $request): User
+    public function login(Request $request)
     {
         // prepare payload
         $payload = [
@@ -36,10 +35,10 @@ class AuthenticationService extends Service
         if ($response->failed()) throw new Exception('Please check your username and password.', 422);
 
         // determine whether or not we have two factor authentication endpoint in the response
-        if ($response->return_url) return $response->json();
+        if (isset($response['challenged'])) return $response->json();
 
-        // set session
-        $this->setOAuthSession($response->json());
+        // authenticate user
+        $this->authenticateUser($response->json());
 
         return true;
     }
@@ -67,7 +66,7 @@ class AuthenticationService extends Service
     /**
      * enable/disable two factor authentication
      */
-    public function twoFactorAuthentication($state): object
+    public function twoFactorAuthentication($state): array
     {
         // send request
         $response = $this->http->post($this->getPath() . '/auth/two-factor/' . $state);
@@ -81,7 +80,7 @@ class AuthenticationService extends Service
     /**
      * two factor confirmation
      */
-    public function twoFactorConfirmation(Request $request): object
+    public function twoFactorValidation(Request $request): array
     {
         // define
         $type = 'code';
@@ -90,12 +89,15 @@ class AuthenticationService extends Service
         if ($request->authentication_type == 'recovery_code') $type = $request->authentication_type;
 
         // send request to signed url for confirmation
-        $response = $this->http->post($request->returnURL, [
+        $response = $this->http->post($request->return_url, [
             $type => $request->authentication_code,
         ]);
 
         // failed
         if ($response->failed()) throw new Exception('Unable to confirm your identity.', 422);
+
+        // authenticate user
+        $this->authenticateUser($response->json());
 
         return $response->json();
     }
@@ -122,12 +124,14 @@ class AuthenticationService extends Service
     }
 
     /**
-     * set session
-     *
-     * @param json $request - oAuth Passport token response
+     * authenticate the user by setting the session and retrieving the user from MPE
      */
-    private function setOAuthSession($oAuth)
+    private function authenticateUser($oAuth)
     {
+        // set session
         session()->put('oAuth', $oAuth);
+
+        // retrieve up-to-date user
+        MPEUser::get();
     }
 }

@@ -31,7 +31,7 @@ class LoginController extends Controller
      *
      * @param Request $request
      */
-    public function login(Request $request): RedirectResponse
+    public function login(Request $request)
     {
         // validate
         Validator::make($request->all(), [
@@ -40,10 +40,11 @@ class LoginController extends Controller
         ])->validate();
 
         try {
-            // authenticate
+            // attempt login
             if (($response = MPEAuthentication::login($request)) !== true) {
-                return redirect()->route('marketplace-sdk::auth.two-factor-login', [
-                    'returnUrl' => $response['return_url'],
+                // 2fa challenge received so need to capture authentication code
+                return view('marketplace-sdk::auth.two-factor-login', [
+                    'return_url' => $response['return_url'],
                 ]);
             }
 
@@ -163,10 +164,16 @@ class LoginController extends Controller
     /**
      * two factor authentication code confirmation
      */
-    public function twoFactorConfirmation(Request $request)
+    public function twoFactorValidation(Request $request)
     {
-        $response = MPEAuthentication::twoFactorConfirmation($request);
+        try {
+            // validate two factory authentication code
+            MPEAuthentication::twoFactorValidation($request);
 
-        dd($response);
+            return redirect()->route('welcome');
+
+        } catch (Exception $e) {
+            return back()->with('status', $e->getMessage());
+        }
     }
 }
