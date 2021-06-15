@@ -13,10 +13,10 @@ class UserService extends Service
      *
      * @return Authenticatable
      */
-    public function get(): User
+    public function get($id = null): User
     {
         // call
-        $response = $this->http->get($this->getPath() . '/super-admin/show');
+        $response = $this->http->get($this->getPath() . '/user');
 
         // failed
         if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);
@@ -67,6 +67,6 @@ class UserService extends Service
      */
     protected static function login(User $user): void
     {
-        Auth::login($user, true);
+        Auth::login($user);
     }
 }

@@ -1,21 +1,23 @@
 <?php
 
-namespace Code23\MarketplaceSDK\Models;
+namespace App\Models;
 
-use Code23\MarketplaceSDK\Interfaces\ModelInterface;
-use Illuminate\Auth\Authenticatable;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends ModelInterface implements AuthenticatableContract
+class User extends Model implements Authenticatable
 {
-    use Authenticatable;
+    /**
+     * @var array
+     */
+    protected $guarded = [];
 
     /**
      * @param string
      */
     public function getAuthIdentifierName(): string
     {
-        return 'token';
+        return 'id';
     }
 
     /**
@@ -23,26 +25,26 @@ class User extends ModelInterface implements AuthenticatableContract
      */
     public function getAuthIdentifier(): string
     {
-        return $this->token;
+        return $this->id;
     }
 
     public function getAuthPassword()
     {
-
+        return $this->password;
     }
 
     public function getRememberToken()
     {
-
+        return $this->remember_token;
     }
 
     public function getRememberTokenName()
     {
-
+        return 'remember_token';
     }
 
     public function setRememberToken($value)
     {
-
+        $this->remember_token = $value;
     }
 }

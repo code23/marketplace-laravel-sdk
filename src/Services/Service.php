@@ -32,7 +32,7 @@ class Service
      */
     public function getApiSegment()
     {
-        return '/' . config('marketplace-sdk.api.version') . '/api';
+        return '/api/' . config('marketplace-sdk.api.version');
     }
 
     /**

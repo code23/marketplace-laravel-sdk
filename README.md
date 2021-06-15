@@ -1,11 +1,15 @@
 # Marketplace SDK
 
-![GitHub Actions](https://github.com/code23/marketplace-sdk/actions/workflows/main.yml/badge.svg)
-
 Marketplace SDK provides an easy interface to the Code23 Marketplace Engine API.  Designed and developed for use with Laravel, it will reduce the 
 work involved when integrating with the Markeplace Engine api from a new front-end application.
 
-Authentication is handled by installing the necessary views and components in the same way as Laravel Breeze but without the need for a database.
+Authentication is handled by installing the necessary models, views and components so you can use the Auth facade in the same way as traditional
+Laravel applications but but without the need for a database.
+
+## Before Installation
+
+Please be aware that installing the Marketplace SDK on a default Laravel installation will replace the base User model with the SDK User model 
+developed to work directly with the API. 
 
 ## Installation
 
@@ -15,29 +19,20 @@ You can install the package via composer:
 composer require code23/marketplace-sdk
 ```
 
-Once the package is included in your project you can install the config, views and components by running the following install command:
+Once the package is included in your project you can install the models, config, views and components by running the following install command:
 ```bash
 php artisan marketplace-sdk:install
 ```
 
 Note:  If you don't want to install all of the resources included with Marketplace SDK you can install them individually:
-
 ```bash
 php artisan vendor:publish --tag=mpe-config
+php artisan vendor:publish --tag=mpe-models
 php artisan vendor:publish --tag=mpe-views
 php artisan vendor:publish --tag=mpe-view-components
 ```
 
 ## Usage
-
-Add the MPEAuthenticatable trait to the user model
-```php
-class User extends Model {
-
-    use MPEAuthenticatable;
-
-    ...
-```
 
 Update config.auth by commenting out the current driver for users and adding the custom driver provided by Marketplace SDK
 ```php

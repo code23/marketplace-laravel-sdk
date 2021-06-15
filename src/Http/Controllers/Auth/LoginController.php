@@ -3,13 +3,14 @@
 namespace Code23\MarketplaceSDK\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+
 use Code23\MarketplaceSDK\Facades\MPEAuthentication;
-use Code23\MarketplaceSDK\Facades\MPEUser;
 use Code23\MarketplaceSDK\Traits\PasswordValidationRules;
+
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class LoginController extends Controller
 {
@@ -28,7 +29,7 @@ class LoginController extends Controller
      *
      * @param Request $request
      */
-    public function login(Request $request): View
+    public function login(Request $request): RedirectResponse
     {
         // validate
         Validator::make($request->all(), [
@@ -37,17 +38,26 @@ class LoginController extends Controller
         ])->validate();
 
         // authenticate
-        MPEAuthentication::login($request);
+        $user = MPEAuthentication::login($request);
 
-        // retrieve user
-        $user = MPEUser::get();
+        // flash session
+        $request->session()->flash('status', 'Welcome ' . $user->first_name);
 
-        // login user
-        // Auth::login($user);
+        return redirect()->route('welcome');
+    }
 
-        return view('marketplace-sdk::auth.login', [
-            'user' => $user,
-        ]);
+    /**
+     * logout of MPE
+     */
+    public function logout(): RedirectResponse
+    {
+        // logout
+        auth()->logout();
+
+        // clear session
+        session()->flush();
+
+        return redirect()->route('welcome');
     }
 
     /**

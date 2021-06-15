@@ -50,11 +50,6 @@ class MarketplaceSDKServiceProvider extends ServiceProvider
                 __DIR__.'/../config/config.php' => config_path('marketplace-sdk.php'),
             ], 'mpe-config');
 
-            // publish interfaces
-            $this->publishes([
-                __DIR__.'/../src/Interfaces' => app_path('Interfaces'),
-            ], 'mpe-interfaces');
-
             // publish the user model
             $this->publishes([
                 __DIR__.'/../src/Models' => app_path('Models'),

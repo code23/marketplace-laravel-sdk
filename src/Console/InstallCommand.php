@@ -34,14 +34,7 @@ class InstallCommand extends Command
             '--force' => true
         ]);
 
-        // interfaces
-        $this->comment('Publishing interfaces...');
-        $this->callSilent('vendor:publish', [
-            '--tag' => 'mpe-interfaces',
-            '--force' => true
-        ]);
-
-        // interfaces
+        // models
         $this->comment('Publishing models...');
         $this->callSilent('vendor:publish', [
             '--tag' => 'mpe-models',

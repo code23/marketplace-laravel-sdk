@@ -2,7 +2,9 @@
 
 namespace Code23\MarketplaceSDK\Services;
 
+use App\Models\User;
 use Code23\MarketplaceSDK\Facades\MPEUser;
+
 use Exception;
 use Illuminate\Http\Request;
 
@@ -15,7 +17,7 @@ class AuthenticationService extends Service
      *
      * @return Array
      */
-    public function login(Request $request): array
+    public function login(Request $request): User
     {
         // prepare payload
         $payload = [
@@ -34,10 +36,10 @@ class AuthenticationService extends Service
         if ($response->failed()) throw new Exception('Unable to retrieve oAuth tokens!', 422);
 
         // set session
-        $this->setSession($response->json());
+        $this->setOAuthSession($response->json());
 
-        // return user
-        return $response->json();
+        // retrieve the user model
+        return MPEUser::get();
     }
 
     /**
@@ -86,7 +88,7 @@ class AuthenticationService extends Service
      *
      * @param json $request - oAuth Passport token response
      */
-    private function setSession($oAuth)
+    private function setOAuthSession($oAuth)
     {
         session()->put('oAuth', $oAuth);
     }

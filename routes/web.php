@@ -16,6 +16,7 @@ use Code23\MarketplaceSDK\Http\Controllers\Auth\RegisterController;
 Route::group(['middleware' => ['web']], function () {
 
     Route::get('/login',            [LoginController::class,    'index'])->name('login');
+    Route::get('/logout',           [LoginController::class,    'logout'])->name('logout');
     Route::get('/register',         [RegisterController::class, 'index'])->name('register');
     Route::get('/password/forgot',  [LoginController::class,    'passwordForgot'])->name('password.forgot');
     Route::get('/password/reset',   [LoginController::class,    'passwordReset'])->name('password.reset');

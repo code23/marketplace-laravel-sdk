@@ -10,7 +10,7 @@ class UserProviderService implements AuthProvider
 {
     public function retrieveById($identifier): Authenticatable
     {
-        return MPEUser::get();
+        return MPEUser::get($identifier);
     }
 
     public function retrieveByToken($identifier, $token)

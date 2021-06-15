@@ -5,7 +5,7 @@ namespace Code23\MarketplaceSDK\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static object login(Request $request) authenticate with mpe and return user
+ * @method static User login(Request $request) authenticate with mpe and return user
  * @method static object resetPasswordLinkRequest(String $email) request a password reset link for the email provided
  * @method static object setSession(json $oAuth) save the oAuth token response to the session
  * @method static object updatePassword(String $email) update the password for the email provided
