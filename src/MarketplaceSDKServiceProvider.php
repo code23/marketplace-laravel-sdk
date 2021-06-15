@@ -4,6 +4,8 @@ namespace Code23\MarketplaceSDK;
 
 use App\View\Components\GuestLayout;
 
+use App\Models\User;
+
 use Code23\MarketplaceSDK\View\Components\Layout;
 use Code23\MarketplaceSDK\Services\AuthenticationService;
 use Code23\MarketplaceSDK\Services\RegistrationService;
@@ -11,7 +13,6 @@ use Code23\MarketplaceSDK\Services\UserService;
 use Code23\MarketplaceSDK\Console\InstallCommand;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
-use Code23\MarketplaceSDK\Services\Auth\UserProviderService;
 
 class MarketplaceSDKServiceProvider extends ServiceProvider
 {
@@ -25,11 +26,6 @@ class MarketplaceSDKServiceProvider extends ServiceProvider
          */
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'marketplace-sdk');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-
-        /**
-         * customer user provider - enables us to use User model with api instead of database
-         */
-        $this->customDriver();
 
         /**
          * custom singletons
@@ -97,21 +93,11 @@ class MarketplaceSDKServiceProvider extends ServiceProvider
     }
 
     /**
-     * create a custom driver for user model
-     */
-    private function customDriver()
-    {
-        Auth::provider('mpe-custom', static function (): UserProviderService {
-            return new UserProviderService();
-        });
-    }
-
-    /**
      * customer singletons
      */
     protected function singletons()
     {
-        $this->app->bind('user', static function (): ?Models\User {
+        $this->app->bind('user', static function (): ?User {
             return Auth::user();
         });
 

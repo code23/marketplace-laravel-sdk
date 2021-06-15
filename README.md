@@ -46,7 +46,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'mpe-custom'
+            'driver' => 'marketplace-sdk-custom'
         ],
     ],
 

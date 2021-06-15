@@ -36,7 +36,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Code23\\MarketplaceSDK\\MarketplaceSDKServiceProvider"
+                "Code23\\MarketplaceSDK\\MarketplaceSDKServiceProvider",
+                "Code23\\MarketplaceSDK\\MarketplaceSDKAuthProvider"
             ],
             "aliases": {
                 "MPEAuthentication": "Code23\\MarketplaceSDK\\Facades\\MPEAuthentication"
