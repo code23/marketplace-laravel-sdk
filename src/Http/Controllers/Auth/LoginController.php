@@ -143,22 +143,35 @@ class LoginController extends Controller
     /**
      * enable/disable two factor authentication
      */
-    public function twoFactorAuthentication(Request $request, $state): View
+    public function twoFactorAuthentication(Request $request, $state)
     {
         try {
             // enable/disable
             $state == 'enable' ? $response = $request->user()->enable2FA() : $response = $request->user()->disable2FA();
 
+            // if enabling
+            if ($state == 'enable') {
+                return redirect()->route('two-factor.confirmation')->with('auth', $response);
+            }
+
             // flash session
             $request->session()->flash('status', $response['message']);
 
-            return view('marketplace-sdk::auth.two-factor-authentication', [
-                'recoveryCodes' => $response['recoveryCodes'],
-                'svgQRCode'     => $response['svg_qr_code'],
-            ]);
+            return redirect()->route('user');
+
         } catch (Exception $e) {
             return back()->with('status', $e->getMessage());
         }
+    }
+
+    /**
+     * show two factor qr and recovery codes
+     */
+    public function twoFactorDetails(Request $request)
+    {
+        return view('marketplace-sdk::auth.two-factor-authentication', [
+                'auth' => session()->get('auth'),
+            ]);
     }
 
     /**

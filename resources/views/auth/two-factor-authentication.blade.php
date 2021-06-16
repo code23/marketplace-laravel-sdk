@@ -20,28 +20,22 @@
                     {{ __('Please find below details which you should keep safe!') }}
                 </div>
 
-                @if (session('status'))
-                    <div class="mb-4 font-medium text-green-600">
-                        {{ session('status') }}
-                    </div>
-                @endif
-
-                @if($svgQRCode)
+                @if(session()->get('auth')['svg_qr_code'])
                     <div class="flex py-3">
                         <div class="flex-shrink text-gray-900 rounded-md">
-                            {!! $svgQRCode !!}
+                            {!! session()->get('auth')['svg_qr_code'] !!}
                         </div>
                     </div>
                 @endif
 
-                @if($recoveryCodes)
+                @if(session()->get('auth')['recoveryCodes'])
                     <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
                         Recovery Codes
                     </h2>
                     <p class="mb-3">Keep in a safe place!</p>
 
                     <ul>
-                        @foreach($recoveryCodes as $code)
+                        @foreach(session()->get('auth')['recoveryCodes'] as $code)
                             <li class="italics">{{ $code }}</li>
                         @endforeach
                     </ul>
