@@ -53,10 +53,28 @@ return [
     ....
 ```
 
-### Testing
+## Services
 
-```bash
-composer test
+When creating a Service and its corresponding Facade you will make reference to the service alias from the Facade rather than the service itself. Then remember to register the service with its alias in `MarketplaceSDKServiceProvider`.
+
+### Facade
+```php
+    class MPEAuthentication extends Facade
+    {
+        protected static function getFacadeAccessor()
+        {
+            // return the alias
+            return 'mpe-authentication';
+        }
+    }
+```
+
+### MarketplaceSDKServiceProvider
+```php
+    // bind the service to an alias
+    $this->app->bind('mpe-authentication', function () {
+        return new AuthenticationService();
+    });
 ```
 
 ### Changelog
