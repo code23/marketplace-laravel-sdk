@@ -2,7 +2,6 @@
 
 namespace Code23\MarketplaceSDK\Services;
 
-use App\Models\User;
 use Code23\MarketplaceSDK\Facades\MPEUser;
 use Exception;
 use Illuminate\Http\Request;
@@ -16,7 +15,7 @@ class AuthenticationService extends Service
      *
      * @return Array
      */
-    public function login(Request $request)
+    public function login(Request $request): array
     {
         // prepare payload
         $payload = [
@@ -31,16 +30,22 @@ class AuthenticationService extends Service
         // retrieve oAuth tokens
         $response = $this->http->post($this->getAuthPath() . '/token', $payload);
 
-        // failed
-        if ($response->failed()) throw new Exception('Please check your username and password.', 422);
+        // http request failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the authentication process.', 422);
+
+        // process error
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // determine whether or not we have two factor authentication endpoint in the response
-        if (isset($response['challenged'])) return $response->json();
+        if (isset($response['data']['challenged']) && $response['data']['challenged']) return $response->json()['data'];
 
         // authenticate user
         $this->authenticateUser($response->json());
 
-        return true;
+        // success
+        return [
+            'error' => false,
+        ];
     }
 
     /**
@@ -48,7 +53,7 @@ class AuthenticationService extends Service
      *
      * @param String $email
      */
-    public function resetPasswordLinkRequest($email): object
+    public function resetPasswordLinkRequest($email): bool
     {
         // send request
         $response = $this->http->post($this->getPath() . '/password/reset', [
@@ -56,11 +61,12 @@ class AuthenticationService extends Service
         ]);
 
         // failed
-        if ($response->failed()) throw new Exception('Unable to request a password reset link.', 422);
+        if ($response->failed()) throw new Exception('A problem was encountered during the request for a password reset link.', 422);
 
-        return $this->response([
-            'message' => 'Reset link request sent!',
-        ]);
+        // process error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        return true;
     }
 
     /**
@@ -72,9 +78,12 @@ class AuthenticationService extends Service
         $response = $this->http->post($this->getPath() . '/auth/two-factor/' . $state);
 
         // failed
-        if ($response->failed()) throw new Exception('Unable to enable two factor authentication on your account.', 422);
+        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to ' . $state . ' two factor authentication on your account.', 422);
 
-        return $response->json();
+        // process error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        return $response->json()['data'];
     }
 
     /**
@@ -94,7 +103,10 @@ class AuthenticationService extends Service
         ]);
 
         // failed
-        if ($response->failed()) throw new Exception('Unable to confirm your identity.', 422);
+        if ($response->failed()) throw new Exception('A problem was encountered during the process to confirm your identity.', 422);
+
+        // process error
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], $response['code']);
 
         // authenticate user
         $this->authenticateUser($response->json());
@@ -107,7 +119,7 @@ class AuthenticationService extends Service
      *
      * @param Request $request - must contain password and token
      */
-    public function updatePassword(Request $request): object
+    public function updatePassword(Request $request): bool
     {
         // update password
         $response = $this->http->post($this->getPath() . '/password/reset', [
@@ -116,17 +128,18 @@ class AuthenticationService extends Service
         ]);
 
         // failed
-        if ($response->failed()) throw new Exception('Unable to update your password.', 422);
+        if ($response->failed()) throw new Exception('A problem was encountered during the process of updating your password.', 422);
 
-        return $this->response([
-            'message' => 'Password updated!',
-        ]);
+        // process error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        return true;
     }
 
     /**
      * authenticate the user by setting the session and retrieving the user from MPE
      */
-    private function authenticateUser($oAuth)
+    private function authenticateUser($oAuth): void
     {
         // set session
         session()->put('oAuth', $oAuth);
