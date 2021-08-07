@@ -18,6 +18,6 @@ class MPERegistration extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'mpe-registration';
+        return 'marketplace-laravel-sdk-registration';
     }
 }

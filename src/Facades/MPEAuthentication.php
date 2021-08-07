@@ -21,6 +21,6 @@ class MPEAuthentication extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'mpe-authentication';
+        return 'marketplace-laravel-sdk-authentication';
     }
 }

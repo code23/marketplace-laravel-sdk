@@ -19,6 +19,6 @@ abstract class MPEUser extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'mpe-user';
+        return 'marketplace-laravel-sdk-user';
     }
 }

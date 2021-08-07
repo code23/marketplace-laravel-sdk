@@ -24,7 +24,7 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         /*
          * load package assets
          */
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'marketplace-sdk');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'marketplace-laravel-sdk');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         /**
@@ -43,23 +43,23 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('marketplace-sdk.php'),
-            ], 'mpe-config');
+                __DIR__.'/../config/config.php' => config_path('marketplace-laravel-sdk.php'),
+            ], 'marketplace-laravel-sdk-config');
 
             // publish the user model
             $this->publishes([
                 __DIR__.'/../src/Models' => app_path('Models'),
-            ], 'mpe-models');
+            ], 'marketplace-laravel-sdk-models');
 
             // publish the authentication views
             $this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/marketplace-sdk'),
-            ], 'mpe-views');
+                __DIR__.'/../resources/views' => resource_path('views/vendor/marketplace-laravel-sdk'),
+            ], 'marketplace-laravel-sdk-views');
 
             // Publishing view components.
             $this->publishes([
                 __DIR__.'/../src/View/Components' => app_path('View/Components'),
-            ], 'mpe-view-components');
+            ], 'marketplace-laravel-sdk-view-components');
 
             // registering package commands
             $this->commands([
@@ -77,17 +77,17 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'marketplace-sdk');
 
         // bind the service to an alias
-        $this->app->bind('mpe-authentication', function () {
+        $this->app->bind('marketplace-laravel-sdk-authentication', function () {
             return new AuthenticationService();
         });
 
         // bind the service to an alias
-        $this->app->bind('mpe-registration', function () {
+        $this->app->bind('marketplace-laravel-sdk-registration', function () {
             return new RegistrationService();
         });
 
         // bind the service to an alias
-        $this->app->bind('mpe-user', function () {
+        $this->app->bind('marketplace-laravel-sdk-user', function () {
             return new UserService();
         });
     }
