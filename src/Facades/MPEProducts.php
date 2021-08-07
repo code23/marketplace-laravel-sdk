@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @see \Code23\MarketplaceLaravelSDK\Services\UserService
  */
-abstract class MPEUser extends Facade
+abstract class MPEProducts extends Facade
 {
     /**
      * get the registered name of the component

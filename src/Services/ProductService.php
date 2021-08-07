@@ -4,7 +4,7 @@ namespace Code23\MarketplaceLaravelSDK\Services;
 
 use Exception;
 
-class ProductsService extends Service
+class ProductService extends Service
 {
     public function list()
     {
