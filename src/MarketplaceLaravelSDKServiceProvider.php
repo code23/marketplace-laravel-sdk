@@ -74,7 +74,7 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'marketplace-sdk');
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'marketplace-laravel-sdk');
 
         // bind the service to an alias
         $this->app->bind('marketplace-laravel-sdk-authentication', function () {

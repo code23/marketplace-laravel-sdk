@@ -5,7 +5,7 @@
         <div class="flex-1 flex flex-col justify-start py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
 
             <div>
-                Marketplace SDK
+                {{ config('package.name') }}
             </div>
 
             <div class="mx-auto w-full max-w-sm lg:w-96">

@@ -20,8 +20,8 @@ class AuthenticationService extends Service
         // prepare payload
         $payload = [
             'grant_type'    => 'password',
-            'client_id'     => config('marketplace-sdk.api.keys.id'),
-            'client_secret' => config('marketplace-sdk.api.keys.secret'),
+            'client_id'     => config('marketplace-laravel-sdk.api.keys.id'),
+            'client_secret' => config('marketplace-laravel-sdk.api.keys.secret'),
             'username'      => $request->email,
             'password'      => $request->password,
             'scope'         => '*'
@@ -38,7 +38,7 @@ class AuthenticationService extends Service
 
         // determine whether or not we have two factor authentication endpoint in the response
         if (isset($response['data']['challenged']) && $response['data']['challenged']) {
-            return view('marketplace-sdk::auth.two-factor-login', [
+            return view('marketplace-laravel-sdk::auth.two-factor-login', [
                 'return_url' => $response['data']['return_url'],
             ]);
         }

@@ -17,7 +17,7 @@ class RegisterController extends Controller
      */
     public function index()
     {
-        return view('marketplace-sdk::auth.register');
+        return view('marketplace-laravel-sdk::auth.register');
     }
 
     /**
@@ -38,7 +38,7 @@ class RegisterController extends Controller
         $user = MPERegistration::register($request);
 
         // return
-        return view('marketplace-sdk::auth.register', [
+        return view('marketplace-laravel-sdk::auth.register', [
             'user' => $user,
         ]);
     }

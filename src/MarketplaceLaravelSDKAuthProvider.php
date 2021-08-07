@@ -22,7 +22,7 @@ class MarketplaceLaravelSDKAuthProvider extends ServiceProvider
      */
     protected function provider(): void
     {
-        BaseAuth::provider('marketplace-sdk-custom', static function (): UserProviderService {
+        BaseAuth::provider('marketplace-laravel-sdk-custom', static function (): UserProviderService {
             return new UserProviderService();
         });
     }

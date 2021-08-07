@@ -1,6 +1,6 @@
-# Marketplace SDK
+# Marketplace Laravel SDK
 
-Marketplace SDK provides an easy interface to the Code23 Marketplace Engine API.  Designed and developed for use with Laravel, it will reduce the 
+Marketplace Laravel SDK provides an easy interface to the Code23 Marketplace Engine API.  Designed and developed for use with Laravel, it will reduce the 
 work involved when integrating with the Markeplace Engine api from a new front-end application.
 
 Authentication is handled by installing the necessary models, views and components so you can use the Auth facade in the same way as traditional
@@ -8,7 +8,7 @@ Laravel applications but but without the need for a database.
 
 ## Before Installation
 
-Please be aware that installing the Marketplace SDK on a default Laravel installation will replace the base User model with the SDK User model 
+Please be aware that installing the Marketplace Laravel SDK on a default Laravel installation will replace the base User model with the SDK User model 
 developed to work directly with the API. 
 
 The blade files provided by the SDK utilise Tailwind CSS so it's recommended that you install Tailwind on your Laravel instance :-
@@ -42,25 +42,25 @@ mix.js("resources/js/app.js", "public/js")
 
 You can install the package via composer:
 ```bash
-composer require code23/marketplace-sdk
+composer require code23/marketplace-laravel-sdk
 ```
 
 Once the package is included in your project you can install the models, config, views and components by running the following install command:
 ```bash
-php artisan marketplace-sdk:install
+php artisan marketplace-laravel-sdk:install
 ```
 
 Note:  If you don't want to install all of the resources included with Marketplace SDK you can install them individually:
 ```bash
-php artisan vendor:publish --tag=mpe-config
-php artisan vendor:publish --tag=mpe-models
-php artisan vendor:publish --tag=mpe-views
-php artisan vendor:publish --tag=mpe-view-components
+php artisan vendor:publish --tag=marketplace-laravel-sdk-config
+php artisan vendor:publish --tag=marketplace-laravel-sdk-models
+php artisan vendor:publish --tag=marketplace-laravel-sdk-views
+php artisan vendor:publish --tag=marketplace-laravel-sdk-view-components
 ```
 
 ## Usage
 
-Update config.auth by commenting out the current driver for users and adding the custom driver provided by Marketplace SDK
+Update config.auth by commenting out the current driver for users and adding the custom driver provided by Marketplace Laravel SDK
 ```php
 <?php
 
@@ -72,7 +72,7 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'marketplace-sdk-custom'
+            'driver' => 'marketplace-laravel-sdk-custom'
         ],
     ],
 
@@ -90,7 +90,7 @@ When creating a Service and its corresponding Facade you will make reference to 
         protected static function getFacadeAccessor()
         {
             // return the alias
-            return 'mpe-authentication';
+            return 'marketplace-laravel-sdk-authentication';
         }
     }
 ```
@@ -98,7 +98,7 @@ When creating a Service and its corresponding Facade you will make reference to 
 ### MarketplaceLaravelSDKServiceProvider
 ```php
     // bind the service to an alias
-    $this->app->bind('mpe-authentication', function () {
+    $this->app->bind('marketplace-laravel-sdk-authentication', function () {
         return new AuthenticationService();
     });
 ```

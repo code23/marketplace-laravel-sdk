@@ -22,7 +22,7 @@ class LoginController extends Controller
      */
     public function index(): View
     {
-        return view('marketplace-sdk::auth.login');
+        return view('marketplace-laravel-sdk::auth.login');
     }
 
     /**
@@ -68,7 +68,7 @@ class LoginController extends Controller
      */
     public function passwordForgot(Request $request): View
     {
-        return view('marketplace-sdk::auth.forgot-password', [
+        return view('marketplace-laravel-sdk::auth.forgot-password', [
             'request' => $request
         ]);
     }
@@ -92,7 +92,7 @@ class LoginController extends Controller
             // flash session
             $request->session()->flash('status', $response->message);
 
-            return view('marketplace-sdk::auth.login');
+            return view('marketplace-laravel-sdk::auth.login');
 
         } catch (Exception $e) {
             return back()->with('status', $e->getMessage());
@@ -106,7 +106,7 @@ class LoginController extends Controller
      */
     public function passwordReset(Request $request): View
     {
-        return view('marketplace-sdk::auth.reset-password', [
+        return view('marketplace-laravel-sdk::auth.reset-password', [
             'request' => $request
         ]);
     }
@@ -125,7 +125,7 @@ class LoginController extends Controller
             // flash session
             $request->session()->flash('status', $response->message);
 
-            return view('marketplace-sdk::auth.login');
+            return view('marketplace-laravel-sdk::auth.login');
 
         } catch (Exception $e) {
             return back()->with('status', $e->getMessage());
@@ -161,7 +161,7 @@ class LoginController extends Controller
      */
     public function twoFactorDetails(Request $request)
     {
-        return view('marketplace-sdk::auth.two-factor-authentication', [
+        return view('marketplace-laravel-sdk::auth.two-factor-authentication', [
                 'auth' => session()->get('auth'),
             ]);
     }

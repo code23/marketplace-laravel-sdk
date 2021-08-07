@@ -32,7 +32,7 @@ class Service
      */
     public function getApiSegment()
     {
-        return '/api/' . config('marketplace-sdk.api.version');
+        return '/api/' . config('marketplace-laravel-sdk.api.version');
     }
 
     /**
@@ -48,7 +48,7 @@ class Service
      */
     public function getBasePath()
     {
-        return config('marketplace-sdk.api.base_path', 'mpe.test');
+        return config('marketplace-laravel-sdk.api.base_path', 'mpe.test');
     }
 
     /**
