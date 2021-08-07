@@ -8,6 +8,7 @@ use Code23\MarketplaceSDK\Facades\MPEAuthentication;
 use Code23\MarketplaceSDK\Traits\PasswordValidationRules;
 
 use Exception;
+use Illuminate\Contracts\View\View as ViewView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -30,25 +31,33 @@ class LoginController extends Controller
      *
      * @param Request $request
      */
-    public function login(Request $request): RedirectResponse
+    public function login(Request $request)
     {
         // validate
         Validator::make($request->all(), [
-            'email' => ['required', 'string', 'email', 'max:255'],
-            'password' => ['required', 'string'],
+            'email'     => ['required', 'string', 'email', 'max:255'],
+            'password'  => ['required', 'string'],
         ])->validate();
 
         try {
-            // authenticate
-            $user = MPEAuthentication::login($request);
+            // attempt login
+            $response = MPEAuthentication::login($request);
+
+            // check for 2fa challenge
+            if (isset($response['challenged']) && $response['challenged']) {
+                // 2fa challenge received so need to capture authentication code
+                return view('marketplace-sdk::auth.two-factor-login', [
+                    'return_url' => $response['return_url'],
+                ]);
+            }
+
+            // back to welcome - login failed
+            return redirect()->route('welcome');
+
         } catch (Exception $e) {
+            // return with error message
             return back()->with('status', $e->getMessage());
         }
-
-        // flash session
-        $request->session()->flash('status', 'Welcome ' . $user->first_name);
-
-        return redirect()->route('welcome');
     }
 
     /**
@@ -89,13 +98,18 @@ class LoginController extends Controller
             'email' => ['required', 'string', 'email', 'max:255'],
         ])->validate();
 
-        // request link
-        $response = MPEAuthentication::resetPasswordLinkRequest($request->email);
+        try {
+            // request link
+            $response = MPEAuthentication::resetPasswordLinkRequest($request->email);
 
-        // flash session
-        $request->session()->flash('status', $response->message);
+            // flash session
+            $request->session()->flash('status', $response->message);
 
-        return view('marketplace-sdk::auth.login');
+            return view('marketplace-sdk::auth.login');
+
+        } catch (Exception $e) {
+            return back()->with('status', $e->getMessage());
+        }
     }
 
     /**
@@ -117,12 +131,67 @@ class LoginController extends Controller
      */
     public function passwordUpdate(Request $request): View
     {
-        // update password
-        $response = MPEAuthentication::updatePassword($request);
+        try {
+            // update password
+            $response = MPEAuthentication::updatePassword($request);
 
-        // flash session
-        $request->session()->flash('status', $response->message);
+            // flash session
+            $request->session()->flash('status', $response->message);
 
-        return view('marketplace-sdk::auth.login');
+            return view('marketplace-sdk::auth.login');
+
+        } catch (Exception $e) {
+            return back()->with('status', $e->getMessage());
+        }
+    }
+
+    /**
+     * enable/disable two factor authentication
+     */
+    public function twoFactorAuthentication(Request $request, $state)
+    {
+        try {
+            // enable/disable
+            $state == 'enable' ? $response = $request->user()->enable2FA() : $response = $request->user()->disable2FA();
+
+            // if enabling
+            if ($state == 'enable') {
+                return redirect()->route('two-factor.confirmation')->with('auth', $response);
+            }
+
+            // flash session
+            $request->session()->flash('status', $response['message']);
+
+            return redirect()->route('user');
+
+        } catch (Exception $e) {
+            return back()->with('status', $e->getMessage());
+        }
+    }
+
+    /**
+     * show two factor qr and recovery codes
+     */
+    public function twoFactorDetails(Request $request)
+    {
+        return view('marketplace-sdk::auth.two-factor-authentication', [
+                'auth' => session()->get('auth'),
+            ]);
+    }
+
+    /**
+     * two factor authentication code confirmation
+     */
+    public function twoFactorValidation(Request $request)
+    {
+        try {
+            // validate two factory authentication code
+            MPEAuthentication::twoFactorValidation($request);
+
+            return redirect()->route('welcome');
+
+        } catch (Exception $e) {
+            return back()->with('status', $e->getMessage());
+        }
     }
 }

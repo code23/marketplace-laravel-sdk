@@ -11,10 +11,36 @@ Laravel applications but but without the need for a database.
 Please be aware that installing the Marketplace SDK on a default Laravel installation will replace the base User model with the SDK User model 
 developed to work directly with the API. 
 
-## Installation
+The blade files provided by the SDK utilise Tailwind CSS so it's recommended that you install Tailwind on your Laravel instance :-
+```php
+npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
+npx tailwindcss init
+```
+
+Once installed add the following lines to your tailwind.config.js :-
+```php
+// tailwind.config.js
+module.exports = {
+   purge: [
+     './resources/**/*.blade.php',
+     './resources/**/*.js',
+     './resources/**/*.vue',
+   ],
+   ...
+```
+
+And finally, configure Laravel Mix :-
+```php
+// webpack.mix.js
+mix.js("resources/js/app.js", "public/js")
+    .postCss("resources/css/app.css", "public/css", [
+        require("tailwindcss"),
+    ]);
+```
+
+## SDK Installation
 
 You can install the package via composer:
-
 ```bash
 composer require code23/marketplace-sdk
 ```
