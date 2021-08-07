@@ -13,9 +13,9 @@ class AuthenticationService extends Service
      *
      * @param Request $request - must contain email and password
      *
-     * @return Array
+     * @return
      */
-    public function login(Request $request): array
+    public function login(Request $request)
     {
         // prepare payload
         $payload = [
@@ -37,15 +37,17 @@ class AuthenticationService extends Service
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // determine whether or not we have two factor authentication endpoint in the response
-        if (isset($response['data']['challenged']) && $response['data']['challenged']) return $response->json()['data'];
+        if (isset($response['data']['challenged']) && $response['data']['challenged']) {
+            return view('marketplace-sdk::auth.two-factor-login', [
+                'return_url' => $response['data']['return_url'],
+            ]);
+        }
 
         // authenticate user
         $this->authenticateUser($response->json());
 
-        // success
-        return [
-            'error' => false,
-        ];
+        // back to welcome - login failed
+        return redirect()->route('welcome');
     }
 
     /**
@@ -83,7 +85,7 @@ class AuthenticationService extends Service
         // process error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        return $response->json()['data'];
+        return $response->json()['data'] ?? ['message' => $response['message']];
     }
 
     /**

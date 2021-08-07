@@ -41,19 +41,7 @@ class LoginController extends Controller
 
         try {
             // attempt login
-            $response = MPEAuthentication::login($request);
-
-            // check for 2fa challenge
-            if (isset($response['challenged']) && $response['challenged']) {
-                // 2fa challenge received so need to capture authentication code
-                return view('marketplace-sdk::auth.two-factor-login', [
-                    'return_url' => $response['return_url'],
-                ]);
-            }
-
-            // back to welcome - login failed
-            return redirect()->route('welcome');
-
+            return MPEAuthentication::login($request);
         } catch (Exception $e) {
             // return with error message
             return back()->with('status', $e->getMessage());
