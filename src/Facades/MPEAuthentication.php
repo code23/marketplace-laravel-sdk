@@ -1,6 +1,6 @@
 <?php
 
-namespace Code23\MarketplaceSDK\Facades;
+namespace Code23\MarketplaceLaravelSDK\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static object setSession(json $oAuth) save the oAuth token response to the session
  * @method static object updatePassword(String $email) update the password for the email provided
  *
- * @see \Code23\MarketplaceSDK\Services\AuthenticationService
+ * @see \Code23\MarketplaceLaravelSDK\Services\AuthenticationService
  */
 class MPEAuthentication extends Facade
 {

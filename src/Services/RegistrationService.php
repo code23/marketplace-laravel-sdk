@@ -1,8 +1,8 @@
 <?php
 
-namespace Code23\MarketplaceSDK\Services;
+namespace Code23\MarketplaceLaravelSDK\Services;
 
-use Code23\MarketplaceSDK\Facades\MPEUser;
+use Code23\MarketplaceLaravelSDK\Facades\MPEUser;
 use Exception;
 use Illuminate\Http\Request;
 

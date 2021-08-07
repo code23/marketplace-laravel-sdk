@@ -1,6 +1,6 @@
 <?php
 
-namespace Code23\MarketplaceSDK\View\Components;
+namespace Code23\MarketplaceLaravelSDK\View\Components;
 
 use Illuminate\View\Component;
 
@@ -13,6 +13,6 @@ class Layout extends Component
      */
     public function render()
     {
-        return view('marketplace-sdk::layouts.guest');
+        return view('marketplace-laravel-sdk::layouts.guest');
     }
 }

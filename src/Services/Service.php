@@ -1,6 +1,6 @@
 <?php
 
-namespace Code23\MarketplaceSDK\Services;
+namespace Code23\MarketplaceLaravelSDK\Services;
 
 use Illuminate\Support\Facades\Http;
 

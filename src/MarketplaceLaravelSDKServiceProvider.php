@@ -1,20 +1,20 @@
 <?php
 
-namespace Code23\MarketplaceSDK;
+namespace Code23\MarketplaceLaravelSDK;
 
 use App\View\Components\GuestLayout;
 
 use App\Models\User;
 
-use Code23\MarketplaceSDK\View\Components\Layout;
-use Code23\MarketplaceSDK\Services\AuthenticationService;
-use Code23\MarketplaceSDK\Services\RegistrationService;
-use Code23\MarketplaceSDK\Services\UserService;
-use Code23\MarketplaceSDK\Console\InstallCommand;
+use Code23\MarketplaceLaravelSDK\View\Components\Layout;
+use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
+use Code23\MarketplaceLaravelSDK\Services\RegistrationService;
+use Code23\MarketplaceLaravelSDK\Services\UserService;
+use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 
-class MarketplaceSDKServiceProvider extends ServiceProvider
+class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

@@ -1,6 +1,6 @@
 <?php
 
-namespace Code23\MarketplaceSDK\Traits;
+namespace Code23\MarketplaceLaravelSDK\Traits;
 
 trait PasswordValidationRules
 {

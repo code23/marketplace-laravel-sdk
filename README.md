@@ -81,7 +81,7 @@ return [
 
 ## Services
 
-When creating a Service and its corresponding Facade you will make reference to the service alias from the Facade rather than the service itself. Then remember to register the service with its alias in `MarketplaceSDKServiceProvider`.
+When creating a Service and its corresponding Facade you will make reference to the service alias from the Facade rather than the service itself. Then remember to register the service with its alias in `MarketplaceLaravelSDKServiceProvider`.
 
 ### Facade
 ```php
@@ -95,7 +95,7 @@ When creating a Service and its corresponding Facade you will make reference to 
     }
 ```
 
-### MarketplaceSDKServiceProvider
+### MarketplaceLaravelSDKServiceProvider
 ```php
     // bind the service to an alias
     $this->app->bind('mpe-authentication', function () {

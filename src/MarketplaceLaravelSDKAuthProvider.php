@@ -1,12 +1,12 @@
 <?php
 
-namespace Code23\MarketplaceSDK;
+namespace Code23\MarketplaceLaravelSDK;
 
 use Illuminate\Support\Facades\Auth as BaseAuth;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Code23\MarketplaceSDK\Services\Auth\UserProviderService;
+use Code23\MarketplaceLaravelSDK\Services\Auth\UserProviderService;
 
-class MarketplaceSDKAuthProvider extends ServiceProvider
+class MarketplaceLaravelSDKAuthProvider extends ServiceProvider
 {
     /**
      * @return void

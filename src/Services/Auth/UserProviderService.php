@@ -1,10 +1,10 @@
 <?php
 
-namespace Code23\MarketplaceSDK\Services\Auth;
+namespace Code23\MarketplaceLaravelSDK\Services\Auth;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider as AuthProvider;
-use Code23\MarketplaceSDK\Facades\MPEUser;
+use Code23\MarketplaceLaravelSDK\Facades\MPEUser;
 
 class UserProviderService implements AuthProvider
 {

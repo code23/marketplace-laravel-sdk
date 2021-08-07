@@ -5,13 +5,13 @@
 | Marketplace Web Routes
 |--------------------------------------------------------------------------
 |
-| These routes are loaded by the MarketplaceSDKServiceProvider within
+| These routes are loaded by the MarketplaceLaravelSDKServiceProvider within
 | a group which contains the "web" middleware group.
 |
 */
 
-use Code23\MarketplaceSDK\Http\Controllers\Auth\LoginController;
-use Code23\MarketplaceSDK\Http\Controllers\Auth\RegisterController;
+use Code23\MarketplaceLaravelSDK\Http\Controllers\Auth\LoginController;
+use Code23\MarketplaceLaravelSDK\Http\Controllers\Auth\RegisterController;
 
 Route::group(['middleware' => ['web']], function () {
 

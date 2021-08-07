@@ -1,11 +1,11 @@
 {
-    "name": "code23/marketplace-sdk",
-    "description": "Marketplace SDK",
+    "name": "code23/marketplace-laravel-sdk",
+    "description": "Marketplace Laravel SDK",
     "keywords": [
         "code23",
-        "marketplace-sdk"
+        "marketplace-laravel-sdk"
     ],
-    "homepage": "https://github.com/code23/marketplace-sdk",
+    "homepage": "https://github.com/code23/marketplace-laravel-sdk",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -21,12 +21,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Code23\\MarketplaceSDK\\": "src"
+            "Code23\\MarketplaceLaravelSDK\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Code23\\MarketplaceSDK\\Tests\\": "tests"
+            "Code23\\MarketplaceLaravelSDK\\Tests\\": "tests"
         }
     },
     "scripts": {},
@@ -36,11 +36,11 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Code23\\MarketplaceSDK\\MarketplaceSDKServiceProvider",
-                "Code23\\MarketplaceSDK\\MarketplaceSDKAuthProvider"
+                "Code23\\MarketplaceLaravelSDK\\MarketplaceLaravelSDKServiceProvider",
+                "Code23\\MarketplaceLaravelSDK\\MarketplaceLaravelSDKAuthProvider"
             ],
             "aliases": {
-                "MPEAuthentication": "Code23\\MarketplaceSDK\\Facades\\MPEAuthentication"
+                "MPEAuthentication": "Code23\\MarketplaceLaravelSDK\\Facades\\MPEAuthentication"
             }
         }
     }

@@ -1,10 +1,10 @@
 <?php
 
-namespace Code23\MarketplaceSDK\Http\Controllers\Auth;
+namespace Code23\MarketplaceLaravelSDK\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Code23\MarketplaceSDK\Facades\MPERegistration;
-use Code23\MarketplaceSDK\Traits\PasswordValidationRules;
+use Code23\MarketplaceLaravelSDK\Facades\MPERegistration;
+use Code23\MarketplaceLaravelSDK\Traits\PasswordValidationRules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 

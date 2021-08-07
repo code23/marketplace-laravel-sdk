@@ -1,6 +1,6 @@
 <?php
 
-namespace Code23\MarketplaceSDK\Facades;
+namespace Code23\MarketplaceLaravelSDK\Facades;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Facade;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @method static Authenticatable get() return user
  *
- * @see \Code23\MarketplaceSDK\Services\UserService
+ * @see \Code23\MarketplaceLaravelSDK\Services\UserService
  */
 abstract class MPEUser extends Facade
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Code23\MarketplaceSDK\Console;
+namespace Code23\MarketplaceLaravelSDK\Console;
 
 use Illuminate\Console\Command;
 
@@ -11,14 +11,14 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'marketplace-sdk:install';
+    protected $signature = 'marketplace-laravel-sdk:install';
 
     /**
      * console command description
      *
      * @var string
      */
-    protected $description = 'Install all of the Marketplace SDK resources';
+    protected $description = 'Install all of the Marketplace Laravel SDK resources';
 
     /**
      * execute the console command
@@ -30,32 +30,32 @@ class InstallCommand extends Command
         // config
         $this->comment('Publishing config...');
         $this->callSilent('vendor:publish', [
-            '--tag' => 'mpe-config',
+            '--tag' => 'marketplace-laravel-sdk-config',
             '--force' => true
         ]);
 
         // models
         $this->comment('Publishing models...');
         $this->callSilent('vendor:publish', [
-            '--tag' => 'mpe-models',
+            '--tag' => 'marketplace-laravel-sdk-models',
             '--force' => true
         ]);
 
         // view components
         $this->comment('Publishing view components...');
         $this->callSilent('vendor:publish', [
-            '--tag' => 'mpe-view-components',
+            '--tag' => 'marketplace-laravel-sdk-view-components',
             '--force' => true
         ]);
 
         // views
         $this->comment('Publishing views...');
         $this->callSilent('vendor:publish', [
-            '--tag' => 'mpe-views',
+            '--tag' => 'marketplace-laravel-sdk-views',
             '--force' => true
         ]);
 
         // prompt user
-        $this->info('Marketplace SDK installed successfully.');
+        $this->info('Marketplace Laravel SDK installed successfully.');
     }
 }

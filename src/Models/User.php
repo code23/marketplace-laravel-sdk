@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Code23\MarketplaceSDK\Facades\MPEAuthentication;
+use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
