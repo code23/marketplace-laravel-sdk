@@ -40,7 +40,22 @@ mix.js("resources/js/app.js", "public/js")
 
 ## SDK Installation
 
-You can install the package via composer:
+You can install this package via composer.  Marketplace Laravel SDK resides in a private GitHub repository so you will need to update your composer.json by
+adding the following:
+```bash
+    ...
+
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/code23/marketplace-laravel-sdk"
+        }
+    ],
+
+    ...
+```
+
+Once you've provided composer with the location of the Marketplace Laravel SDK package you can install it as normal:
 ```bash
 composer require code23/marketplace-laravel-sdk
 ```
@@ -60,17 +75,19 @@ php artisan vendor:publish --tag=marketplace-laravel-sdk-view-components
 
 ## Usage
 
-Update config.auth by commenting out the current driver for users and adding the custom driver provided by Marketplace Laravel SDK
+To ensure that your application authenticates using Marketplace Laravel SDK you'll need to ensure that Laravel knows where to look for users.  To do this you'll need to update your config.auth by commenting out the current driver for `users` and adding the custom driver provided by Marketplace Laravel SDK
 ```php
 <?php
 
 return [
-    // 'users' => [
-    //     'driver' => 'eloquent',
-    //     'model' => App\Models\User::class,
-    // ],
+    ...
 
     'providers' => [
+        // 'users' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\User::class,
+        // ],
+        
         'users' => [
             'driver' => 'marketplace-laravel-sdk-custom'
         ],
