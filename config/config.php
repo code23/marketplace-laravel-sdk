@@ -4,9 +4,6 @@
  * You can place your custom package configuration in here.
  */
 return [
-    'package' => [
-        'name' => 'Marketplace Laravel SDK',
-    ],
 
     'api' => [
         'base_path' => env('MPE_API_BASE_PATH', 'mpe.test'),
@@ -17,4 +14,7 @@ return [
         'version'   => env('MPE_VERSION', 'v1'),
     ],
 
+    'package' => [
+        'name' => 'Marketplace Laravel SDK',
+    ],
 ];
