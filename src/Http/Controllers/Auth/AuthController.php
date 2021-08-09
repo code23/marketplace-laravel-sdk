@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 
-class LoginController extends Controller
+class AuthController extends Controller
 {
     use PasswordValidationRules;
 
@@ -40,7 +40,11 @@ class LoginController extends Controller
 
         try {
             // attempt login
-            return MPEAuthentication::login($request);
+            MPEAuthentication::login($request);
+
+            // return to on success
+            return redirect()->route('welcome');
+
         } catch (Exception $e) {
             // return with error message
             return back()->with('status', $e->getMessage());
@@ -58,6 +62,7 @@ class LoginController extends Controller
         // clear session
         session()->flush();
 
+        // return to on success
         return redirect()->route('welcome');
     }
 
@@ -92,9 +97,11 @@ class LoginController extends Controller
             // flash session
             $request->session()->flash('status', $response->message);
 
+            // return to on success
             return view('marketplace-laravel-sdk::auth.login');
 
         } catch (Exception $e) {
+            // return with error message
             return back()->with('status', $e->getMessage());
         }
     }
@@ -125,9 +132,11 @@ class LoginController extends Controller
             // flash session
             $request->session()->flash('status', $response->message);
 
+            // return to on success
             return view('marketplace-laravel-sdk::auth.login');
 
         } catch (Exception $e) {
+            // return with error message
             return back()->with('status', $e->getMessage());
         }
     }
@@ -149,9 +158,11 @@ class LoginController extends Controller
             // flash session
             $request->session()->flash('status', $response['message']);
 
-            return redirect()->route('user');
+            // return with error message
+            return redirect()->route('profile');
 
         } catch (Exception $e) {
+            // return with error message
             return back()->with('status', $e->getMessage());
         }
     }

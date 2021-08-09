@@ -10,22 +10,22 @@
 |
 */
 
-use Code23\MarketplaceLaravelSDK\Http\Controllers\Auth\LoginController;
+use Code23\MarketplaceLaravelSDK\Http\Controllers\Auth\AuthController;
 use Code23\MarketplaceLaravelSDK\Http\Controllers\Auth\RegisterController;
 
 Route::group(['as' => 'mls.', 'middleware' => ['web']], function () {
 
-    Route::get('/login',                    [LoginController::class,    'index'])->name('login');
-    Route::get('/logout',                   [LoginController::class,    'logout'])->name('logout');
+    Route::get('/login',                    [AuthController::class,    'index'])->name('login');
+    Route::get('/logout',                   [AuthController::class,    'logout'])->name('logout');
     Route::get('/register',                 [RegisterController::class, 'index'])->name('register');
-    Route::get('/password/forgot',          [LoginController::class,    'passwordForgot'])->name('password.forgot');
-    Route::get('/password/reset',           [LoginController::class,    'passwordReset'])->name('password.reset');
-    Route::get('/two-factor-auth/{state}',  [LoginController::class,    'twoFactorAuthentication'])->name('two-factor.authentication');
-    Route::get('/two-factor-details',       [LoginController::class,    'twoFactorDetails'])->name('two-factor.confirmation');
+    Route::get('/password/forgot',          [AuthController::class,    'passwordForgot'])->name('password.forgot');
+    Route::get('/password/reset',           [AuthController::class,    'passwordReset'])->name('password.reset');
+    Route::get('/two-factor-auth/{state}',  [AuthController::class,    'twoFactorAuthentication'])->name('two-factor.authentication');
+    Route::get('/two-factor-details',       [AuthController::class,    'twoFactorDetails'])->name('two-factor.confirmation');
 
-    Route::post('/login',           [LoginController::class,    'login'])->name('login.authenticate');
+    Route::post('/login',           [AuthController::class,    'login'])->name('login.authenticate');
     Route::post('/register',        [RegisterController::class, 'register'])->name('register.new');
-    Route::post('/password/email',  [LoginController::class,    'passwordEmail'])->name('password.email');
-    Route::post('/password/update', [LoginController::class,    'passwordUpdate'])->name('password.update');
-    Route::post('/two-factor-auth', [LoginController::class,    'twoFactorValidation'])->name('two-factor.validation');
+    Route::post('/password/email',  [AuthController::class,    'passwordEmail'])->name('password.email');
+    Route::post('/password/update', [AuthController::class,    'passwordUpdate'])->name('password.update');
+    Route::post('/two-factor-auth', [AuthController::class,    'twoFactorValidation'])->name('two-factor.validation');
 });

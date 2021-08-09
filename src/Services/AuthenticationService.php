@@ -34,7 +34,7 @@ class AuthenticationService extends Service
         if ($response->failed()) throw new Exception('A problem was encountered during the authentication process.', 422);
 
         // process error
-        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], $response['code']);
 
         // determine whether or not we have two factor authentication endpoint in the response
         if (isset($response['data']['challenged']) && $response['data']['challenged']) {
@@ -46,8 +46,8 @@ class AuthenticationService extends Service
         // authenticate user
         $this->authenticateUser($response->json());
 
-        // back to welcome - login failed
-        return redirect()->route('welcome');
+        // back to welcome - login succeeded
+        return true;
     }
 
     /**

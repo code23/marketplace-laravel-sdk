@@ -47,6 +47,11 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
                 __DIR__.'/../config/config.php' => config_path('marketplace-laravel-sdk.php'),
             ], 'marketplace-laravel-sdk-config');
 
+            // publish the controllers
+            $this->publishes([
+                __DIR__.'/../src/Http/Controllers/Auth' => app_path('Http/Controllers/Auth'),
+            ], 'marketplace-laravel-sdk-controllers');
+
             // publish the user model
             $this->publishes([
                 __DIR__.'/../src/Models' => app_path('Models'),
@@ -80,11 +85,6 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         // bind the service to an alias
         $this->app->bind('marketplace-laravel-sdk-authentication', function () {
             return new AuthenticationService();
-        });
-
-        // bind the service to an alias
-        $this->app->bind('marketplace-laravel-sdk-registration', function () {
-            return new RegistrationService();
         });
 
         // bind the service to an alias
