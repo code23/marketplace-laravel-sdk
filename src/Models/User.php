@@ -38,6 +38,11 @@ class User extends Model implements Authenticatable
         return 'remember_token';
     }
 
+    public function getFullnameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
     /**
      * @param String $value
      */

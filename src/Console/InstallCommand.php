@@ -31,28 +31,30 @@ class InstallCommand extends Command
         $this->comment('Publishing config...');
         $this->callSilent('vendor:publish', [
             '--tag' => 'marketplace-laravel-sdk-config',
-            '--force' => true
+        ]);
+
+        // controllers
+        $this->comment('Publishing controllers...');
+        $this->callSilent('vendor:publish', [
+            '--tag' => 'marketplace-laravel-sdk-controllers'
         ]);
 
         // models
         $this->comment('Publishing models...');
         $this->callSilent('vendor:publish', [
             '--tag' => 'marketplace-laravel-sdk-models',
-            '--force' => true
         ]);
 
         // view components
         $this->comment('Publishing view components...');
         $this->callSilent('vendor:publish', [
             '--tag' => 'marketplace-laravel-sdk-view-components',
-            '--force' => true
         ]);
 
         // views
         $this->comment('Publishing views...');
         $this->callSilent('vendor:publish', [
             '--tag' => 'marketplace-laravel-sdk-views',
-            '--force' => true
         ]);
 
         // prompt user

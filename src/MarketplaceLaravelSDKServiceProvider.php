@@ -8,7 +8,6 @@ use App\Models\User;
 
 use Code23\MarketplaceLaravelSDK\View\Components\Layout;
 use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
-use Code23\MarketplaceLaravelSDK\Services\RegistrationService;
 use Code23\MarketplaceLaravelSDK\Services\UserService;
 use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
 use Illuminate\Support\ServiceProvider;
@@ -26,20 +25,6 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
          */
         $this->loadViewsFrom(__DIR__.'/../resources/views', 'marketplace-laravel-sdk');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-
-        /**
-         * custom singletons
-         */
-        $this->singletons();
-
-        /*
-         * load view components if they do not already exist
-         */
-        if (!class_exists(GuestLayout::class)) {
-            $this->loadViewComponentsAs('guest', [
-                Layout::class,
-            ]);
-        }
 
         if ($this->app->runningInConsole()) {
             // config
@@ -70,6 +55,20 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
             // registering package commands
             $this->commands([
                 InstallCommand::class,
+            ]);
+        }
+
+        /**
+         * custom singletons
+         */
+        $this->singletons();
+
+        /*
+         * load view components if they do not already exist
+         */
+        if (!class_exists(GuestLayout::class)) {
+            $this->loadViewComponentsAs('guest', [
+                Layout::class,
             ]);
         }
     }
