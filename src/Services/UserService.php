@@ -4,6 +4,7 @@ namespace Code23\MarketplaceLaravelSDK\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Exception;
 
 class UserService extends Service
@@ -65,8 +66,8 @@ class UserService extends Service
      *
      * @return void
      */
-    protected static function login(User $user): void
+    protected static function login(Authenticatable $user): void
     {
-        Auth::login($user);
+        Auth::login($user, true);
     }
 }
