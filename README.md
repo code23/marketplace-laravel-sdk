@@ -73,6 +73,18 @@ php artisan vendor:publish --tag=marketplace-laravel-sdk-views
 php artisan vendor:publish --tag=marketplace-laravel-sdk-view-components
 ```
 
+## SDK Configuration
+
+Before you can connect to the Marketplace Engine you'll need to add the following to your `.env` file. The api key and secret can be provided by your Marketplace Engine Super Admin.
+
+```bash
+# Marketplace
+MPE_VERSION=v1
+MPE_API_BASE_PATH=https://mpe.test
+MPE_API_KEY=93ec3d35-f905-47bd-a22e-0090906776f4
+MPE_API_SECRET=PuT2NZZ1fJAL30wxVcovPrS2Al8pVNzJ5nAFsC2b
+```
+
 ## Usage
 
 To ensure that your application authenticates using Marketplace Laravel SDK you'll need to ensure that Laravel knows where to look for users.  To do this you'll need to update your config.auth by commenting out the current driver for `users` and adding the custom driver provided by Marketplace Laravel SDK

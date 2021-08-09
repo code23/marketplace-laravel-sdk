@@ -13,7 +13,7 @@
 use Code23\MarketplaceLaravelSDK\Http\Controllers\Auth\LoginController;
 use Code23\MarketplaceLaravelSDK\Http\Controllers\Auth\RegisterController;
 
-Route::name('mls.')->group(['middleware' => ['web']], function () {
+Route::group(['as' => 'mls.', 'middleware' => ['web']], function () {
 
     Route::get('/login',                    [LoginController::class,    'index'])->name('login');
     Route::get('/logout',                   [LoginController::class,    'logout'])->name('logout');
