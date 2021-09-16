@@ -43,7 +43,7 @@ class AuthController extends Controller
             MPEAuthentication::login($request);
 
             // return to on success
-            return redirect()->route('welcome');
+            return redirect()->route('home');
 
         } catch (Exception $e) {
             // return with error message
@@ -63,7 +63,7 @@ class AuthController extends Controller
         session()->flush();
 
         // return to on success
-        return redirect()->route('welcome');
+        return redirect()->route('home');
     }
 
     /**
@@ -83,7 +83,7 @@ class AuthController extends Controller
      *
      * @param Request $request
      */
-    public function passwordEmail(Request $request): View
+    public function passwordEmail(Request $request)
     {
         // validate
         Validator::make($request->all(), [
@@ -98,7 +98,7 @@ class AuthController extends Controller
             $request->session()->flash('status', $response->message);
 
             // return to on success
-            return view('marketplace-laravel-sdk::auth.login');
+            return redirect('mls.login');
 
         } catch (Exception $e) {
             // return with error message

@@ -10,6 +10,8 @@ use Code23\MarketplaceLaravelSDK\View\Components\Layout;
 use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
 use Code23\MarketplaceLaravelSDK\Services\UserService;
 use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
+use Code23\MarketplaceLaravelSDK\Services\CategoryService;
+use Code23\MarketplaceLaravelSDK\Services\ProductService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,7 +36,7 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
 
             // publish the controllers
             $this->publishes([
-                __DIR__.'/../src/Http/Controllers/Auth' => app_path('Http/Controllers/Auth'),
+                __DIR__.'/../src/Http/Controllers' => app_path('Http/Controllers'),
             ], 'marketplace-laravel-sdk-controllers');
 
             // publish the user model
@@ -89,6 +91,16 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         // bind the service to an alias
         $this->app->bind('marketplace-laravel-sdk-user', function () {
             return new UserService();
+        });
+
+        // bind the service to an alias
+        $this->app->bind('marketplace-laravel-sdk-products', function () {
+            return new ProductService();
+        });
+
+        // bind the service to an alias
+        $this->app->bind('marketplace-laravel-sdk-categories', function () {
+            return new CategoryService();
         });
     }
 

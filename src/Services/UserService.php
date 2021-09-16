@@ -70,4 +70,12 @@ class UserService extends Service
     {
         Auth::login($user, true);
     }
+
+    /**
+     * update the given user
+     */
+    public function update($userId)
+    {
+        # code...
+    }
 }
