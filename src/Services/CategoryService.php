@@ -7,55 +7,6 @@ use Faker\Factory;
 
 class CategoryService extends Service
 {
-    public function list()
-    {
-        // init faker instance
-        $faker = (new Factory)->create();
-
-        // fake categories
-        $categories = [
-            [
-                'name' => 'Abayas',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
-            ],
-            [
-                'name' => 'Dresses',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
-            ],
-            [
-                'name' => 'Skirts',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
-            ],
-            [
-                'name' => 'Tops',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
-            ],
-            [
-                'name' => 'Pants',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
-            ],
-            [
-                'name' => 'Sportswear',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
-            ],
-            [
-                'name' => 'Swimwear',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
-            ],
-            [
-                'name' => 'Jumpsuits',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
-            ],
-            [
-                'name' => 'Loungewear',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
-            ],
-        ];
-
-        // return them
-        return $categories;
-    }
-
     public function category($name)
     {
         // init faker instance
@@ -103,5 +54,60 @@ class CategoryService extends Service
 
         // return them
         return $subCategories;
+    }
+
+    /**
+     * Get a list of categories with their images
+     *
+     * @param integer $level How many levels deep to include - 0 = top level
+     */
+    public function list($level = null)
+    {
+        // send request
+        $response = $this->http->get($this->getPath() . '/tenant/categories', [
+            'with' => 'images',
+        ]);
+
+        // failed
+        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
+
+        // process error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return categories as collection
+        if($response->json()['data']) {
+            return collect($response->json()['data'])
+                    ->where('is_active')
+                    // when level 0 specified, only include top level categories
+                    ->when($level === 0, function($q) {
+                        return $q->where('parent_id', null);
+                    });
+        }
+
+        // else return error
+        return ['message' => $response['message']];
+    }
+
+    public function productsByCategory($id)
+    {
+        // send request
+        $response = $this->http->get($this->getPath() . '/tenant/categories/' . $id, [
+            'with' => 'products.images,products.vendor',
+        ]);
+
+        // failed
+        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
+
+        // process error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return categories as collection
+        if ($response->json()['data']) {
+            return collect($response->json()['data']['products'])
+                ->where('is_active');
+        }
+
+        // else return error
+        return ['message' => $response['message']];
     }
 }

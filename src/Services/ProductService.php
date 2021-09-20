@@ -3,7 +3,6 @@
 namespace Code23\MarketplaceLaravelSDK\Services;
 
 use Exception;
-use Faker\Factory;
 
 class ProductService extends Service
 {
@@ -24,23 +23,21 @@ class ProductService extends Service
      */
     public function latest($count = 3)
     {
-        // init faker instance
-        $faker = (new Factory)->create();
+        // call to api
+        $response = $this->http->get($this->getPath() . '/tenant/products', [
+            'sort' => 'created_at',
+            'is_active' => true,
+            'limit' => $count,
+            'with' => 'images,vendor',
+        ]);
 
-        // make products array
-        $products = [];
+        // failed
+        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
 
-        // fill array with fake products
-        for($i = 0; $i < $count; $i++) {
-            array_push($products, [
-                'name' => $faker->text(30),
-                'vendor' => ucwords($faker->words(2, true)),
-                'price' => number_format($faker->randomFloat(2, 15, 200), 2),
-                'image' => 'https://picsum.photos/900/900?random=' . $faker->randomDigitNotNull,
-            ]);
-        }
+        // process error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        // return the products
-        return $products;
+        // if successful, return categories as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : ['message' => $response['message']];
     }
 }
