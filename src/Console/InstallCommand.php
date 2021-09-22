@@ -39,6 +39,12 @@ class InstallCommand extends Command
             '--tag' => 'marketplace-laravel-sdk-controllers'
         ]);
 
+        // middleware
+        $this->comment('Publishing middleware...');
+        $this->callSilent('vendor:publish', [
+            '--tag' => 'marketplace-laravel-sdk-middleware'
+        ]);
+
         // models
         $this->comment('Publishing models...');
         $this->callSilent('vendor:publish', [

@@ -6,25 +6,27 @@ use Illuminate\Support\Facades\Http;
 
 class Service
 {
-    public $http;
-    private  $options = [
+    public $client;
+    public $options = [
         'verify' => false,      // no ssl verification required
     ];
+    public $headers = [];
 
-    public function __construct()
+    /**
+     * initialises a new http instance and returns the client
+     */
+    public function http()
     {
+        // new http client with options expecting json from the api
+        $this->client = Http::withOptions($this->options)->acceptJson();
+
         // determine whether tokens already exist
-        if (session()->has('oAuth') && isset(session()->get('oAuth')['access_token'])) {
-            // merge options
-            $this->options = array_merge($this->options, [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . session()->get('oAuth')['access_token'],
-                    ],
-                ]);
+        if (session()->has('oAuth') && isset(session('oAuth')['access_token'])) {
+            // add bearer token
+            $this->client->withToken(session('oAuth')['access_token']);
         }
 
-        // new http client with options expecting json from the api
-        $this->http = Http::withOptions($this->options)->acceptJson();
+        return $this->client;
     }
 
     /**
