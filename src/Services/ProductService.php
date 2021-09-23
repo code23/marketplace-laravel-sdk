@@ -9,7 +9,7 @@ class ProductService extends Service
     public function list()
     {
         // call
-        $response = $this->http()->get($this->getPath() . '/products');
+        $response = $this->http()->get($this->getPath() . '/tenant/products');
 
         // failed
         if ($response->failed()) throw new Exception('Unable to retrieve the products!', 422);
