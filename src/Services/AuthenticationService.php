@@ -152,7 +152,7 @@ class AuthenticationService extends Service
         ]);
 
         // http request failed
-        if ($response->failed()) throw new Exception('A problem was encountered during the authentication process.', 422);
+        if ($response->failed()) throw new Exception('Unable to authenticate with MPE!', 422);
 
         // process error
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
