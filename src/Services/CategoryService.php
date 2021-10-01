@@ -3,52 +3,49 @@
 namespace Code23\MarketplaceLaravelSDK\Services;
 
 use Exception;
-use Faker\Factory;
+use Illuminate\Support\Str;
 
 class CategoryService extends Service
 {
     public function category($name)
     {
-        // init faker instance
-        $faker = (new Factory)->create();
-
         // fake categories
         $subCategories = [
             [
                 'name' => 'Weddings',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
+                'image' => 'https://picsum.photos/600/600?random=' . Str::random(1),
             ],
             [
                 'name' => 'Birthdays',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
+                'image' => 'https://picsum.photos/600/600?random=' . Str::random(1),
             ],
             [
                 'name' => 'Corporate Events',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
+                'image' => 'https://picsum.photos/600/600?random=' . Str::random(1),
             ],
             [
                 'name' => 'Village Fetes',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
+                'image' => 'https://picsum.photos/600/600?random=' . Str::random(1),
             ],
             [
                 'name' => 'Grand Opening',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
+                'image' => 'https://picsum.photos/600/600?random=' . Str::random(1),
             ],
             [
                 'name' => 'Launch Day',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
+                'image' => 'https://picsum.photos/600/600?random=' . Str::random(1),
             ],
             [
                 'name' => 'Reunion',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
+                'image' => 'https://picsum.photos/600/600?random=' . Str::random(1),
             ],
             [
                 'name' => 'Space Walks',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
+                'image' => 'https://picsum.photos/600/600?random=' . Str::random(1),
             ],
             [
                 'name' => 'Easter Egg Hunts',
-                'image' => 'https://picsum.photos/600/600?random=' . $faker->randomDigitNotNull
+                'image' => 'https://picsum.photos/600/600?random=' . Str::random(1),
             ],
         ];
 
@@ -64,7 +61,7 @@ class CategoryService extends Service
     public function list($level = null)
     {
         // send request
-        $response = $this->http->get($this->getPath() . '/tenant/categories', [
+        $response = $this->http()->get($this->getPath() . '/tenant/categories', [
             'with' => 'images',
         ]);
 
@@ -91,7 +88,7 @@ class CategoryService extends Service
     public function productsByCategory($id)
     {
         // send request
-        $response = $this->http->get($this->getPath() . '/tenant/categories/' . $id, [
+        $response = $this->http()->get($this->getPath() . '/tenant/categories/' . $id, [
             'with' => 'products.images,products.vendor',
         ]);
 
