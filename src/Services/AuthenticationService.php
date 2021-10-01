@@ -25,7 +25,7 @@ class AuthenticationService extends Service
             'client_secret' => config('marketplace-laravel-sdk.api.keys.secret'),
             'username'      => $request->email,
             'password'      => $request->password,
-            'scope'         => '*'
+            'scope'         => ''
         ];
 
         // retrieve oAuth tokens
@@ -146,9 +146,7 @@ class AuthenticationService extends Service
     {
         // retrieve oAuth tokens
         $response = $this->http()->post($this->getPath() . '/auth/site', [
-            'client_id'     => config('marketplace-laravel-sdk.api.pac_keys.id'),
-            'client_secret' => config('marketplace-laravel-sdk.api.pac_keys.secret'),
-            'host'          => $request->header('host'),
+            'client_id' => config('marketplace-laravel-sdk.api.pac_keys.id'),
         ]);
 
         // http request failed
