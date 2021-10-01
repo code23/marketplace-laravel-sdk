@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
+use Exception;
 use Illuminate\Support\Facades\Http;
 
 class Service
@@ -9,6 +10,7 @@ class Service
     public $http;
     private  $options = [
         'verify' => false,      // no ssl verification required
+        'origin' => 'az-modesty.test',
     ];
 
     public function __construct()
@@ -65,5 +67,48 @@ class Service
     public function response($response)
     {
         return json_decode(json_encode($response));
+    }
+
+    /**
+     * validate
+     */
+    public function validator($request, $rules, $messages)
+    {
+        try {
+
+            // run laravel validation using passed in rules and messages
+            // throws an exception if validation fails
+            $request->validate($rules, $messages);
+
+            // if passes, return true
+            return true;
+
+        } catch (Exception $e) {
+
+            // if the exception contains a validator object
+            if ($e->validator) {
+
+                // flash the errors array to the session
+                $request->session()->flash(
+                    'errors', $e->validator->messages(),
+                );
+
+                // flash the submitted field values for form re-population, except:
+                $request->flashExcept([
+                    'password',
+                    'password_confirmation',
+                    'image_1',
+                    'image_2',
+                    'image_3',
+                    'image_4',
+                ]);
+            }
+
+            // dd($request->session());
+            // dd($e->getMessage());
+
+            // return the exception message
+            return $e->getMessage();
+        }
     }
 }

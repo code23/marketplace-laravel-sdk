@@ -40,7 +40,8 @@
                 "Code23\\MarketplaceLaravelSDK\\MarketplaceLaravelSDKAuthProvider"
             ],
             "aliases": {
-                "MPEAuthentication": "Code23\\MarketplaceLaravelSDK\\Facades\\MPEAuthentication"
+                "MPEAuthentication": "Code23\\MarketplaceLaravelSDK\\Facades\\MPEAuthentication",
+                "MPEVendors": "Code23\\MarketplaceLaravelSDK\\Facades\\MPEVendors"
             }
         }
     }

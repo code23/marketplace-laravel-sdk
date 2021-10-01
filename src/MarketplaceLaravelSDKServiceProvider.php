@@ -12,6 +12,7 @@ use Code23\MarketplaceLaravelSDK\Services\UserService;
 use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
 use Code23\MarketplaceLaravelSDK\Services\CategoryService;
 use Code23\MarketplaceLaravelSDK\Services\ProductService;
+use Code23\MarketplaceLaravelSDK\Services\VendorService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 
@@ -91,6 +92,11 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         // bind the service to an alias
         $this->app->bind('marketplace-laravel-sdk-user', function () {
             return new UserService();
+        });
+
+        // bind the service to an alias
+        $this->app->bind('marketplace-laravel-sdk-vendors', function () {
+            return new VendorService();
         });
 
         // bind the service to an alias
