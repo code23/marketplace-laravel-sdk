@@ -17,8 +17,13 @@ class Service
      */
     public function http()
     {
+        // update headers with origin
+        $this->headers = array_merge($this->headers, [
+            'X-MPE-Origin' => request()->header('host') ?? config('marketplace-laravel-sdk.app.url'),
+        ]);
+
         // new http client with options expecting json from the api
-        $this->client = Http::withOptions($this->options)->acceptJson();
+        $this->client = Http::withHeaders($this->headers)->withOptions($this->options)->acceptJson();
 
         // determine whether tokens already exist
         if (session()->has('oAuth') && isset(session('oAuth')['access_token'])) {

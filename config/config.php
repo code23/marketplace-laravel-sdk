@@ -4,6 +4,9 @@
  * You can place your custom package configuration in here.
  */
 return [
+    'app'   => [
+        'url' => env('APP_URL'),
+    ],
 
     'api' => [
         'base_path' => env('MPE_API_BASE_PATH', 'mpe.test'),
