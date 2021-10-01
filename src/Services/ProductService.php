@@ -9,7 +9,7 @@ class ProductService extends Service
     public function list()
     {
         // call
-        $response = $this->http->get($this->getPath() . '/products');
+        $response = $this->http()->get($this->getPath() . '/tenant/products');
 
         // failed
         if ($response->failed()) throw new Exception('Unable to retrieve the products!', 422);
@@ -24,7 +24,7 @@ class ProductService extends Service
     public function latest($count = 3)
     {
         // call to api
-        $response = $this->http->get($this->getPath() . '/tenant/products', [
+        $response = $this->http()->get($this->getPath() . '/tenant/products', [
             'sort' => 'created_at',
             'is_active' => true,
             'limit' => $count,

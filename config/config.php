@@ -11,6 +11,9 @@ return [
             'id'        => env('MPE_API_KEY'),
             'secret'    => env('MPE_API_SECRET'),
         ],
+        'pac_keys' => [
+            'id'        => env('MPE_PAC_KEY'),
+        ],
         'version'   => env('MPE_VERSION', 'v1'),
     ],
 

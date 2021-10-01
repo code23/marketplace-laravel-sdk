@@ -40,6 +40,11 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
                 __DIR__.'/../src/Http/Controllers' => app_path('Http/Controllers'),
             ], 'marketplace-laravel-sdk-controllers');
 
+            // publish the controllers
+            $this->publishes([
+                __DIR__.'/../src/Http/Middleware' => app_path('Http/Middleware'),
+            ], 'marketplace-laravel-sdk-middleware');
+
             // publish the user model
             $this->publishes([
                 __DIR__.'/../src/Models' => app_path('Models'),

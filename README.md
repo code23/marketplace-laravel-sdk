@@ -68,6 +68,7 @@ php artisan marketplace-laravel-sdk:install
 Note:  If you don't want to install all of the resources included with Marketplace SDK you can install them individually:
 ```bash
 php artisan vendor:publish --tag=marketplace-laravel-sdk-config
+php artisan vendor:publish --tag=marketplace-laravel-sdk-middleware
 php artisan vendor:publish --tag=marketplace-laravel-sdk-models
 php artisan vendor:publish --tag=marketplace-laravel-sdk-views
 php artisan vendor:publish --tag=marketplace-laravel-sdk-view-components
@@ -75,7 +76,7 @@ php artisan vendor:publish --tag=marketplace-laravel-sdk-view-components
 
 ## SDK Configuration
 
-Before you can connect to the Marketplace Engine you'll need to add the following to your `.env` file. The api key and secret can be provided by your Marketplace Engine Super Admin.
+Before you can connect to the Marketplace Engine you'll need to add the following to your `.env` file. The API key and secret will be provided by a Marketplace Super Admin and the PACT key can be found in the Tenant admin dashboard.  The PAC key allows the website to authenticate with MPE without needing a user to login.  This allows the website to consume certain endpoints eg product lists, categories etc.
 
 ```bash
 # Marketplace
@@ -83,6 +84,46 @@ MPE_VERSION=v1
 MPE_API_BASE_PATH=https://mpe.test
 MPE_API_KEY=93ec3d35-f905-47bd-a22e-0090906776f4
 MPE_API_SECRET=PuT2NZZ1fJAL30wxVcovPrS2Al8pVNzJ5nAFsC2b
+MPE_PAC_KEY=94736f1c-970b-41c7-a29d-a14cc09d4d13
+```
+You will also need to add the MPEPACAuthentication middleware to your `web` middleware group in `App\Http\Kernel.php`.  You MUST make sure that it is the last middleware in the middleware `web` group.
+
+```php
+<?php
+
+namespace App\Http;
+
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
+
+class Kernel extends HttpKernel
+{
+    /**
+     * The application's global HTTP middleware stack.
+     *
+     * These middleware are run during every request to your application.
+     *
+     * @var array
+     */
+    protected $middleware = [
+        ...
+    ];
+
+    /**
+     * The application's route middleware groups.
+     *
+     * @var array
+     */
+    protected $middlewareGroups = [
+        'web' => [
+            ...
+            \App\Http\Middleware\MPEPACAuthentication::class,
+        ],
+
+        'api' => [
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
 ```
 
 ## Usage

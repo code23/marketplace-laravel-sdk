@@ -18,7 +18,7 @@ class UserService extends Service
     public function get($id = null): User
     {
         // call
-        $response = $this->http->get($this->getPath() . '/user');
+        $response = $this->http()->get($this->getPath() . '/user');
 
         // failed
         if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);

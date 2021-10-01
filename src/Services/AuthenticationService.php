@@ -3,6 +3,7 @@
 namespace Code23\MarketplaceLaravelSDK\Services;
 
 use Code23\MarketplaceLaravelSDK\Facades\MPEUser;
+
 use Exception;
 use Illuminate\Http\Request;
 
@@ -24,17 +25,17 @@ class AuthenticationService extends Service
             'client_secret' => config('marketplace-laravel-sdk.api.keys.secret'),
             'username'      => $request->email,
             'password'      => $request->password,
-            'scope'         => '*'
+            'scope'         => ''
         ];
 
         // retrieve oAuth tokens
-        $response = $this->http->post($this->getAuthPath() . '/token', $payload);
+        $response = $this->http()->post($this->getAuthPath() . '/token', $payload);
 
         // http request failed
         if ($response->failed()) throw new Exception('A problem was encountered during the authentication process.', 422);
 
         // process error
-        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], $response['code']);
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // determine whether or not we have two factor authentication endpoint in the response
         if (isset($response['data']['challenged']) && $response['data']['challenged']) {
@@ -58,7 +59,7 @@ class AuthenticationService extends Service
     public function resetPasswordLinkRequest($email): bool
     {
         // send request
-        $response = $this->http->post($this->getPath() . '/password/reset', [
+        $response = $this->http()->post($this->getPath() . '/password/reset', [
             'email' => $email,
         ]);
 
@@ -77,7 +78,7 @@ class AuthenticationService extends Service
     public function twoFactorAuthentication($state): array
     {
         // send request
-        $response = $this->http->post($this->getPath() . '/auth/two-factor/' . $state);
+        $response = $this->http()->post($this->getPath() . '/auth/two-factor/' . $state);
 
         // failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to ' . $state . ' two factor authentication on your account.', 422);
@@ -100,7 +101,7 @@ class AuthenticationService extends Service
         if ($request->authentication_type == 'recovery_code') $type = $request->authentication_type;
 
         // send request to signed url for confirmation
-        $response = $this->http->post($request->return_url, [
+        $response = $this->http()->post($request->return_url, [
             $type => $request->authentication_code,
         ]);
 
@@ -124,7 +125,7 @@ class AuthenticationService extends Service
     public function updatePassword(Request $request): bool
     {
         // update password
-        $response = $this->http->post($this->getPath() . '/password/reset', [
+        $response = $this->http()->post($this->getPath() . '/password/reset', [
             'password'  => $request->password,
             'token'     => $request->token,
         ]);
@@ -136,6 +137,29 @@ class AuthenticationService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         return true;
+    }
+
+    /**
+     * authenticate site
+     */
+    public function authenticateSite(Request $request)
+    {
+        // retrieve oAuth tokens
+        $response = $this->http()->post($this->getPath() . '/auth/site', [
+            'client_id' => config('marketplace-laravel-sdk.api.pac_keys.id'),
+        ]);
+
+        // http request failed
+        if ($response->failed()) throw new Exception('Unable to authenticate with MPE!', 422);
+
+        // process error
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+        // set session
+        session()->put('oAuth', $response['data']);
+
+        // return
+        return $response['data'];
     }
 
     /**
