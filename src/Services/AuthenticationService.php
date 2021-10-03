@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
+use App\Exceptions\AuthenticateSiteException;
 use Code23\MarketplaceLaravelSDK\Facades\MPEUser;
 
 use Exception;
@@ -150,7 +151,7 @@ class AuthenticationService extends Service
         ]);
 
         // http request failed
-        if ($response->failed()) throw new Exception('Unable to authenticate with MPE!', 422);
+        if ($response->failed()) throw new AuthenticateSiteException();
 
         // process error
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
