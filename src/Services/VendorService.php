@@ -8,27 +8,7 @@ use Illuminate\Http\Request;
 class VendorService extends Service
 {
     /**
-     * Save a vendor!
-     *
-     * Front-end fields to include in request (not all are validated):
-     * first_name
-     * surname
-     * telephone
-     * email
-     * password
-     * password_confirmation
-     * vendor_name
-     * vendor_description
-     * vendor_summary
-     * address_line_1
-     * address_line_2
-     * address_city
-     * address_postcode
-     * country
-     * image_1
-     * image_2
-     * image_3
-     * image_4
+     * Save a vendor
      */
     public function save(Request $request)
     {
@@ -97,7 +77,7 @@ class VendorService extends Service
                     'address'               => [
                         'company'           => isset($request->company) ? $request->company : null,
                         'line1'             => $request->line1,
-                        'line2'             => $request->line2,
+                        'line2'             => isset($request->line2) ? $request->line2 : null,
                         'city'              => $request->city,
                         'county'            => $request->county,
                         'postcode'          => $request->postcode,

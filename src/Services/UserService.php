@@ -62,6 +62,8 @@ class UserService extends Service
 
     /**
      * create new user
+     *
+     * TODO: validate email on mpe db is unique to the team
      */
     public function create(Request $request)
     {
@@ -80,7 +82,7 @@ class UserService extends Service
         // use our validation method in Service
         $validated = $this->validator($request, $rules, $messages);
 
-        if ($validated) {
+        if ($validated === true) {
 
             try {
 
@@ -100,7 +102,9 @@ class UserService extends Service
                 // process error
                 if ($response['error']) throw new Exception($response['message'], $response['code']);
 
+                // return
                 return true;
+
             } catch (Exception $e) {
 
                 return $e;
