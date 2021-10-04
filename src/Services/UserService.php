@@ -85,15 +85,14 @@ class UserService extends Service
             try {
 
                 // send request
-                $response = $this->http->post($this->getPath() . '/user/register', [
-                    'first_name' => $request->first_name,
-                    'last_name'  => $request->last_name,
-                    'email'      => $request->email,
-                    'password'   => $request->password,
-                    'terms'      => isset($request->terms) ? true : false,
+                $response = $this->http()->post($this->getPath() . '/user/register', [
+                    'first_name'              => $request->first_name,
+                    'last_name'               => $request->last_name,
+                    'email'                   => $request->email,
+                    'password'                => $request->password,
+                    'password_confirmation'   => $request->password_confirmation,
+                    'terms'                   => isset($request->terms) ? true : false,
                 ]);
-
-                dd($response);
 
                 // failed
                 if ($response->failed()) throw new Exception('A problem was encountered during the request for a password reset link.', 422);
@@ -101,14 +100,10 @@ class UserService extends Service
                 // process error
                 if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-                if ($response) {
-                    return true;
-                }
-
-                return false;
+                return true;
             } catch (Exception $e) {
 
-                return dd($e);
+                return $e;
             }
         } else {
             return $validated;
@@ -126,7 +121,7 @@ class UserService extends Service
     {
         try {
             // call
-            $response = $this->http->delete($this->getPath() . '/user/' . $id);
+            $response = $this->http()->delete($this->getPath() . '/user/' . $id);
 
             // failed
             if ($response->failed()) throw new Exception('Unable to delete the user!', 422);
@@ -161,7 +156,7 @@ class UserService extends Service
     {
         try {
             // call
-            $response = $this->http->patch($this->getPath() . '/user/' . $id, [
+            $response = $this->http()->patch($this->getPath() . '/user/' . $id, [
                 'first_name' => $request->first_name ?? $request->user()->first_name,
                 'last_name'  => $request->last_name ?? $request->user()->last_name,
                 'email'      => $request->user()->email,

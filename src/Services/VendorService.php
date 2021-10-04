@@ -74,7 +74,7 @@ class VendorService extends Service
             try {
 
                 // send request
-                $response = $this->http->post($this->getPath() . '/tenant/vendors/register', [
+                $response = $this->http()->post($this->getPath() . '/tenant/vendors/register', [
                     'first_name'            => $request->first_name,
                     'last_name'             => $request->last_name,
                     'email'                 => $request->email,
@@ -102,9 +102,12 @@ class VendorService extends Service
                         'county'            => $request->county,
                         'postcode'          => $request->postcode,
                     ],
+                    'logo'                  => isset($request->logo) ? $request->logo : null,
+                    'imagery'               => isset($request->imagery) ? $request->imagery : null,
                 ]);
 
-                dd($response);
+                // for testing
+                // dd($response);
 
                 // failed
                 if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new vendor.', 422);
@@ -112,15 +115,12 @@ class VendorService extends Service
                 // process error
                 if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-                if($response) {
-                    return true;
-                }
-
-                return false;
+                return true;
 
             } catch (Exception $e) {
 
-                return dd($e);
+                // return exception
+                return $e;
 
             }
 
