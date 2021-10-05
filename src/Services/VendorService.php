@@ -12,6 +12,9 @@ class VendorService extends Service
      */
     public function save(Request $request)
     {
+        // dd($request->file('image_1')->getMimeType());
+        // dd('data:' . $request->file('image_1')->getMimeType() . ';base64,' . base64_encode(file_get_contents($request->file('image_1'))));
+
         $rules = [
             'first_name'         => 'required',
             'last_name'          => 'required',
@@ -53,16 +56,38 @@ class VendorService extends Service
 
             try {
 
+                // create imagery array
+                $imagery = [];
+
+                // set index
+                $i = 1;
+
+                // loop over number of images
+                while ($i <= 4) {
+
+                    // set field name
+                    $image = 'image_' . $i;
+
+                    // if field present in request
+                    if (isset($request->$image)) {
+                        // add data uri with mime type & base64 encoded image to array
+                        $imagery[] = ['file' => 'data:' . $request->file($image)->getMimeType() . ';base64,' . base64_encode(file_get_contents($request->file($image)))];
+                    }
+
+                    // increment index counter
+                    $i++;
+                }
+
                 // send request
                 $response = $this->http()->post($this->getPath() . '/tenant/vendors/register', [
                     'first_name'            => $request->first_name,
                     'last_name'             => $request->last_name,
-                    'email'                 => $request->email,
+                    'email'                 => $request->email . rand(1, 999),
                     'phone'                 => $request->phone,
                     'password'              => $request->password,
                     'password_confirmation' => $request->password_confirmation,
                     'terms'                 => $request->terms ? true : false,
-                    'store_name'            => $request->store_name,
+                    'store_name'            => $request->store_name . rand(1, 999),
                     'country_id'            => $request->country_id,
                     'vat'                   => isset($request->vat) ? $request->vat : null,
                     'meta'                  => [
@@ -83,11 +108,8 @@ class VendorService extends Service
                         'postcode'          => $request->postcode,
                     ],
                     'logo'                  => isset($request->logo) ? $request->logo : null,
-                    'imagery'               => isset($request->imagery) ? $request->imagery : null,
+                    'imagery'               => $imagery,
                 ]);
-
-                // for testing
-                // dd($response);
 
                 // failed
                 if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new vendor.', 422);
