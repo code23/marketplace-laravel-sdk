@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
+use Code23\MarketplaceLaravelSDK\Rules\UniqueVendorStoreName;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -12,16 +13,13 @@ class VendorService extends Service
      */
     public function save(Request $request)
     {
-        // dd($request->file('image_1')->getMimeType());
-        // dd('data:' . $request->file('image_1')->getMimeType() . ';base64,' . base64_encode(file_get_contents($request->file('image_1'))));
-
         $rules = [
             'first_name'         => 'required',
             'last_name'          => 'required',
             'phone'              => 'required',
             'email'              => 'required|email',
             'password'           => 'required|confirmed|min:8|regex:/[a-z]/|regex:/[A-Z]/',
-            'store_name'         => 'required',
+            'store_name'         => ['required', new UniqueVendorStoreName],
             'description'        => 'required',
             'summary'            => 'required',
             'line1'              => 'required',
@@ -82,12 +80,12 @@ class VendorService extends Service
                 $response = $this->http()->post($this->getPath() . '/tenant/vendors/register', [
                     'first_name'            => $request->first_name,
                     'last_name'             => $request->last_name,
-                    'email'                 => $request->email . rand(1, 999),
+                    'email'                 => $request->email,
                     'phone'                 => $request->phone,
                     'password'              => $request->password,
                     'password_confirmation' => $request->password_confirmation,
                     'terms'                 => $request->terms ? true : false,
-                    'store_name'            => $request->store_name . rand(1, 999),
+                    'store_name'            => $request->store_name,
                     'country_id'            => $request->country_id,
                     'vat'                   => isset($request->vat) ? $request->vat : null,
                     'meta'                  => [
@@ -131,5 +129,26 @@ class VendorService extends Service
             // perform laravel validation failed behaviour
             return $validated;
         }
+    }
+
+    /**
+     * Check vendor name is unique
+     *
+     * @return boolean
+     */
+    public function storeNameIsUnique($name)
+    {
+        // call to api
+        $response = $this->http()->get($this->getPath() . '/tenant/vendors/is-store-name-unique', [
+            'store_name' => $name,
+        ]);
+
+        // failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the request to check vendor name unique.', 422);
+
+        // process error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        return $response;
     }
 }

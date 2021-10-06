@@ -68,6 +68,7 @@ php artisan marketplace-laravel-sdk:install
 Note:  If you don't want to install all of the resources included with Marketplace SDK you can install them individually:
 ```bash
 php artisan vendor:publish --tag=marketplace-laravel-sdk-config
+php artisan vendor:publish --tag=marketplace-laravel-sdk-controllers
 php artisan vendor:publish --tag=marketplace-laravel-sdk-middleware
 php artisan vendor:publish --tag=marketplace-laravel-sdk-models
 php artisan vendor:publish --tag=marketplace-laravel-sdk-views

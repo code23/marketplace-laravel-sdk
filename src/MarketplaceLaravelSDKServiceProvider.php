@@ -50,6 +50,11 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
                 __DIR__.'/../src/Models' => app_path('Models'),
             ], 'marketplace-laravel-sdk-models');
 
+            // Publishing rules.
+            $this->publishes([
+                __DIR__ . '/../src/Rules' => app_path('Rules'),
+            ], 'marketplace-laravel-sdk-rules');
+
             // publish the authentication views
             $this->publishes([
                 __DIR__.'/../resources/views' => resource_path('views/vendor/marketplace-laravel-sdk'),
