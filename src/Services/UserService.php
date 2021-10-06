@@ -3,10 +3,12 @@
 namespace Code23\MarketplaceLaravelSDK\Services;
 
 use App\Models\User;
+use Code23\MarketplaceLaravelSDK\Rules\UniqueUserEmailInTeam;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UserService extends Service
 {
@@ -70,7 +72,7 @@ class UserService extends Service
         $rules = [
             'first_name'         => 'required',
             'last_name'          => 'required',
-            'email'              => 'required|email',
+            'email'              => ['required', 'email', new UniqueUserEmailInTeam],
             'password'           => 'required|confirmed|min:8|regex:/[a-z]/|regex:/[A-Z]/',
             'terms'              => 'required',
         ];
@@ -140,6 +142,25 @@ class UserService extends Service
         }
     }
 
+    /**
+     * Check user is not already registered with this tenant
+     */
+    public function emailIsUniqueInTeam($email)
+    {
+        // call to api
+        $response = $this->http()->get($this->getPath() . '/tenant/has-user-with-email', [
+            'email' => $email,
+        ]);
+
+        // failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the request to check for existing user.', 422);
+
+        // process error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        return $response;
+    }
+
 
     /**
      * login user using auth facade
@@ -176,6 +197,33 @@ class UserService extends Service
             return $response;
         } catch (Exception $e) {
             return $e;
+        }
+    }
+
+    /**
+     * Send an email verification link to the user
+     */
+    public function sendEmailVerificationLink()
+    {
+        try {
+
+            // call api
+            $response = $this->http()->post($this->getPath() . '/auth/email/verification-notification/');
+
+            // failed
+            if ($response->failed()) throw new Exception('Unable to send verification email', 422);
+
+            // process error
+            if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+            return 'Verification email sent';
+
+        } catch (Exception $e) {
+
+            Log::error($e->getMessage());
+
+            return $e->getMessage();
+
         }
     }
 }
