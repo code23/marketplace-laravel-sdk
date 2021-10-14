@@ -4,23 +4,27 @@
  * You can place your custom package configuration in here.
  */
 return [
-    'app'   => [
+    'app' => [
         'url' => env('APP_URL'),
     ],
 
     'api' => [
         'base_path' => env('MPE_API_BASE_PATH', 'mpe.test'),
-        'keys'  => [
+        'keys' => [
             'id'        => env('MPE_API_KEY'),
             'secret'    => env('MPE_API_SECRET'),
         ],
         'pac_keys' => [
             'id'        => env('MPE_PAC_KEY'),
         ],
-        'version'   => env('MPE_VERSION', 'v1'),
+        'version' => env('MPE_VERSION', 'v1'),
     ],
 
     'package' => [
         'name' => 'Marketplace Laravel SDK',
     ],
+
+    'passwords' => [
+        'rules' => 'required|confirmed|min:8|regex:/[a-z]/|regex:/[A-Z]/',
+    ]
 ];

@@ -73,7 +73,7 @@ class UserService extends Service
             'first_name'         => 'required',
             'last_name'          => 'required',
             'email'              => ['required', 'email', new UniqueUserEmailInTeam],
-            'password'           => 'required|confirmed|min:8|regex:/[a-z]/|regex:/[A-Z]/',
+            'password'           => config('marketplace-laravel-sdk.passwords.rules'),
             'terms'              => 'required',
         ];
 
@@ -148,7 +148,7 @@ class UserService extends Service
     public function emailIsUniqueInTeam($email)
     {
         // call to api
-        $response = $this->http()->get($this->getPath() . '/tenant/has-user-with-email', [
+        $response = $this->http()->get($this->getPath() . '/tenants/has-user-with-email', [
             'email' => $email,
         ]);
 

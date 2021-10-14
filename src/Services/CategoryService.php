@@ -61,9 +61,11 @@ class CategoryService extends Service
     public function list($level = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/tenant/categories', [
+        $response = $this->http()->get($this->getPath() . '/categories', [
             'with' => 'images',
         ]);
+
+        // dd($response);
 
         // failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
@@ -88,7 +90,7 @@ class CategoryService extends Service
     public function productsByCategory($id)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/tenant/categories/' . $id, [
+        $response = $this->http()->get($this->getPath() . '/categories/' . $id, [
             'with' => 'products.images,products.vendor',
         ]);
 

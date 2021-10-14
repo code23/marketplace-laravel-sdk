@@ -2,23 +2,24 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
+use Code23\MarketplaceLaravelSDK\Facades\MPEImages;
+use Code23\MarketplaceLaravelSDK\Rules\UniqueUserEmailInTeam;
 use Code23\MarketplaceLaravelSDK\Rules\UniqueVendorStoreName;
 use Exception;
-use Illuminate\Http\Request;
 
 class VendorService extends Service
 {
     /**
      * Save a vendor
      */
-    public function save(Request $request)
+    public function save(Array $data)
     {
         $rules = [
             'first_name'         => 'required',
             'last_name'          => 'required',
             'phone'              => 'required',
-            'email'              => 'required|email',
-            'password'           => 'required|confirmed|min:8|regex:/[a-z]/|regex:/[A-Z]/',
+            'email'              => ['required', 'email', new UniqueUserEmailInTeam],
+            'password'           => config('marketplace-laravel-sdk.passwords.rules'),
             'store_name'         => ['required', new UniqueVendorStoreName],
             'description'        => 'required',
             'summary'            => 'required',
@@ -37,17 +38,17 @@ class VendorService extends Service
         $messages = [
             'password.regex' => 'Password must include at least one upper & lowercase letter.',
             'image_1.mimes'  => 'Image 1 must be either jpeg or png format.',
-            'image_1.max'    => 'Image 1 filesizse too large - max 3MB.',
+            'image_1.max'    => 'Image 1 filesize too large - max 3MB.',
             'image_2.mimes'  => 'Image 2 must be either jpeg or png format.',
-            'image_2.max'    => 'Image 2 filesizse too large - max 3MB.',
+            'image_2.max'    => 'Image 2 filesize too large - max 3MB.',
             'image_3.mimes'  => 'Image 3 must be either jpeg or png format.',
-            'image_3.max'    => 'Image 3 filesizse too large - max 3MB.',
+            'image_3.max'    => 'Image 3 filesize too large - max 3MB.',
             'image_4.mimes'  => 'Image 4 must be either jpeg or png format.',
-            'image_4.max'    => 'Image 4 filesizse too large - max 3MB.',
+            'image_4.max'    => 'Image 4 filesize too large - max 3MB.',
         ];
 
         // use our validation method in Service
-        $validated = $this->validator($request, $rules, $messages);
+        $validated = $this->validator($data, $rules, $messages);
 
         // if validation passes
         if($validated === true) {
@@ -66,51 +67,51 @@ class VendorService extends Service
                     // set field name
                     $image = 'image_' . $i;
 
-                    // if field present in request
-                    if (isset($request->$image)) {
+                    // if field present in data
+                    if ($data[$image]) {
                         // add data uri with mime type & base64 encoded image to array
-                        $imagery[] = ['file' => 'data:' . $request->file($image)->getMimeType() . ';base64,' . base64_encode(file_get_contents($request->file($image)))];
+                        $imagery[] = ['file' => MPEImages::prepareImageObject($data[$image])];
                     }
 
                     // increment index counter
                     $i++;
                 }
 
-                // send request
-                $response = $this->http()->post($this->getPath() . '/tenant/vendors/register', [
-                    'first_name'            => $request->first_name,
-                    'last_name'             => $request->last_name,
-                    'email'                 => $request->email,
-                    'phone'                 => $request->phone,
-                    'password'              => $request->password,
-                    'password_confirmation' => $request->password_confirmation,
-                    'terms'                 => $request->terms ? true : false,
-                    'store_name'            => $request->store_name,
-                    'country_id'            => $request->country_id,
-                    'vat'                   => isset($request->vat) ? $request->vat : null,
+                // send data
+                $response = $this->http()->post($this->getPath() . '/vendors/register', [
+                    'first_name'            => $data['first_name'],
+                    'last_name'             => $data['last_name'],
+                    'email'                 => $data['email'],
+                    'phone'                 => $data['phone'],
+                    'password'              => $data['password'],
+                    'password_confirmation' => $data['password_confirmation'],
+                    'terms'                 => $data['terms'] ? true : false,
+                    'store_name'            => $data['store_name'],
+                    'country_id'            => $data['country_id'],
+                    'vat'                   => isset($data['vat']) ? $data['vat'] : null,
                     'meta'                  => [
-                        'website'           => isset($request->website) ? $request->website : null,
-                        'facebook'          => isset($request->facebook) ? $request->facebook : null,
-                        'instagram'         => isset($request->instagram) ? $request->instagram : null,
-                        'description'       => isset($request->description) ? $request->description : null,
-                        'summary'           => isset($request->summary) ? $request->summary : null,
-                        'sku_quantity'      => isset($request->sku_quantity) ? $request->sku_quantity : null,
-                        'referee'           => isset($request->referee) ? $request->referee : null,
+                        'website'           => isset($data['website']) ? $data['website'] : null,
+                        'facebook'          => isset($data['facebook']) ? $data['facebook'] : null,
+                        'instagram'         => isset($data['instagram']) ? $data['instagram'] : null,
+                        'description'       => isset($data['description']) ? $data['description'] : null,
+                        'summary'           => isset($data['summary']) ? $data['summary'] : null,
+                        'sku_quantity'      => isset($data['sku_quantity']) ? $data['sku_quantity'] : null,
+                        'referee'           => isset($data['referee']) ? $data['referee'] : null,
                     ],
                     'address'               => [
-                        'company'           => isset($request->company) ? $request->company : null,
-                        'line1'             => $request->line1,
-                        'line2'             => isset($request->line2) ? $request->line2 : null,
-                        'city'              => $request->city,
-                        'county'            => $request->county,
-                        'postcode'          => $request->postcode,
+                        'company'           => isset($data['company']) ? $data['company'] : null,
+                        'line1'             => $data['line1'],
+                        'line2'             => isset($data['line2']) ? $data['line2'] : null,
+                        'city'              => $data['city'],
+                        'county'            => $data['county'],
+                        'postcode'          => $data['postcode'],
                     ],
-                    'logo'                  => isset($request->logo) ? $request->logo : null,
+                    'logo'                  => isset($data['logo']) ? $data['logo'] : null,
                     'imagery'               => $imagery,
                 ]);
 
                 // failed
-                if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new vendor.', 422);
+                if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new user & vendor.', 422);
 
                 // process error
                 if ($response['error']) throw new Exception($response['message'], $response['code']);
@@ -119,13 +120,14 @@ class VendorService extends Service
 
             } catch (Exception $e) {
 
+                dd($e);
+
                 // return exception
                 return $e;
 
             }
 
         } else {
-
             // perform laravel validation failed behaviour
             return $validated;
         }
@@ -139,7 +141,7 @@ class VendorService extends Service
     public function storeNameIsUnique($name)
     {
         // call to api
-        $response = $this->http()->get($this->getPath() . '/tenant/vendors/is-store-name-unique', [
+        $response = $this->http()->get($this->getPath() . '/vendors/is-store-name-unique', [
             'store_name' => $name,
         ]);
 

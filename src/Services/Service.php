@@ -4,6 +4,7 @@ namespace Code23\MarketplaceLaravelSDK\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class Service
 {
@@ -79,42 +80,29 @@ class Service
     /**
      * validate
      */
-    public function validator($request, $rules, $messages)
+    public function validator($data, $rules, $messages)
     {
         try {
 
-            // run laravel validation using passed in rules and messages
-            // throws an exception if validation fails
-            $request->validate($rules, $messages);
+            // validate data
+            $validator = Validator::make($data, $rules, $messages);
 
-            // if passes, return true
+            if($validator->fails()) {
+                return $validator->errors();
+            }
+
+            // if passes validation
             return true;
 
         } catch (Exception $e) {
 
             // if the exception contains a validator object
             if ($e->validator) {
-
-                // flash the errors array to the session
-                $request->session()->flash(
-                    'errors', $e->validator->messages(),
-                );
-
-                // flash the submitted field values for form re-population, except:
-                $request->flashExcept([
-                    'password',
-                    'password_confirmation',
-                    'image_1',
-                    'image_2',
-                    'image_3',
-                    'image_4',
-                ]);
+                // return error messages array
+                return ['errors' => $e->validator->messages()];
             }
 
-            // dd($request->session());
-            // dd($e->getMessage());
-
-            // return the exception message
+            // else, return the exception message
             return $e->getMessage();
         }
     }

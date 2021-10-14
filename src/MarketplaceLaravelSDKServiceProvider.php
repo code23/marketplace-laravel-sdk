@@ -11,6 +11,8 @@ use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
 use Code23\MarketplaceLaravelSDK\Services\UserService;
 use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
 use Code23\MarketplaceLaravelSDK\Services\CategoryService;
+use Code23\MarketplaceLaravelSDK\Services\ImageService;
+use Code23\MarketplaceLaravelSDK\Services\LivewireErrorHandlerService;
 use Code23\MarketplaceLaravelSDK\Services\ProductService;
 use Code23\MarketplaceLaravelSDK\Services\ReferenceValuesService;
 use Code23\MarketplaceLaravelSDK\Services\VendorService;
@@ -65,6 +67,11 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../src/View/Components' => app_path('View/Components'),
             ], 'marketplace-laravel-sdk-view-components');
+
+            // Publishing livewire traits.
+            $this->publishes([
+                __DIR__.'/../src/Http/Livewire/Traits' => app_path('Http/Livewire/Traits'),
+            ], 'marketplace-laravel-sdk-livewire-traits');
 
             // registering package commands
             $this->commands([
@@ -123,6 +130,11 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         // bind the service to an alias
         $this->app->bind('marketplace-laravel-sdk-reference-values', function () {
             return new ReferenceValuesService();
+        });
+
+        // bind the service to an alias
+        $this->app->bind('marketplace-laravel-sdk-images', function () {
+            return new ImageService();
         });
     }
 

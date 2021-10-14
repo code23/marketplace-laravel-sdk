@@ -73,6 +73,7 @@ php artisan vendor:publish --tag=marketplace-laravel-sdk-middleware
 php artisan vendor:publish --tag=marketplace-laravel-sdk-models
 php artisan vendor:publish --tag=marketplace-laravel-sdk-views
 php artisan vendor:publish --tag=marketplace-laravel-sdk-view-components
+php artisan vendor:publish --tag=marketplace-laravel-sdk-livewire-traits
 ```
 
 ## SDK Configuration
