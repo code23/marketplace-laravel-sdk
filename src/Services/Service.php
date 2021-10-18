@@ -4,15 +4,12 @@ namespace Code23\MarketplaceLaravelSDK\Services;
 
 use Exception;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class Service
 {
     public $client;
-    public $options = [
-        'verify' => false,      // no ssl verification required
-        'origin' => 'az-modesty.test',
-    ];
     public $headers = [];
 
     /**
@@ -26,7 +23,7 @@ class Service
         ]);
 
         // new http client with options expecting json from the api
-        $this->client = Http::withHeaders($this->headers)->withOptions($this->options)->acceptJson();
+        $this->client = Http::withHeaders($this->headers)->withOptions($this->getOptions())->acceptJson();
 
         // determine whether tokens already exist
         if (session()->has('oAuth') && isset(session('oAuth')['access_token'])) {
@@ -59,6 +56,22 @@ class Service
     public function getBasePath()
     {
         return config('marketplace-laravel-sdk.api.base_path', 'mpe.test');
+    }
+
+    /**
+     * get options
+     */
+    public function getOptions()
+    {
+        if(!config('marketplace-laravel-sdk.http.origin')) {
+            Log::error('MPE_ORIGIN value missing from env!');
+            throw new Exception("MPE_ORIGIN value missing from env", 500);
+        }
+
+        return [
+            'verify' => false,      // no ssl verification required
+            'origin' => config('marketplace-laravel-sdk.http.origin'),
+        ];
     }
 
     /**

@@ -20,6 +20,10 @@ return [
         'version' => env('MPE_VERSION', 'v1'),
     ],
 
+    'http' => [
+        'origin' => env('MPE_ORIGIN'),
+    ],
+
     'package' => [
         'name' => 'Marketplace Laravel SDK',
     ],
