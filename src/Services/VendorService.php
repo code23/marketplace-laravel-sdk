@@ -10,6 +10,27 @@ use Exception;
 class VendorService extends Service
 {
     /**
+     * Retrieve a vendor by slug
+     */
+    public function getBySlug(String $slug)
+    {
+        // retrieve vendor
+        $response = $this->http()->get($this->getPath() . '/vendors/slug/' . $slug );
+
+        // if not found, return the response
+        if ($response->status() == 404) return $response;
+
+        // if failed for any other reason
+        if ($response->failed()) throw new Exception('A problem was encountered during the vendor retrieval.', 422);
+
+        // process error
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+        // return the response
+        return $response;
+    }
+
+    /**
      * Save a vendor
      */
     public function save(Array $data)
@@ -119,8 +140,6 @@ class VendorService extends Service
                 return true;
 
             } catch (Exception $e) {
-
-                dd($e);
 
                 // return exception
                 return $e;

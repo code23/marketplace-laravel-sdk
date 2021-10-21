@@ -65,8 +65,6 @@ class CategoryService extends Service
             'with' => 'images',
         ]);
 
-        // dd($response);
-
         // failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
 
@@ -76,15 +74,15 @@ class CategoryService extends Service
         // if successful, return categories as collection
         if($response->json()['data']) {
             return collect($response->json()['data'])
-                    ->where('is_active')
-                    // when level 0 specified, only include top level categories
-                    ->when($level === 0, function($q) {
-                        return $q->where('parent_id', null);
-                    });
+                ->where('is_active')
+                // when level 0 specified, only include top level categories
+                ->when($level === 0, function($q) {
+                    return $q->where('parent_id', null);
+                });
         }
 
-        // else return error
-        return ['message' => $response['message']];
+        // if no results
+        return [];
     }
 
     public function productsByCategory($id)
@@ -93,6 +91,9 @@ class CategoryService extends Service
         $response = $this->http()->get($this->getPath() . '/categories/' . $id, [
             'with' => 'products.images,products.vendor',
         ]);
+
+        // category not found
+        if($response->status() == 404) throw new Exception('The given category was not found', 404);
 
         // failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
@@ -107,6 +108,6 @@ class CategoryService extends Service
         }
 
         // else return error
-        return ['message' => $response['message']];
+        return [];
     }
 }
