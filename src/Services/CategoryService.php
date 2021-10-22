@@ -61,14 +61,12 @@ class CategoryService extends Service
     public function list($level = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/categories', [
-            'with' => 'images',
-        ]);
+        $response = $this->http()->get($this->getPath() . '/categories', ['with' => 'images']);
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
 
-        // process error
+        // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return categories as collection
@@ -82,32 +80,24 @@ class CategoryService extends Service
         }
 
         // if no results
-        return collect([]);
+        return collect();
     }
 
     public function productsByCategory($id)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/categories/' . $id, [
-            'with' => 'products.images,products.vendor',
-        ]);
+        $response = $this->http()->get($this->getPath() . '/categories/' . $id, ['with' => 'products.images,products.vendor']);
 
         // category not found
         if($response->status() == 404) throw new Exception('The given category was not found', 404);
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
 
-        // process error
+        // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        // if successful, return categories as collection
-        if ($response->json()['data']) {
-            return collect($response->json()['data']['products'])
-                ->where('is_active');
-        }
-
-        // else return error
-        return [];
+        // return categories as collection
+        return $response->json()['data'] ? collect($response->json()['data']['products'])->where('is_active') : collect();
     }
 }

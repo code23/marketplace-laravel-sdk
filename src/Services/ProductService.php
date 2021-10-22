@@ -11,7 +11,7 @@ class ProductService extends Service
         // call
         $response = $this->http()->get($this->getPath() . '/products');
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the products!', 422);
 
         // return product list
@@ -31,13 +31,13 @@ class ProductService extends Service
             'with' => 'images,vendor',
         ]);
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the latest products.', 422);
 
-        // process error
+        // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        // if successful, return products as collection
-        return $response->json()['data'] ? collect($response->json()['data']) : [];
+        // if successful, return collection or products or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 }

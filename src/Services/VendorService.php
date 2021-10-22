@@ -17,16 +17,16 @@ class VendorService extends Service
         // retrieve vendor
         $response = $this->http()->get($this->getPath() . '/vendors/slug/' . $slug );
 
-        // if not found, return the response
+        // vendor not found
         if ($response->status() == 404) return $response;
 
-        // if failed for any other reason
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the vendor retrieval.', 422);
 
-        // process error
+        // any other errors
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
-        // return the response
+        // return the vendor
         return $response;
     }
 
@@ -131,10 +131,10 @@ class VendorService extends Service
                     'imagery'               => $imagery,
                 ]);
 
-                // failed
+                // api call failed
                 if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new user & vendor.', 422);
 
-                // process error
+                // any other error
                 if ($response['error']) throw new Exception($response['message'], $response['code']);
 
                 return true;
@@ -164,12 +164,13 @@ class VendorService extends Service
             'store_name' => $name,
         ]);
 
-        // failed
-        if ($response->failed()) throw new Exception('A problem was encountered during the request to check vendor name unique.', 422);
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the request to check vendor name is unique.', 422);
 
-        // process error
+        // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
+        // true/false
         return $response;
     }
 }

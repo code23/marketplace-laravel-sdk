@@ -22,7 +22,7 @@ class UserService extends Service
         // call
         $response = $this->http()->get($this->getPath() . '/user');
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);
 
         // return user as user model
@@ -98,10 +98,10 @@ class UserService extends Service
                     'terms'                   => isset($request->terms) ? true : false,
                 ]);
 
-                // failed
+                // api call failed
                 if ($response->failed()) throw new Exception('A problem was encountered during the request for a password reset link.', 422);
 
-                // process error
+                // any other error
                 if ($response['error']) throw new Exception($response['message'], $response['code']);
 
                 // return
@@ -129,10 +129,10 @@ class UserService extends Service
             // call
             $response = $this->http()->delete($this->getPath() . '/user/' . $id);
 
-            // failed
+            // api call failed
             if ($response->failed()) throw new Exception('Unable to delete the user!', 422);
 
-            // process error
+            // any other error
             if ($response['error']) throw new Exception($response['message'], $response['code']);
 
             // return success
@@ -152,10 +152,10 @@ class UserService extends Service
             'email' => $email,
         ]);
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the request to check for existing user.', 422);
 
-        // process error
+        // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         return $response;
@@ -187,10 +187,10 @@ class UserService extends Service
                 'email'      => $request->user()->email,
             ]);
 
-            // failed
+            // api call failed
             if ($response->failed()) throw new Exception('Unable to edit the user!', 422);
 
-            // process error
+            // any other error
             if ($response['error']) throw new Exception($response['message'], $response['code']);
 
             // return success
@@ -210,10 +210,10 @@ class UserService extends Service
             // call api
             $response = $this->http()->post($this->getPath() . '/auth/email/verification-notification/');
 
-            // failed
+            // api call failed
             if ($response->failed()) throw new Exception('Unable to send verification email', 422);
 
-            // process error
+            // any other error
             if ($response['error']) throw new Exception($response['message'], $response['code']);
 
             return 'Verification email sent';
