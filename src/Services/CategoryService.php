@@ -82,7 +82,7 @@ class CategoryService extends Service
         }
 
         // if no results
-        return [];
+        return collect([]);
     }
 
     public function productsByCategory($id)
