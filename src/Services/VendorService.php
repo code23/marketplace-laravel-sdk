@@ -141,6 +141,8 @@ class VendorService extends Service
 
             } catch (Exception $e) {
 
+                dd($e);
+
                 // return exception
                 return $e;
 

@@ -97,7 +97,7 @@ class CategoryService extends Service
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        // return categories as collection
-        return $response->json()['data'] ? collect($response->json()['data']['products'])->where('is_active') : collect();
+        // return products as collection
+        return $response->json()['data'] ? collect($response->json()['data']['products'])->where('status', 'published') : collect();
     }
 }
