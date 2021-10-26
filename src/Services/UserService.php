@@ -13,23 +13,6 @@ use Illuminate\Support\Facades\Log;
 class UserService extends Service
 {
     /**
-     * retrieve user
-     *
-     * @return Authenticatable
-     */
-    public function get($id = null): User
-    {
-        // call
-        $response = $this->http()->get($this->getPath() . '/user');
-
-        // api call failed
-        if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);
-
-        // return user as user model
-        return static::auth((new User())->forceFill($response->json()['data']));
-    }
-
-    /**
      * authenticate the user on the consuming application
      *
      * @param User $user
@@ -159,6 +142,43 @@ class UserService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         return $response;
+    }
+
+    /**
+     * Get the brands the user is following
+     */
+    public function follows()
+    {
+        // call
+        $response = $this->http()->get($this->getPath() . '/user', [
+            'with' => 'profile',
+        ]);
+
+        // user not found
+        if ($response->status() == 404) throw new Exception('User not found!', 404);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);
+
+        // return followed vendors as collection
+        return isset($response->json()['data']['profile']['follows']) ? collect($response->json()['data']['profile']['follows']) : collect();
+    }
+
+    /**
+     * retrieve user
+     *
+     * @return Authenticatable
+     */
+    public function get($id = null): User
+    {
+        // call
+        $response = $this->http()->get($this->getPath() . '/user');
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);
+
+        // return user as user model
+        return static::auth((new User())->forceFill($response->json()['data']));
     }
 
 
