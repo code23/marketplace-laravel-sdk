@@ -47,8 +47,6 @@ class UserService extends Service
 
     /**
      * create new user
-     *
-     * TODO: validate email on mpe db is unique to the team
      */
     public function create(Request $request)
     {
@@ -65,14 +63,14 @@ class UserService extends Service
         ];
 
         // use our validation method in Service
-        $validated = $this->validator($request, $rules, $messages);
+        $validated = $this->validator($request->all(), $rules, $messages);
 
         if ($validated === true) {
 
             try {
 
                 // send request
-                $response = $this->http()->post($this->getPath() . '/user/register', [
+                $response = $this->http()->post($this->getPath() . '/customers/register', [
                     'first_name'              => $request->first_name,
                     'last_name'               => $request->last_name,
                     'email'                   => $request->email,
@@ -82,7 +80,7 @@ class UserService extends Service
                 ]);
 
                 // api call failed
-                if ($response->failed()) throw new Exception('A problem was encountered during the request for a password reset link.', 422);
+                if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new user.', 422);
 
                 // any other error
                 if ($response['error']) throw new Exception($response['message'], $response['code']);
