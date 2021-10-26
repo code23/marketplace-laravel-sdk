@@ -31,6 +31,24 @@ class VendorService extends Service
     }
 
     /**
+     * Retrieve all vendors
+     */
+    public function list()
+    {
+        // retrieve vendors
+        $response = $this->http()->get($this->getPath() . '/vendors');
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the vendors retrieval.', 422);
+
+        // any other errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+        // return the vendor
+        return collect($response['data']);
+    }
+
+    /**
      * Save a vendor
      */
     public function save(Array $data)
