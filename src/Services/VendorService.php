@@ -86,7 +86,7 @@ class VendorService extends Service
             'image_4.max'    => 'Image 4 filesize too large - max 3MB.',
         ];
 
-        // use our validation method in Service
+        // use our validation method in Service.php
         $validated = $this->validator($data, $rules, $messages);
 
         // if validation passes
