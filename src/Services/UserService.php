@@ -195,14 +195,15 @@ class UserService extends Service
     /**
      * update the given user's profile - first name, last name, password
      */
-    public function updateProfile(Request $request, $id)
+    public function updateProfile(Array $data)
     {
         try {
             // call
-            $response = $this->http()->patch($this->getPath() . '/user/' . $id, [
-                'first_name' => $request->first_name ?? $request->user()->first_name,
-                'last_name'  => $request->last_name ?? $request->user()->last_name,
-                'email'      => $request->user()->email,
+            $response = $this->http()->patch($this->getPath() . '/user', [
+                'first_name'            => $data['first_name'],
+                'last_name'             => $data['last_name'],
+                'password'              => $data['password'],
+                'password_confirmation' => $data['password_confirmation'],
             ]);
 
             // api call failed
