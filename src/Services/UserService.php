@@ -13,23 +13,6 @@ use Illuminate\Support\Facades\Log;
 class UserService extends Service
 {
     /**
-     * retrieve user
-     *
-     * @return Authenticatable
-     */
-    public function get($id = null): User
-    {
-        // call
-        $response = $this->http()->get($this->getPath() . '/user');
-
-        // failed
-        if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);
-
-        // return user as user model
-        return static::auth((new User())->forceFill($response->json()['data']));
-    }
-
-    /**
      * authenticate the user on the consuming application
      *
      * @param User $user
@@ -64,8 +47,6 @@ class UserService extends Service
 
     /**
      * create new user
-     *
-     * TODO: validate email on mpe db is unique to the team
      */
     public function create(Request $request)
     {
@@ -82,14 +63,14 @@ class UserService extends Service
         ];
 
         // use our validation method in Service
-        $validated = $this->validator($request, $rules, $messages);
+        $validated = $this->validator($request->all(), $rules, $messages);
 
         if ($validated === true) {
 
             try {
 
                 // send request
-                $response = $this->http()->post($this->getPath() . '/user/register', [
+                $response = $this->http()->post($this->getPath() . '/customers/register', [
                     'first_name'              => $request->first_name,
                     'last_name'               => $request->last_name,
                     'email'                   => $request->email,
@@ -98,10 +79,10 @@ class UserService extends Service
                     'terms'                   => isset($request->terms) ? true : false,
                 ]);
 
-                // failed
-                if ($response->failed()) throw new Exception('A problem was encountered during the request for a password reset link.', 422);
+                // api call failed
+                if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new user.', 422);
 
-                // process error
+                // any other error
                 if ($response['error']) throw new Exception($response['message'], $response['code']);
 
                 // return
@@ -129,10 +110,10 @@ class UserService extends Service
             // call
             $response = $this->http()->delete($this->getPath() . '/user/' . $id);
 
-            // failed
+            // api call failed
             if ($response->failed()) throw new Exception('Unable to delete the user!', 422);
 
-            // process error
+            // any other error
             if ($response['error']) throw new Exception($response['message'], $response['code']);
 
             // return success
@@ -152,13 +133,50 @@ class UserService extends Service
             'email' => $email,
         ]);
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the request to check for existing user.', 422);
 
-        // process error
+        // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         return $response;
+    }
+
+    /**
+     * Get the brands the user is following
+     */
+    public function follows()
+    {
+        // call
+        $response = $this->http()->get($this->getPath() . '/user', [
+            'with' => 'profile',
+        ]);
+
+        // user not found
+        if ($response->status() == 404) throw new Exception('User not found!', 404);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);
+
+        // return followed vendors as collection
+        return isset($response->json()['data']['profile']['follows']) ? collect($response->json()['data']['profile']['follows']) : collect();
+    }
+
+    /**
+     * retrieve user
+     *
+     * @return Authenticatable
+     */
+    public function get($id = null): User
+    {
+        // call
+        $response = $this->http()->get($this->getPath() . '/user');
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);
+
+        // return user as user model
+        return static::auth((new User())->forceFill($response->json()['data']));
     }
 
 
@@ -177,20 +195,21 @@ class UserService extends Service
     /**
      * update the given user's profile - first name, last name, password
      */
-    public function updateProfile(Request $request, $id)
+    public function updateProfile(Array $data)
     {
         try {
             // call
-            $response = $this->http()->patch($this->getPath() . '/user/' . $id, [
-                'first_name' => $request->first_name ?? $request->user()->first_name,
-                'last_name'  => $request->last_name ?? $request->user()->last_name,
-                'email'      => $request->user()->email,
+            $response = $this->http()->patch($this->getPath() . '/user', [
+                'first_name'            => $data['first_name'],
+                'last_name'             => $data['last_name'],
+                'password'              => $data['password'],
+                'password_confirmation' => $data['password_confirmation'],
             ]);
 
-            // failed
+            // api call failed
             if ($response->failed()) throw new Exception('Unable to edit the user!', 422);
 
-            // process error
+            // any other error
             if ($response['error']) throw new Exception($response['message'], $response['code']);
 
             // return success
@@ -210,10 +229,10 @@ class UserService extends Service
             // call api
             $response = $this->http()->post($this->getPath() . '/auth/email/verification-notification/');
 
-            // failed
+            // api call failed
             if ($response->failed()) throw new Exception('Unable to send verification email', 422);
 
-            // process error
+            // any other error
             if ($response['error']) throw new Exception($response['message'], $response['code']);
 
             return 'Verification email sent';

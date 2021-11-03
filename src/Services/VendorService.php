@@ -10,6 +10,45 @@ use Exception;
 class VendorService extends Service
 {
     /**
+     * Retrieve a vendor by slug
+     */
+    public function getBySlug(String $slug)
+    {
+        // retrieve vendor
+        $response = $this->http()->get($this->getPath() . '/vendors/slug/' . $slug );
+
+        // vendor not found
+        if ($response->status() == 404) return $response;
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the vendor retrieval.', 422);
+
+        // any other errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+        // return the vendor
+        return $response;
+    }
+
+    /**
+     * Retrieve all vendors
+     */
+    public function list()
+    {
+        // retrieve vendors
+        $response = $this->http()->get($this->getPath() . '/vendors');
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the vendors retrieval.', 422);
+
+        // any other errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+        // return the vendor
+        return collect($response['data']);
+    }
+
+    /**
      * Save a vendor
      */
     public function save(Array $data)
@@ -47,7 +86,7 @@ class VendorService extends Service
             'image_4.max'    => 'Image 4 filesize too large - max 3MB.',
         ];
 
-        // use our validation method in Service
+        // use our validation method in Service.php
         $validated = $this->validator($data, $rules, $messages);
 
         // if validation passes
@@ -110,10 +149,10 @@ class VendorService extends Service
                     'imagery'               => $imagery,
                 ]);
 
-                // failed
+                // api call failed
                 if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new user & vendor.', 422);
 
-                // process error
+                // any other error
                 if ($response['error']) throw new Exception($response['message'], $response['code']);
 
                 return true;
@@ -145,12 +184,13 @@ class VendorService extends Service
             'store_name' => $name,
         ]);
 
-        // failed
-        if ($response->failed()) throw new Exception('A problem was encountered during the request to check vendor name unique.', 422);
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the request to check vendor name is unique.', 422);
 
-        // process error
+        // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
+        // true/false
         return $response;
     }
 }

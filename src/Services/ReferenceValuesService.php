@@ -21,10 +21,10 @@ class ReferenceValuesService extends Service
 
             // dd($response);
 
-            // failed
+            // api call failed
             if ($response->failed()) throw new Exception('A problem was encountered during the reference value lookup.', 422);
 
-            // process error
+            // any other error
             if ($response['error']) throw new Exception($response['message'], $response['code']);
 
             return $response;

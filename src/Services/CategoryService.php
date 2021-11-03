@@ -61,52 +61,43 @@ class CategoryService extends Service
     public function list($level = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/categories', [
-            'with' => 'images',
-        ]);
+        $response = $this->http()->get($this->getPath() . '/categories', ['with' => 'images']);
 
-        // dd($response);
-
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
 
-        // process error
+        // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return categories as collection
         if($response->json()['data']) {
             return collect($response->json()['data'])
-                    ->where('is_active')
-                    // when level 0 specified, only include top level categories
-                    ->when($level === 0, function($q) {
-                        return $q->where('parent_id', null);
-                    });
+                ->where('is_active')
+                // when level 0 specified, only include top level categories
+                ->when($level === 0, function($q) {
+                    return $q->where('parent_id', null);
+                });
         }
 
-        // else return error
-        return ['message' => $response['message']];
+        // if no results
+        return collect();
     }
 
     public function productsByCategory($id)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/categories/' . $id, [
-            'with' => 'products.images,products.vendor',
-        ]);
+        $response = $this->http()->get($this->getPath() . '/categories/' . $id, ['with' => 'products.images,products.vendor']);
 
-        // failed
+        // category not found
+        if($response->status() == 404) throw new Exception('The given category was not found', 404);
+
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
 
-        // process error
+        // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        // if successful, return categories as collection
-        if ($response->json()['data']) {
-            return collect($response->json()['data']['products'])
-                ->where('is_active');
-        }
-
-        // else return error
-        return ['message' => $response['message']];
+        // return products as collection
+        return $response->json()['data'] ? collect($response->json()['data']['products'])->where('status', 'published') : collect();
     }
 }

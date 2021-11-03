@@ -34,7 +34,7 @@ class AuthenticationService extends Service
         // http request failed
         if ($response->failed()) throw new Exception('A problem was encountered during the authentication process.', 422);
 
-        // process error
+        // any other error
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // determine whether or not we have two factor authentication endpoint in the response
@@ -63,10 +63,10 @@ class AuthenticationService extends Service
             'email' => $email,
         ]);
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the request for a password reset link.', 422);
 
-        // process error
+        // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         return true;
@@ -80,10 +80,10 @@ class AuthenticationService extends Service
         // send request
         $response = $this->http()->post($this->getPath() . '/auth/two-factor/' . $state);
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to ' . $state . ' two factor authentication on your account.', 422);
 
-        // process error
+        // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         return $response->json()['data'] ?? ['message' => $response['message']];
@@ -105,10 +105,10 @@ class AuthenticationService extends Service
             $type => $request->authentication_code,
         ]);
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the process to confirm your identity.', 422);
 
-        // process error
+        // any other error
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], $response['code']);
 
         // authenticate user
@@ -130,10 +130,10 @@ class AuthenticationService extends Service
             'token'     => $request->token,
         ]);
 
-        // failed
+        // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the process of updating your password.', 422);
 
-        // process error
+        // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         return true;
@@ -152,7 +152,7 @@ class AuthenticationService extends Service
         // http request failed
         if ($response->failed()) throw new Exception('Unable to authenticate with MPE!', 422);
 
-        // process error
+        // any other error
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // set session
