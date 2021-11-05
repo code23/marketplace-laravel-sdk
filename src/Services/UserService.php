@@ -100,15 +100,13 @@ class UserService extends Service
     /**
      * delete user
      *
-     * @param int $id User id to delete
-     *
      * @return bool
      */
-    public function delete($id)
+    public function delete()
     {
         try {
             // call
-            $response = $this->http()->delete($this->getPath() . '/user/' . $id);
+            $response = $this->http()->delete($this->getPath() . '/user');
 
             // api call failed
             if ($response->failed()) throw new Exception('Unable to delete the user!', 422);
