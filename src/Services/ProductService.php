@@ -6,6 +6,11 @@ use Exception;
 
 class ProductService extends Service
 {
+    /**
+     * Get a list of all products
+     *
+     * @return Collection
+     */
     public function list()
     {
         // call
@@ -14,14 +19,22 @@ class ProductService extends Service
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the products!', 422);
 
-        // return product list
-        return $response;
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
     /**
-     * get the most recently added products
+     * Get the most recently added products.
+     *
+     * @param Int $count
+     *      (optional) The number of reviews to retrieve (default = 3).
+     *
+     * @return Collection
      */
-    public function latest($count = 3)
+    public function latest(Int $count = 3)
     {
         // call to api
         $response = $this->http()->get($this->getPath() . '/products', [
@@ -37,7 +50,7 @@ class ProductService extends Service
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        // if successful, return collection or products or empty collection
+        // if successful, return collection of products or empty collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 }
