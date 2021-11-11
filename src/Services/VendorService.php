@@ -10,7 +10,37 @@ use Exception;
 class VendorService extends Service
 {
     /**
+     * Follow a vendor
+     *
+     * @param Int $id
+     *      Vendor ID to follow.
+     *
+     * @return Collection
+     *      Update list of followed vendors.
+     */
+    public function follow(Int $id)
+    {
+        // call to api
+        $response = $this->http()->patch($this->getPath() . '/vendors/' . $id . '/follow');
+
+        // vendor not found
+        if ($response->status() == 404) return $response;
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered while attempting to follow the vendor.', 422);
+
+        // any other errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+        // return
+        return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * Retrieve a vendor by slug
+     *
+     * @param String $slug
+     *      Vendor slug to retrieve.
      */
     public function getBySlug(String $slug)
     {
@@ -32,6 +62,8 @@ class VendorService extends Service
 
     /**
      * Retrieve all vendors
+     *
+     * @return Collection of vendors
      */
     public function list()
     {
@@ -159,8 +191,6 @@ class VendorService extends Service
 
             } catch (Exception $e) {
 
-                dd($e);
-
                 // return exception
                 return $e;
 
@@ -174,6 +204,9 @@ class VendorService extends Service
 
     /**
      * Check vendor name is unique
+     *
+     * @param String $name
+     *      The name to check for uniqueness within the tenant
      *
      * @return boolean
      */
@@ -192,5 +225,32 @@ class VendorService extends Service
 
         // true/false
         return $response;
+    }
+
+    /**
+     * Unfollow a vendor
+     *
+     * @param Int $id
+     *      Vendor ID to unfollow.
+     *
+     * @return Collection
+     *      Updated list of followed vendors.
+     */
+    public function unfollow(Int $id)
+    {
+        // call to api
+        $response = $this->http()->patch($this->getPath() . '/vendors/' . $id . '/unfollow');
+
+        // vendor not found
+        if ($response->status() == 404) throw new Exception('Vendor not found.', 404);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered while attempting to unfollow the vendor.', 422);
+
+        // any other errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+        // return updated followed list as collection
+        return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
     }
 }
