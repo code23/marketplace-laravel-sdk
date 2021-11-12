@@ -92,7 +92,6 @@ class VendorService extends Service
             'email'              => ['required', 'email', new UniqueUserEmailInTeam],
             'password'           => config('marketplace-laravel-sdk.passwords.rules'),
             'store_name'         => ['required', new UniqueVendorStoreName],
-            'description'        => 'required',
             'summary'            => 'required',
             'line1'              => 'required',
             'city'               => 'required',
