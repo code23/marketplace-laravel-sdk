@@ -8,10 +8,10 @@ class AddressService extends Service
 {
     public function create(Array $data)
     {
-        // call
+        // api call
         $response = $this->http()->post($this->getPath() . '/address', $data);
 
-        // api call failed
+        // call failed
         if ($response->failed()) throw new Exception('Error during call to create a new address!', 422);
 
         // any other error
@@ -34,7 +34,7 @@ class AddressService extends Service
         return $response;
     }
 
-    public function makeDefault(Int $id)
+    public function setDefault(Int $id)
     {
         // call
         $response = $this->http()->patch($this->getPath() . '/address/' . $id . '/make-default');
@@ -61,27 +61,4 @@ class AddressService extends Service
 
         return $response;
     }
-
-    // /**
-    //  * get the most recently added products
-    //  */
-    // public function latest($count = 3)
-    // {
-    //     // call to api
-    //     $response = $this->http()->get($this->getPath() . '/products', [
-    //         'sort' => 'created_at',
-    //         'status' => 'published',
-    //         'limit' => $count,
-    //         'with' => 'images,vendor',
-    //     ]);
-
-    //     // api call failed
-    //     if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the latest products.', 422);
-
-    //     // any other error
-    //     if ($response['error']) throw new Exception($response['message'], $response['code']);
-
-    //     // if successful, return collection or products or empty collection
-    //     return $response->json()['data'] ? collect($response->json()['data']) : collect();
-    // }
 }
