@@ -16,7 +16,7 @@
                     </h2>
                     <p class="mt-2 text-sm text-gray-600 max-w">
                         Don't have an account?
-                        <a href="{{ route('register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        <a href="{{ route('mls.register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
                             Register
                         </a>
                     </p>
@@ -28,7 +28,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login.authenticate') }}">
+                <form method="POST" action="{{ route('mls.login.authenticate') }}">
                     @csrf
 
                     <div>
@@ -51,7 +51,7 @@
 
                         <div class="text-sm">
                             @if (Route::has('password.forgot'))
-                                <a class="font-medium text-indigo-600 hover:text-indigo-500" href="{{ route('password.forgot') }}">
+                                <a class="font-medium text-indigo-600 hover:text-indigo-500" href="{{ route('mls.password.forgot') }}">
                                     {{ __('Forgot your password?') }}
                                 </a>
                             @endif

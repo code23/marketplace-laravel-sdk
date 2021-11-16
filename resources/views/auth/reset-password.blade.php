@@ -16,16 +16,16 @@
                     </h2>
                     <p class="mt-2 text-sm text-gray-600 max-w">
                         Remember password?
-                        <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        <a href="{{ route('mls.login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
                             Sign in
                         </a>
                     </p>
                 </div>
 
-                <form method="POST" action="{{ route('password.update') }}">
+                <form method="POST" action="{{ route('mls.password.update') }}">
                     @csrf
 
-                    <input type="hidden" name="token" value="{{ $request->route('token') }}">
+                    <input type="hidden" name="token" value="{{ $request->route('mls.token') }}">
 
                     <div class="block">
                         <label for="email">{{ __('Email') }}</label>

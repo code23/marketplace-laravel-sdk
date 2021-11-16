@@ -16,13 +16,13 @@
                     </h2>
                     <p class="mt-2 text-sm text-gray-600 max-w">
                         Already have an account?
-                        <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        <a href="{{ route('mls.login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
                             Sign in
                         </a>
                     </p>
                 </div>
 
-                <form method="POST" action="{{ route('register') }}">
+                <form method="POST" action="{{ route('mls.register') }}">
                     @csrf
 
                     <div>

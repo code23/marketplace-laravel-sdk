@@ -42,7 +42,7 @@
                 @endif
 
                 <div class="flex items-center mt-8">
-                    <a href="{{ route('login') }}" class="flex justify-center py-2 px-3 border border-gray-700 rounded-md">
+                    <a href="{{ route('mls.login') }}" class="flex justify-center py-2 px-3 border border-gray-700 rounded-md">
                         {{ __('Log In') }}
                     </a>
                 </div>

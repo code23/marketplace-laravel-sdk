@@ -152,7 +152,7 @@ return [
     ....
 ```
 
-## Services
+## Creating SDK Services
 
 When creating a Service and its corresponding Facade you will make reference to the service alias from the Facade rather than the service itself. Then remember to register the service with its alias in `MarketplaceLaravelSDKServiceProvider`.
 

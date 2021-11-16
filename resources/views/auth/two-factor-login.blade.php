@@ -22,7 +22,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('two-factor.validation') }}">
+                <form method="POST" action="{{ route('mls.two-factor.validation') }}">
 
                     @csrf
 

@@ -16,7 +16,7 @@
                     </h2>
                     <p class="mt-2 text-sm text-gray-600 max-w">
                         Remember password?
-                        <a href="{{ route('login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        <a href="{{ route('mls.login') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
                             Sign in
                         </a>
                     </p>
@@ -32,7 +32,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('password.email') }}">
+                <form method="POST" action="{{ route('mls.password.email') }}">
                     @csrf
 
                     <div class="block">
