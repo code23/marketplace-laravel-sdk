@@ -86,13 +86,12 @@ class VendorService extends Service
     public function save(Array $data)
     {
         $rules = [
-            'first_name'         => 'required',
+            'first_name'          => 'required',
             'last_name'          => 'required',
             'phone'              => 'required',
             'email'              => ['required', 'email', new UniqueUserEmailInTeam],
             'password'           => config('marketplace-laravel-sdk.passwords.rules'),
             'store_name'         => ['required', new UniqueVendorStoreName],
-            'summary'            => 'required',
             'line1'              => 'required',
             'city'               => 'required',
             'county'             => 'required',
@@ -154,20 +153,12 @@ class VendorService extends Service
                     'email'                 => $data['email'],
                     'phone'                 => $data['phone'],
                     'password'              => $data['password'],
-                    'password_confirmation' => $data['password_confirmation'],
+                    'password_confirmation'  => $data['password_confirmation'],
                     'terms'                 => $data['terms'] ? true : false,
                     'store_name'            => $data['store_name'],
                     'country_id'            => $data['country_id'],
                     'vat'                   => isset($data['vat']) ? $data['vat'] : null,
-                    'meta'                  => [
-                        'website'           => isset($data['website']) ? $data['website'] : null,
-                        'facebook'          => isset($data['facebook']) ? $data['facebook'] : null,
-                        'instagram'         => isset($data['instagram']) ? $data['instagram'] : null,
-                        'description'       => isset($data['description']) ? $data['description'] : null,
-                        'summary'           => isset($data['summary']) ? $data['summary'] : null,
-                        'sku_quantity'      => isset($data['sku_quantity']) ? $data['sku_quantity'] : null,
-                        'referee'           => isset($data['referee']) ? $data['referee'] : null,
-                    ],
+                    'meta'                  => isset($data['meta']) ? $data['meta'] : null,
                     'address'               => [
                         'company'           => isset($data['company']) ? $data['company'] : null,
                         'line1'             => $data['line1'],
