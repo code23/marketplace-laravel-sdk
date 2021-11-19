@@ -9,12 +9,17 @@ class ProductService extends Service
     /**
      * Get a list of all products
      *
+     * @param String $with
+     *      Comma-separated relationships to include in the api call - example: 'images,vendor'
+     *
      * @return Collection
      */
-    public function list()
+    public function list($with = null)
     {
         // call
-        $response = $this->http()->get($this->getPath() . '/products');
+        $response = $this->http()->get($this->getPath() . '/products', [
+            'with' => $with,
+        ]);
 
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the products!', 422);

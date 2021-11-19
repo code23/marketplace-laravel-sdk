@@ -41,11 +41,16 @@ class VendorService extends Service
      *
      * @param String $slug
      *      Vendor slug to retrieve.
+     *
+     * @param String $with
+     *      Vendor relationships (comma separated) to include
      */
-    public function getBySlug(String $slug)
+    public function getBySlug(String $slug, String $with = null)
     {
         // retrieve vendor
-        $response = $this->http()->get($this->getPath() . '/vendors/slug/' . $slug );
+        $response = $this->http()->get($this->getPath() . '/vendors/slug/' . $slug, [
+            'with' => $with
+        ]);
 
         // vendor not found
         if ($response->status() == 404) return $response;
