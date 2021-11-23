@@ -12,27 +12,18 @@ class ReferenceValuesService extends Service
      */
     public function byCategory($category)
     {
-        try {
+        // call to api
+        $response = $this->http()->get($this->getPath() . '/reference-values/lookup', [
+            'category' => $category,
+        ]);
 
-            // call to api
-            $response = $this->http()->get($this->getPath() . '/reference-values/lookup', [
-                'category' => $category,
-            ]);
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the reference value lookup.', 422);
 
-            // dd($response);
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-            // api call failed
-            if ($response->failed()) throw new Exception('A problem was encountered during the reference value lookup.', 422);
-
-            // any other error
-            if ($response['error']) throw new Exception($response['message'], $response['code']);
-
-            return $response;
-
-        } catch (Exception $e) {
-
-            return $e->getMessage();
-
-        }
+        // if successful, return collection of items or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 }
