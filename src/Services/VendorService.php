@@ -127,69 +127,60 @@ class VendorService extends Service
         // if validation passes
         if($validated === true) {
 
-            try {
+            // create imagery array
+            $imagery = [];
 
-                // create imagery array
-                $imagery = [];
+            // set index
+            $i = 1;
 
-                // set index
-                $i = 1;
+            // loop over number of images
+            while ($i <= 4) {
 
-                // loop over number of images
-                while ($i <= 4) {
+                // set field name
+                $image = 'image_' . $i;
 
-                    // set field name
-                    $image = 'image_' . $i;
-
-                    // if field present in data
-                    if ($data[$image]) {
-                        // add data uri with mime type & base64 encoded image to array
-                        $imagery[] = ['file' => MPEImages::prepareImageObject($data[$image])];
-                    }
-
-                    // increment index counter
-                    $i++;
+                // if field present in data
+                if ($data[$image]) {
+                    // add data uri with mime type & base64 encoded image to array
+                    $imagery[] = ['file' => MPEImages::prepareImageObject($data[$image])];
                 }
 
-                // send data
-                $response = $this->http()->post($this->getPath() . '/vendors/register', [
-                    'first_name'            => $data['first_name'],
-                    'last_name'             => $data['last_name'],
-                    'email'                 => $data['email'],
-                    'phone'                 => $data['phone'],
-                    'password'              => $data['password'],
-                    'password_confirmation'  => $data['password_confirmation'],
-                    'terms'                 => $data['terms'] ? true : false,
-                    'store_name'            => $data['store_name'],
-                    'country_id'            => $data['country_id'],
-                    'vat'                   => isset($data['vat']) ? $data['vat'] : null,
-                    'meta'                  => isset($data['meta']) ? $data['meta'] : null,
-                    'address'               => [
-                        'company'           => isset($data['company']) ? $data['company'] : null,
-                        'line1'             => $data['line1'],
-                        'line2'             => isset($data['line2']) ? $data['line2'] : null,
-                        'city'              => $data['city'],
-                        'county'            => $data['county'],
-                        'postcode'          => $data['postcode'],
-                    ],
-                    'logo'                  => isset($data['logo']) ? $data['logo'] : null,
-                    'imagery'               => $imagery,
-                ]);
-
-                // api call failed
-                if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new user & vendor.', 422);
-
-                // any other error
-                if ($response['error']) throw new Exception($response['message'], $response['code']);
-
-                return true;
-
-            } catch (Exception $e) {
-
-                // return exception
-                return $e;
-
+                // increment index counter
+                $i++;
             }
+
+            // send data
+            $response = $this->http()->post($this->getPath() . '/vendors/register', [
+                'first_name'            => $data['first_name'],
+                'last_name'             => $data['last_name'],
+                'email'                 => $data['email'],
+                'phone'                 => $data['phone'],
+                'password'              => $data['password'],
+                'password_confirmation'  => $data['password_confirmation'],
+                'terms'                 => $data['terms'] ? true : false,
+                'store_name'            => $data['store_name'],
+                'country_id'            => $data['country_id'],
+                'vat'                   => isset($data['vat']) ? $data['vat'] : null,
+                'meta'                  => isset($data['meta']) ? $data['meta'] : null,
+                'address'               => [
+                    'company'           => isset($data['company']) ? $data['company'] : null,
+                    'line1'             => $data['line1'],
+                    'line2'             => isset($data['line2']) ? $data['line2'] : null,
+                    'city'              => $data['city'],
+                    'county'            => $data['county'],
+                    'postcode'          => $data['postcode'],
+                ],
+                'logo'                  => isset($data['logo']) ? $data['logo'] : null,
+                'imagery'               => $imagery,
+            ]);
+
+            // api call failed
+            if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new user & vendor.', 422);
+
+            // any other error
+            if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+            return true;
 
         } else {
             // perform laravel validation failed behaviour

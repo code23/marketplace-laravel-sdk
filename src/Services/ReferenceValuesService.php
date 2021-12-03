@@ -3,7 +3,6 @@
 namespace Code23\MarketplaceLaravelSDK\Services;
 
 use Exception;
-use Illuminate\Http\Request;
 
 class ReferenceValuesService extends Service
 {
