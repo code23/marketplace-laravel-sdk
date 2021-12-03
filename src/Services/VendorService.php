@@ -62,7 +62,7 @@ class VendorService extends Service
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // return the vendor
-        return $response;
+        return $response['data'];
     }
 
     /**
