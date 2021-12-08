@@ -245,4 +245,58 @@ class UserService extends Service
 
         }
     }
+
+    /**
+     * Get the user's wishlist
+     */
+    public function wishlist()
+    {
+        // call to api
+        $response = $this->http()->get($this->getPath() . '/wishlist');
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error getting the wishlist', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Add a product to the authed user's wishlist
+     */
+    public function wishlistAdd(int $id)
+    {
+        // call to api
+        $response = $this->http()->patch($this->getPath() . '/wishlist/add/' . $id);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to add product to wishlist', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Remove a product from the authed user's wishlist
+     */
+    public function wishlistRemove(int $id)
+    {
+        // call to api
+        $response = $this->http()->patch($this->getPath() . '/wishlist/remove/' . $id);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to remove product from wishlist.', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
 }
