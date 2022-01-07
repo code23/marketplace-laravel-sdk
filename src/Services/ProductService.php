@@ -64,7 +64,7 @@ class ProductService extends Service
      * Get the most recently added products.
      *
      * @param Int $count
-     *      (optional) The number of reviews to retrieve (default = 3).
+     *      (optional) The number of products to retrieve (default = 3).
      *
      * @return Collection
      */
@@ -80,6 +80,31 @@ class ProductService extends Service
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the latest products.', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Lookup product variant by code
+     *
+     * @param int $id
+     *      Product ID
+     * @param string $code
+     *      Variant code e.g. '1.4-2.12-6.7'
+     *
+     * @return Collection
+     */
+    public function variantLookup(int $id, string $code)
+    {
+        // call
+        $response = $this->http()->get($this->getPath() . '/product/' . $id . '/variants/lookup/' . $code);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to lookup the product variants!', 422);
 
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
