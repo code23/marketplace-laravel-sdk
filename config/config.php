@@ -30,5 +30,9 @@ return [
 
     'passwords' => [
         'rules' => 'required|confirmed|min:8|regex:/[a-z]/|regex:/[A-Z]/',
+    ],
+
+    's3' => [
+        'signed_storage_url_expires_after' => env('SIGNED_STORAGE_URL_EXPIRES_AFTER', 15),
     ]
 ];

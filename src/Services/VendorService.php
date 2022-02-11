@@ -91,34 +91,28 @@ class VendorService extends Service
     public function save(Array $data)
     {
         $rules = [
-            'first_name'          => 'required',
-            'last_name'          => 'required',
-            'phone'              => 'required',
-            'email'              => ['required', 'email', new UniqueUserEmailInTeam],
-            'password'           => config('marketplace-laravel-sdk.passwords.rules'),
-            'store_name'         => ['required', new UniqueVendorStoreName],
-            'line1'              => 'required',
-            'city'               => 'required',
-            'county'             => 'required',
-            'postcode'           => 'required',
-            'country_id'         => 'required',
-            'terms'              => 'required',
-            'image_1'            => 'required|file|max:3072|mimes:jpeg,png',
-            'image_2'            => 'sometimes|nullable|file|max:3072|mimes:jpeg,png',
-            'image_3'            => 'sometimes|nullable|file|max:3072|mimes:jpeg,png',
-            'image_4'            => 'sometimes|nullable|file|max:3072|mimes:jpeg,png',
+            'first_name'        => 'required',
+            'last_name'         => 'required',
+            'phone'             => 'required',
+            'email'             => ['required', 'email', new UniqueUserEmailInTeam],
+            'password'          => config('marketplace-laravel-sdk.passwords.rules'),
+            'store_name'        => ['required', new UniqueVendorStoreName],
+            'line1'             => 'required',
+            'city'              => 'required',
+            'county'            => 'required',
+            'postcode'          => 'required',
+            'country_id'        => 'required',
+            'terms'             => 'required',
+            'images.*.type'     => 'required|in:image/jpeg,image/png',
+            'images.*.size'     => 'required|max:3145728',
+            'images.*.response' => 'required|array'
         ];
 
         $messages = [
-            'password.regex' => 'Password must include at least one upper & lowercase letter.',
-            'image_1.mimes'  => 'Image 1 must be either jpeg or png format.',
-            'image_1.max'    => 'Image 1 filesize too large - max 3MB.',
-            'image_2.mimes'  => 'Image 2 must be either jpeg or png format.',
-            'image_2.max'    => 'Image 2 filesize too large - max 3MB.',
-            'image_3.mimes'  => 'Image 3 must be either jpeg or png format.',
-            'image_3.max'    => 'Image 3 filesize too large - max 3MB.',
-            'image_4.mimes'  => 'Image 4 must be either jpeg or png format.',
-            'image_4.max'    => 'Image 4 filesize too large - max 3MB.',
+            'password.regex'                => 'Password must include at least one upper & lowercase letter.',
+            'images.*.type.in'              => 'Image must be either jpeg or png format.',
+            'images.*.size.max'             => 'Image filesize too large - max 3MB.',
+            'images.*.response.required'    => 'Payload must contain as response from the storage provider.'
         ];
 
         // use our validation method in Service.php
@@ -126,29 +120,6 @@ class VendorService extends Service
 
         // if validation passes
         if($validated === true) {
-
-            // create imagery array
-            $imagery = [];
-
-            // set index
-            $i = 1;
-
-            // loop over number of images
-            while ($i <= 4) {
-
-                // set field name
-                $image = 'image_' . $i;
-
-                // if field present in data
-                if ($data[$image]) {
-                    // add data uri with mime type & base64 encoded image to array
-                    $imagery[] = ['file' => MPEImages::prepareImageObject($data[$image])];
-                }
-
-                // increment index counter
-                $i++;
-            }
-
             // send data
             $response = $this->http()->post($this->getPath() . '/vendors/register', [
                 'first_name'            => $data['first_name'],
@@ -156,7 +127,7 @@ class VendorService extends Service
                 'email'                 => $data['email'],
                 'phone'                 => $data['phone'],
                 'password'              => $data['password'],
-                'password_confirmation'  => $data['password_confirmation'],
+                'password_confirmation' => $data['password_confirmation'],
                 'terms'                 => $data['terms'] ? true : false,
                 'store_name'            => $data['store_name'],
                 'country_id'            => $data['country_id'],
@@ -171,7 +142,7 @@ class VendorService extends Service
                     'postcode'          => $data['postcode'],
                 ],
                 'logo'                  => isset($data['logo']) ? $data['logo'] : null,
-                'imagery'               => $imagery,
+                'images'                => $data['images'],
             ]);
 
             // api call failed

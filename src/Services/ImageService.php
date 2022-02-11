@@ -38,4 +38,21 @@ class ImageService extends Service
         // return image as base64 string with data: prefix and mimetype
         return 'data:' . $image->getMimeType() . ';base64,' . base64_encode($image->get());
     }
+
+    /**
+     * register an image with MPE
+     */
+    public function register($image, $s3response)
+    {
+        // call
+        $response = $this->http()->post($this->getPath() . '/images/register', $data);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error during call to update address!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        return $response;
+    }
 }
