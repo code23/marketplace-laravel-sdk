@@ -4,6 +4,22 @@ namespace Code23\MarketplaceLaravelSDK\Services;
 
 class ImageService extends Service
 {
+    /**
+     * delete an image on MPE
+     */
+    public function delete($image)
+    {
+         // call
+         $response = $this->http()->delete($this->getPath() . '/images/' . $image['id']);
+
+         // api call failed
+         if ($response->failed()) throw new Exception('Error during call to delete an image!', 422);
+ 
+         // any other error
+         if ($response['error']) throw new Exception($response['message'], $response['code']);
+ 
+         return $response;
+    }
 
     /**
      * Return just the image_paths array of the featured image in an images object
