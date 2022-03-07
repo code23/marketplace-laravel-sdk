@@ -13,6 +13,7 @@ use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
 use Code23\MarketplaceLaravelSDK\Services\AddressService;
 use Code23\MarketplaceLaravelSDK\Services\CategoryService;
 use Code23\MarketplaceLaravelSDK\Services\CheckoutService;
+use Code23\MarketplaceLaravelSDK\Services\CurrencyService;
 use Code23\MarketplaceLaravelSDK\Services\ImageService;
 use Code23\MarketplaceLaravelSDK\Services\ProductService;
 use Code23\MarketplaceLaravelSDK\Services\ReferenceValuesService;
@@ -153,6 +154,11 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         $this->app->bind('marketplace-laravel-sdk-checkout', function () {
             return new CheckoutService();
         });
+
+        // bind the service to an alias
+        // $this->app->bind('marketplace-laravel-sdk-currencies', function () {
+        //     return new CurrencyService();
+        // });
     }
 
     /**

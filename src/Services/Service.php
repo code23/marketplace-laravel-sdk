@@ -20,7 +20,9 @@ class Service
         // update headers with origin
         $this->headers = array_merge($this->headers, [
             'X-MPE-Origin' => config('marketplace-laravel-sdk.http.origin'),
+            'X-MPE-Currency' => 'SBD',
         ]);
+
         // TODO - put below back in after the domain matched the request origin
         //'X-MPE-Origin' => request()->header('host') ?? config('marketplace-laravel-sdk.app.url'),
 
