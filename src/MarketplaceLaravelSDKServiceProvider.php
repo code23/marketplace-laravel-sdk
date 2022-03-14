@@ -2,24 +2,25 @@
 
 namespace Code23\MarketplaceLaravelSDK;
 
-use App\View\Components\GuestLayout;
-
 use App\Models\User;
 
-use Code23\MarketplaceLaravelSDK\View\Components\Layout;
-use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
+use App\View\Components\GuestLayout;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
+use Code23\MarketplaceLaravelSDK\Services\BlogService;
 use Code23\MarketplaceLaravelSDK\Services\UserService;
-use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
-use Code23\MarketplaceLaravelSDK\Services\AddressService;
-use Code23\MarketplaceLaravelSDK\Services\CategoryService;
-use Code23\MarketplaceLaravelSDK\Services\CheckoutService;
 use Code23\MarketplaceLaravelSDK\Services\ImageService;
-use Code23\MarketplaceLaravelSDK\Services\ProductService;
-use Code23\MarketplaceLaravelSDK\Services\ReferenceValuesService;
+use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
 use Code23\MarketplaceLaravelSDK\Services\ReviewService;
 use Code23\MarketplaceLaravelSDK\Services\VendorService;
-use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Auth;
+use Code23\MarketplaceLaravelSDK\View\Components\Layout;
+use Code23\MarketplaceLaravelSDK\Services\AddressService;
+use Code23\MarketplaceLaravelSDK\Services\ProductService;
+use Code23\MarketplaceLaravelSDK\Services\CategoryService;
+use Code23\MarketplaceLaravelSDK\Services\CheckoutService;
+use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
+use Code23\MarketplaceLaravelSDK\Services\ReferenceValuesService;
 
 class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
 {
@@ -152,6 +153,11 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         // bind the service to an alias
         $this->app->bind('marketplace-laravel-sdk-checkout', function () {
             return new CheckoutService();
+        });
+
+        // bind the service to an alias
+        $this->app->bind('marketplace-laravel-sdk-blog', function () {
+            return new BlogService();
         });
     }
 
