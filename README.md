@@ -80,6 +80,8 @@ php artisan vendor:publish --tag=marketplace-laravel-sdk-livewire-traits
 
 Before you can connect to the Marketplace Engine you'll need to add the following to your `.env` file. The API key and secret will be provided by a Marketplace Super Admin and the PAC key can be found in the Tenant admin dashboard.  The PAC key combined with the Origin (site url TLD and host only) allows the website to authenticate with MPE without needing a user to login.  This allows the website to consume certain endpoints e.g. product lists, categories etc.
 
+### Authentication
+
 ```bash
 # Marketplace
 MPE_VERSION=v1
@@ -128,6 +130,12 @@ class Kernel extends HttpKernel
         ],
     ];
 ```
+
+### Currencies
+
+If you require multi-currency options, you'll need to include the `MPESessionCurrencies` middleware *below* the `MPEPACAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
+
+This middleware stores the available currencies to an object in the user's session.
 
 ## Usage
 
