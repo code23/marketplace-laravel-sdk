@@ -154,11 +154,6 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         $this->app->bind('marketplace-laravel-sdk-checkout', function () {
             return new CheckoutService();
         });
-
-        // bind the service to an alias
-        // $this->app->bind('marketplace-laravel-sdk-currencies', function () {
-        //     return new CurrencyService();
-        // });
     }
 
     /**
