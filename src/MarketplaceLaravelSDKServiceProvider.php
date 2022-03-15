@@ -46,7 +46,7 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
                 __DIR__.'/../src/Http/Controllers' => app_path('Http/Controllers'),
             ], 'marketplace-laravel-sdk-controllers');
 
-            // publish the controllers
+            // publish the middleware
             $this->publishes([
                 __DIR__.'/../src/Http/Middleware' => app_path('Http/Middleware'),
             ], 'marketplace-laravel-sdk-middleware');
