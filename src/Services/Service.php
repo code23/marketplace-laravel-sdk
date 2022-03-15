@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
+use Code23\MarketplaceLaravelSDK\Facades\MPECurrencies;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -17,10 +18,18 @@ class Service
      */
     public function http()
     {
-        // update headers with origin
+        // update headers with origin and currency
         $this->headers = array_merge($this->headers, [
             'X-MPE-Origin' => config('marketplace-laravel-sdk.http.origin'),
         ]);
+
+        // update headers with active currency code
+        if (session('currencies')) {
+            $this->headers = array_merge($this->headers, [
+                'X-Currency-Code' => MPECurrencies::active()['code'],
+            ]);
+        }
+
         // TODO - put below back in after the domain matched the request origin
         //'X-MPE-Origin' => request()->header('host') ?? config('marketplace-laravel-sdk.app.url'),
 

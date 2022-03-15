@@ -10,15 +10,15 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
 use Code23\MarketplaceLaravelSDK\Services\BlogService;
 use Code23\MarketplaceLaravelSDK\Services\UserService;
-use Code23\MarketplaceLaravelSDK\Services\ImageService;
 use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
+use Code23\MarketplaceLaravelSDK\Services\AddressService;
+use Code23\MarketplaceLaravelSDK\Services\CategoryService;
+use Code23\MarketplaceLaravelSDK\Services\CheckoutService;
+use Code23\MarketplaceLaravelSDK\Services\ImageService;
 use Code23\MarketplaceLaravelSDK\Services\ReviewService;
 use Code23\MarketplaceLaravelSDK\Services\VendorService;
 use Code23\MarketplaceLaravelSDK\View\Components\Layout;
-use Code23\MarketplaceLaravelSDK\Services\AddressService;
 use Code23\MarketplaceLaravelSDK\Services\ProductService;
-use Code23\MarketplaceLaravelSDK\Services\CategoryService;
-use Code23\MarketplaceLaravelSDK\Services\CheckoutService;
 use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
 use Code23\MarketplaceLaravelSDK\Services\ReferenceValuesService;
 
@@ -46,7 +46,7 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
                 __DIR__.'/../src/Http/Controllers' => app_path('Http/Controllers'),
             ], 'marketplace-laravel-sdk-controllers');
 
-            // publish the controllers
+            // publish the middleware
             $this->publishes([
                 __DIR__.'/../src/Http/Middleware' => app_path('Http/Middleware'),
             ], 'marketplace-laravel-sdk-middleware');
