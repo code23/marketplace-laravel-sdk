@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Facades;
 
+use Code23\MarketplaceLaravelSDK\Services\CheckoutService;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Facade;
 
@@ -19,6 +20,6 @@ abstract class MPECheckout extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'marketplace-laravel-sdk-checkout';
+        return CheckoutService::class;
     }
 }

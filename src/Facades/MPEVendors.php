@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Facades;
 
+use Code23\MarketplaceLaravelSDK\Services\VendorService;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -17,6 +18,6 @@ abstract class MPEVendors extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'marketplace-laravel-sdk-vendors';
+        return VendorService::class;
     }
 }

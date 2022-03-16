@@ -162,26 +162,20 @@ return [
 
 ## Creating SDK Services
 
-When creating a Service and its corresponding Facade you will make reference to the service alias from the Facade rather than the service itself. Then remember to register the service with its alias in `MarketplaceLaravelSDKServiceProvider`.
+When creating a Service and its corresponding Facade, reference the Service via it's class name and add a `use` statement at the top of the file.
 
 ### Facade
 ```php
+    use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
+
     class MPEAuthentication extends Facade
     {
         protected static function getFacadeAccessor()
         {
-            // return the alias
-            return 'marketplace-laravel-sdk-authentication';
+            // return the service
+            return AuthenticationService::class;
         }
     }
-```
-
-### MarketplaceLaravelSDKServiceProvider
-```php
-    // bind the service to an alias
-    $this->app->bind('marketplace-laravel-sdk-authentication', function () {
-        return new AuthenticationService();
-    });
 ```
 
 ### Changelog

@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Facades;
 
+use Code23\MarketplaceLaravelSDK\Services\UserService;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Facade;
 
@@ -19,6 +20,6 @@ abstract class MPEUser extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'marketplace-laravel-sdk-user';
+        return UserService::class;
     }
 }
