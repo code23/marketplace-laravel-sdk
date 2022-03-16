@@ -162,21 +162,6 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         $this->app->bind('marketplace-laravel-sdk-blog', function () {
             return new BlogService();
         });
-
-        // bind the service to an alias
-        $this->app->bind('marketplace-laravel-sdk-payment-methods', function () {
-            return new PaymentMethodService();
-        });
-
-        // bind the service to an alias
-        $this->app->bind('marketplace-laravel-sdk-orders', function () {
-            return new OrderService();
-        });
-
-        // bind the service to an alias
-        $this->app->bind('marketplace-laravel-sdk-returns', function () {
-            return new ReturnService();
-        });
     }
 
     /**
