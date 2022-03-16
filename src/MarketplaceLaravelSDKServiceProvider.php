@@ -2,8 +2,6 @@
 
 namespace Code23\MarketplaceLaravelSDK;
 
-use App\View\Components\GuestLayout;
-
 use App\Models\User;
 
 use Code23\MarketplaceLaravelSDK\View\Components\Layout;
