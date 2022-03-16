@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Facades;
 
+use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -21,6 +22,6 @@ class MPEAuthentication extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'marketplace-laravel-sdk-authentication';
+        return AuthenticationService::class;
     }
 }

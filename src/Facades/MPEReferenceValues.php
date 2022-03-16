@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Facades;
 
+use Code23\MarketplaceLaravelSDK\Services\ReferenceValuesService;
 use Illuminate\Support\Facades\Facade;
 
 /**
@@ -17,6 +18,6 @@ abstract class MPEReferenceValues extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'marketplace-laravel-sdk-reference-values';
+        return ReferenceValuesService::class;
     }
 }
