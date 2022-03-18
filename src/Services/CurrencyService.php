@@ -37,15 +37,18 @@ class CurrencyService extends Service
     }
 
     /**
-     * Reset the session currencies data with a fresh collection from API
+     * Rewrites the session currencies and determines the active item.
      */
     public function reset()
     {
-        // get currencies fresh from API
-        $currencies = $this->list();
+        // if a user is logged in get their profile's preferred currency
+        $userCurrencyCode = request()->user() ? request()->user()->profile['currency']['code'] : null;
 
-        // write currencies data to session with default as active
-        return $this->updateSession($currencies);
+        // get the currencies from the user session or API if not in session
+        $currencies = session('currencies') ?? $this->list();
+
+        // write currencies data to session
+        return $this->updateSession($currencies, $userCurrencyCode);
     }
 
     /**
@@ -53,7 +56,7 @@ class CurrencyService extends Service
      *
      * @param string $code A currency code
      */
-    public function setActive(String $code)
+    public function setActiveByCode(String $code)
     {
         // get the currencies from the user session
         $currencies = session('currencies');
@@ -70,26 +73,24 @@ class CurrencyService extends Service
 
     /**
      * Writes currency data to the user's session
+     *
+     * @param $currencies currencies to write to session
+     *
+     * @param string $code Currency code to set as active
      */
     public function updateSession($currencies, String $code = null)
     {
         // write updated currencies collection to session
         return session(['currencies' => $currencies->map(function ($currency) use ($code) {
-            $data = [
-                'code' => $currency['code'],
-                'symbol' => $currency['symbol'] ?? $currency['code'],
+            return [
+                'id'         => $currency['id'],
+                'code'       => $currency['code'],
+                'symbol'     => $currency['symbol'],
+                'label'      => $currency['label'],
                 'is_default' => $currency['is_default'],
-                'is_active' => $currency['is_default'],
+                // if code given set true/false based on it matching this currency, otherwise use the is_default
+                'is_active'  => $code ? $currency['code'] === $code : $currency['is_default'],
             ];
-
-            // if a code was provided
-            if($code) {
-                // if the code matches the current item set as active
-                $data['is_active'] = $currency['code'] === $code ?? false;
-            }
-
-            // save item
-            return $data;
         })]);
     }
 }

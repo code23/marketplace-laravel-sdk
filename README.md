@@ -93,6 +93,8 @@ MPE_PAC_KEY=94736f1c-970b-41c7-a29d-a14cc09d4d13
 ```
 You will also need to add the MPEPACAuthentication middleware to your `web` middleware group in `App\Http\Kernel.php`.  You MUST make sure that it is the last middleware in the middleware `web` group.
 
+You can publish this middleware to your project should you need to make changes to it, just remember to reference the published version from within the kernel rather than the SDK version.
+
 ```php
 <?php
 
@@ -121,7 +123,7 @@ class Kernel extends HttpKernel
     protected $middlewareGroups = [
         'web' => [
             ...
-            \App\Http\Middleware\MPEPACAuthentication::class,
+            \Code23\MarketplaceLaravelSDK\Http\Middleware\MPEPACAuthentication::class,
         ],
 
         'api' => [

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace Code23\MarketplaceLaravelSDK\Http\Middleware;
 
 use Closure;
 use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;

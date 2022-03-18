@@ -197,13 +197,13 @@ class UserService extends Service
      */
     public function updateProfile(Array $data)
     {
-        try {
             // call
             $response = $this->http()->patch($this->getPath() . '/user', [
                 'first_name'            => $data['first_name'],
-                'last_name'             => $data['last_name'],
-                'password'              => $data['password'],
+                'last_name'            => $data['last_name'],
+                'password'             => $data['password'],
                 'password_confirmation' => $data['password_confirmation'],
+                'currency_id'          => $data['currency_id'],
             ]);
 
             // api call failed
@@ -213,10 +213,7 @@ class UserService extends Service
             if ($response['error']) throw new Exception($response['message'], $response['code']);
 
             // return success
-            return $response;
-        } catch (Exception $e) {
-            return $e;
-        }
+            return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
     /**
