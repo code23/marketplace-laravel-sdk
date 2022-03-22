@@ -174,7 +174,7 @@ class AuthenticationService extends Service
         $user = MPEUser::get();
 
         // activate preferred currency
-        if($user) {
+        if($user && isset($user->profile['currency'])) {
             MPECurrencies::setActiveByCode($user->profile['currency']['code']);
         }
     }
