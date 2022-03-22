@@ -21,8 +21,7 @@ class MPESessionCurrencies
     {
         try {
             // retrieve currency options and store data to user session
-            // sets the default currency as active, or user's default if logged in
-            MPECurrencies::reset();
+            MPECurrencies::init();
 
         } catch (Exception $e) {
             Log::error($e->getMessage());

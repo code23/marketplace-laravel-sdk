@@ -2,8 +2,8 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
+use Code23\MarketplaceLaravelSDK\Facades\MPECurrencies;
 use Code23\MarketplaceLaravelSDK\Facades\MPEUser;
-
 use Exception;
 use Illuminate\Http\Request;
 
@@ -171,6 +171,11 @@ class AuthenticationService extends Service
         session()->put('oAuth', $oAuth);
 
         // retrieve up-to-date user
-        MPEUser::get();
+        $user = MPEUser::get();
+
+        // activate preferred currency
+        if($user) {
+            MPECurrencies::setActiveByCode($user->profile['currency']['code']);
+        }
     }
 }

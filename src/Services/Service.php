@@ -24,11 +24,9 @@ class Service
         ]);
 
         // update headers with active currency code
-        if (session('currencies')) {
-            $this->headers = array_merge($this->headers, [
-                'X-Currency-Code' => MPECurrencies::active()['code'],
-            ]);
-        }
+        $this->headers = array_merge($this->headers, [
+            'X-Currency-Code' => MPECurrencies::active() ? MPECurrencies::active()['code'] : null,
+        ]);
 
         // TODO - put below back in after the domain matched the request origin
         //'X-MPE-Origin' => request()->header('host') ?? config('marketplace-laravel-sdk.app.url'),

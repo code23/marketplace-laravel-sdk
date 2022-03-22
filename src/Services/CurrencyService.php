@@ -7,11 +7,13 @@ use Exception;
 class CurrencyService extends Service
 {
     /**
-     * Returns the active currency from the session. Requires MPESessionCurrencies included in kernel.
+     * Returns the active currency from the session.
      */
     public function active()
     {
-        return session('currencies') ? session('currencies')->firstWhere('is_active', true) : null;
+        return (session('currencies') && session('active_currency_code'))
+            ? session('currencies')->firstWhere('code', session('active_currency_code'))
+            : null;
     }
 
     /**
@@ -37,29 +39,44 @@ class CurrencyService extends Service
     }
 
     /**
-     * Rewrites the session currencies and determines the active item.
+     * Retrieves available currencies from API & stores them in session.
      */
-    public function reset()
+    public function init()
     {
-        // if a user is logged in get their profile's preferred currency
-        $userCurrencyCode = request()->user() ? request()->user()->profile['currency']['code'] : null;
+        // if no currencies in session
+        if(!session('currencies')) {
 
-        // get the currencies from the user session or API if not in session
-        $currencies = session('currencies') ?? $this->list();
+            // retrieve and write currencies collection to session
+            session(['currencies' => $this->list()->map(function ($currency) {
+                return [
+                    'id'         => $currency['id'],
+                    'code'       => $currency['code'],
+                    'symbol'     => $currency['symbol'],
+                    'label'      => $currency['label'],
+                    'is_default' => $currency['is_default'],
+                ];
+            })]);
 
-        // write currencies data to session
-        return $this->updateSession($currencies, $userCurrencyCode);
+        }
+
+        // if active_currency_code not in session
+        if(!session('active_currency_code')) {
+            // set to default currency for site
+            session(['active_currency_code' => session('currencies')->firstWhere('is_default', true)['code']]);
+        }
     }
 
     /**
      * Sets the active currency in user's session
      *
      * @param string $code A currency code
+     *
+     * @return boolean
      */
     public function setActiveByCode(String $code)
     {
-        // get the currencies from the user session
-        $currencies = session('currencies');
+        // get the currencies from the user session if available, or API
+        $currencies = session('currencies') ?? $this->list();
 
         // if not found
         if(!$currencies) return false;
@@ -67,30 +84,9 @@ class CurrencyService extends Service
         // if code not found in available currencies
         if(!$currencies->firstWhere('code', $code)) return false;
 
-        // write updated currencies data to session with new active code
-        return $this->updateSession($currencies, $code);
-    }
+        // update active currency in session
+        session(['active_currency_code' => $code]);
 
-    /**
-     * Writes currency data to the user's session
-     *
-     * @param $currencies currencies to write to session
-     *
-     * @param string $code Currency code to set as active
-     */
-    public function updateSession($currencies, String $code = null)
-    {
-        // write updated currencies collection to session
-        return session(['currencies' => $currencies->map(function ($currency) use ($code) {
-            return [
-                'id'         => $currency['id'],
-                'code'       => $currency['code'],
-                'symbol'     => $currency['symbol'],
-                'label'      => $currency['label'],
-                'is_default' => $currency['is_default'],
-                // if code given set true/false based on it matching this currency, otherwise use the is_default
-                'is_active'  => $code ? $currency['code'] === $code : $currency['is_default'],
-            ];
-        })]);
+        return true;
     }
 }
