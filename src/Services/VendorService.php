@@ -99,7 +99,6 @@ class VendorService extends Service
             'store_name'        => ['required', new UniqueVendorStoreName],
             'line1'             => 'required',
             'city'              => 'required',
-            'county'            => 'required',
             'postcode'          => 'required',
             'country_id'        => 'required',
             'terms'             => 'required',
@@ -122,12 +121,12 @@ class VendorService extends Service
         if($validated === true) {
             // send data
             $response = $this->http()->post($this->getPath() . '/vendors/register', [
-                'first_name'            => $data['first_name'],
+                'first_name'             => $data['first_name'],
                 'last_name'             => $data['last_name'],
                 'email'                 => $data['email'],
                 'phone'                 => $data['phone'],
                 'password'              => $data['password'],
-                'password_confirmation' => $data['password_confirmation'],
+                'password_confirmation'  => $data['password_confirmation'],
                 'terms'                 => $data['terms'] ? true : false,
                 'store_name'            => $data['store_name'],
                 'country_id'            => $data['country_id'],
