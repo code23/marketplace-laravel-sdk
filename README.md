@@ -91,6 +91,8 @@ MPE_API_KEY=93ec3d35-f905-47bd-a22e-0090906776f4
 MPE_API_SECRET=PuT2NZZ1fJAL30wxVcovPrS2Al8pVNzJ5nAFsC2b
 MPE_PAC_KEY=94736f1c-970b-41c7-a29d-a14cc09d4d13
 ```
+Make sure your `MPE_API_BASE_PATH` reflects whether you are using an SSL certificate or not. Mismatched http/https in base path and environment will cause request route errors.
+
 You will also need to add the MPEPACAuthentication middleware to your `web` middleware group in `App\Http\Kernel.php`.  You MUST make sure that it is the last middleware in the middleware `web` group.
 
 You can publish this middleware to your project should you need to make changes to it, just remember to reference the published version from within the kernel rather than the SDK version.
