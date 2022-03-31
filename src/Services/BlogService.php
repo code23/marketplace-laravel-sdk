@@ -75,12 +75,39 @@ class BlogService extends Service
     /**
      * Get a single blog post
      *
-     * * @param string $with - optional - relationships to include, comma separated 'images,foobar'
+     * @param int $id - post id to get
+     *
+     * @param string $with - optional - relationships to include, comma separated 'images,foobar'
      */
-    public function showPost($id, $with = null)
+    public function getPost($id, $with = null)
     {
         // send request
         $response = $this->http()->get($this->getPath() . '/blog/posts/' . $id, ['with' => $with]);
+
+        // blog post not found
+        if($response->status() == 404) throw new Exception('The given blog post was not found', 404);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the blog post.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return blog post as collection
+        if($response->json()['data']) return collect($response->json()['data']);
+    }
+
+    /**
+     * Get a single blog post by slug
+     *
+     * @param string $slug - post slug to get
+     *
+     * @param string $with - optional - relationships to include, comma separated 'images,foobar'
+     */
+    public function getPostBySlug($slug, $with = null)
+    {
+        // send request
+        $response = $this->http()->get($this->getPath() . '/blog/posts/slug/' . $slug, ['with' => $with]);
 
         // blog post not found
         if($response->status() == 404) throw new Exception('The given blog post was not found', 404);
