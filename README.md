@@ -141,6 +141,12 @@ If you require multi-currency options, you'll need to include the `MPESessionCur
 
 This middleware stores the available currencies to an object in the user's session.
 
+### Locales
+
+If you require multi-language options, you'll need to include the `MPESessionLocale` middleware *below* the `MPEPACAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
+
+This middleware stores the enabled locales to an object in the user's session.
+
 ## Usage
 
 To ensure that your application authenticates using Marketplace Laravel SDK you'll need to ensure that Laravel knows where to look for users.  To do this you'll need to update your config.auth by commenting out the current driver for `users` and adding the custom driver provided by Marketplace Laravel SDK

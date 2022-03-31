@@ -2,11 +2,12 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
-use Code23\MarketplaceLaravelSDK\Facades\MPECurrencies;
 use Exception;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
+use Code23\MarketplaceLaravelSDK\Facades\MPELocale;
+use Code23\MarketplaceLaravelSDK\Facades\MPECurrencies;
 
 class Service
 {
@@ -21,6 +22,11 @@ class Service
         // update headers with origin and currency
         $this->headers = array_merge($this->headers, [
             'X-MPE-Origin' => config('marketplace-laravel-sdk.http.origin'),
+        ]);
+
+        // update headers with active locale id
+        $this->headers = array_merge($this->headers, [
+            'X-Locale-ID' => MPELocale::active() ? MPELocale::active()['id'] : null,
         ]);
 
         // update headers with active currency code

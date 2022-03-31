@@ -2,10 +2,11 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
-use Code23\MarketplaceLaravelSDK\Facades\MPECurrencies;
-use Code23\MarketplaceLaravelSDK\Facades\MPEUser;
 use Exception;
 use Illuminate\Http\Request;
+use Code23\MarketplaceLaravelSDK\Facades\MPEUser;
+use Code23\MarketplaceLaravelSDK\Facades\MPELocale;
+use Code23\MarketplaceLaravelSDK\Facades\MPECurrencies;
 
 class AuthenticationService extends Service
 {
@@ -172,6 +173,11 @@ class AuthenticationService extends Service
 
         // retrieve up-to-date user
         $user = MPEUser::get();
+
+        // activate preferred locale
+        if($user && isset($user->profile['locale_id'])) {
+            MPELocale::setActiveById($user->profile['locale_id']);
+        }
 
         // activate preferred currency
         if($user && isset($user->profile['currency'])) {
