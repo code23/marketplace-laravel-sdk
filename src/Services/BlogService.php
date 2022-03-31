@@ -10,11 +10,13 @@ class BlogService extends Service
     /**
      * Get a list of blog posts
      *
+     * @param string $with - optional - relationships to include, comma separated 'images,blog_categories'
+     *
      */
-    public function posts()
+    public function posts($with = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/blog/posts', ['with' => 'images,blog_categories']);
+        $response = $this->http()->get($this->getPath() . '/blog/posts', ['with' => $with]);
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the blog posts.', 422);
@@ -23,23 +25,19 @@ class BlogService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return blog posts as collection
-        if($response->json()['data']) {
-            return collect($response->json()['data'])
-                        ->where('status', 'published');
-        }
-
-        // if no results
-        return collect();
+        return $response->json()['data'] ? collect($response->json()['data'])->where('status', 'published') : collect();
     }
 
     /**
-     * Get a list of blog categories with their posts
+     * Get a list of blog categories
+     *
+     * @param string $with - optional - relationships to include, comma separated 'blog_posts,foobar'
      *
      */
-    public function categories()
+    public function categories(String $with = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/blog/categories', ['with' => 'blog_posts']);
+        $response = $this->http()->get($this->getPath() . '/blog/categories', ['with' => $with]);
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the blog categories.', 422);
@@ -48,22 +46,18 @@ class BlogService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return blog categories as collection
-        if($response->json()['data']) {
-            return collect($response->json()['data']);
-        }
-
-        // if no results
-        return collect();
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
     /**
      * Get a list of posts by blog category
      *
+     * @param string $with - optional - relationships to include, comma separated 'blog_posts.images,foobar'
      */
-    public function postsByCategory($id)
+    public function postsByCategory(Int $id, string $with = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/blog/categories/' . $id, ['with' => 'blog_posts']);
+        $response = $this->http()->get($this->getPath() . '/blog/categories/' . $id, ['with' => $with]);
 
         // category not found
         if($response->status() == 404) throw new Exception('The given blog category was not found', 404);
@@ -81,11 +75,12 @@ class BlogService extends Service
     /**
      * Get a single blog post
      *
+     * * @param string $with - optional - relationships to include, comma separated 'images,foobar'
      */
-    public function showPost($id)
+    public function showPost($id, $with = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/blog/posts/' . $id, ['with' => 'blog_categories,images']);
+        $response = $this->http()->get($this->getPath() . '/blog/posts/' . $id, ['with' => $with]);
 
         // blog post not found
         if($response->status() == 404) throw new Exception('The given blog post was not found', 404);
@@ -97,8 +92,6 @@ class BlogService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return blog post as collection
-        if($response->json()['data']) {
-            return collect($response->json()['data']);
-        }
+        if($response->json()['data']) return collect($response->json()['data']);
     }
 }
