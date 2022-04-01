@@ -21,13 +21,17 @@ class ProductService extends Service
      */
     public function get(string $vendorSlug, string $productSlug, $with = null)
     {
-        // call
+        // call api
         $response = $this->http()->get($this->getPath() . '/vendor/' . $vendorSlug . '/product/' . $productSlug, [
             'with' => $with,
+            'status' => 'published',
         ]);
 
         // not found
         if ($response->status() == 404) throw new Exception($response['message'], 404);
+
+        // not published
+        if (isset($response->json()['data']) && empty($response->json()['data']['products'])) throw new Exception('Product not published', 404);
 
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the product!', 422);
