@@ -56,6 +56,7 @@ class ProductService extends Service
         // call
         $response = $this->http()->get($this->getPath() . '/products', [
             'with' => $with,
+            'status' => 'published',
         ]);
 
         // api call failed
