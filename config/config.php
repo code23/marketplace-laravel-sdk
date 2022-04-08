@@ -34,5 +34,9 @@ return [
 
     's3' => [
         'signed_storage_url_expires_after' => env('SIGNED_STORAGE_URL_EXPIRES_AFTER', 15),
-    ]
+    ],
+
+    'products' => [
+        'recently_viewed_max' => env('RECENTLY_VIEWED_PRODUCTS_MAX', 4),
+    ],
 ];
