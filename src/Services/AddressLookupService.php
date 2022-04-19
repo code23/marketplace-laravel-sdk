@@ -29,8 +29,6 @@ class AddressLookupService extends Service
         // if successful, return address as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
 
-        // return json payload
-        if ($response->successful()) return $response->json();
     }
     
 }
