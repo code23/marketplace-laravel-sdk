@@ -199,4 +199,25 @@ class ProductService extends Service
         // if successful, return collection of products or empty collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
+
+    /**
+     * Add to recently viewed products
+     * 
+     * @param array $product
+     * 
+     */
+    public function addToRecentlyViewed($product)
+    {
+        if(!session('recently_viewed_products')) {
+
+            session()->put('recently_viewed_products');
+        }
+
+        // add to recently viewed products collection within session and set collection length limit
+        session([
+            'recently_viewed_products' => collect(session('recently_viewed_products'))
+                                                ->prepend($product)
+                                                ->slice(0, config('marketplace-laravel-sdk.products.recently_viewed_max'))
+        ]);
+    }
 }
