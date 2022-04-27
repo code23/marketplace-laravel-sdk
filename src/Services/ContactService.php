@@ -1,0 +1,28 @@
+<?php
+
+namespace Code23\MarketplaceLaravelSDK\Services;
+
+use Exception;
+
+class ContactService extends Service
+{
+    /**
+     * Submit contact form to MPE
+     *
+     * @param array $data Contact form data
+     *
+     */
+    public function submit(Array $data)
+    {
+        // api call
+        $response = $this->http()->post($this->getPath() . '/contact-form', $data);
+
+        // call failed
+        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to submit the contact form.', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        return $response;
+    }
+}
