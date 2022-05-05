@@ -2,7 +2,6 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
-use Code23\MarketplaceLaravelSDK\Facades\MPEImages;
 use Code23\MarketplaceLaravelSDK\Rules\UniqueUserEmailInTeam;
 use Code23\MarketplaceLaravelSDK\Rules\UniqueVendorStoreName;
 use Exception;
@@ -70,10 +69,10 @@ class VendorService extends Service
      *
      * @return Collection of vendors
      */
-    public function list()
+    public function list($with = null)
     {
         // retrieve vendors
-        $response = $this->http()->get($this->getPath() . '/vendors');
+        $response = $this->http()->get($this->getPath() . '/vendors', ['with' => $with]);
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the vendors retrieval.', 422);

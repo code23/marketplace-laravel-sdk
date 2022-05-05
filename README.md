@@ -182,6 +182,35 @@ When creating a Service and its corresponding Facade, reference the Service via 
     }
 ```
 
+## Onboarding images mixin
+
+Place images.js in resources/js and add to webpack.mix.js:
+```js
+mix.js('resources/js/app.js', 'public/js')
+    ...
+    .js('resources/js/images.js', 'public/js')
+```
+
+Import in app.js like so:
+```js
+import Images from './images.js'
+window.Images = Images
+```
+Add route to web.php:
+```php
+/*
+ |--------------------------------------------------------------------------
+ | Signed Storage URL - S3 bucket access
+ |--------------------------------------------------------------------------
+ |
+ | Used to create signed storage urls allowing the streaming of files from the
+ | front-end prior to registering with MPE
+ |
+ */
+Route::post('/signed-storage-url', [SignedStorageUrlController::class, 'store']);
+```
+
+
 ### Changelog
 
 Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.

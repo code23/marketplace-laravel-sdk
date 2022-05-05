@@ -51,12 +51,14 @@ class ProductService extends Service
      *
      * @return Collection
      */
-    public function list($with = null)
+    public function list(String $with = null, Int $per_page = null, Int $page = null)
     {
         // call
         $response = $this->http()->get($this->getPath() . '/products', [
-            'with' => $with,
-            'status' => 'published',
+            'with'     => $with,
+            'status'   => 'published',
+            'paginate' => $per_page,
+            'page'     => $page,
         ]);
 
         // api call failed
@@ -66,6 +68,54 @@ class ProductService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return collection of products or empty collection
+        // return $response->json()['data'] ? collect($response->json()['data']) : collect();
+        if($per_page) return $response->json() ? collect($response->json()) : collect();
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Get a list of products with filters and pagination
+     *
+     * @param String $with
+     *      Comma-separated relationships to include in the api call - example: 'images,vendor'
+     *
+     * @return Collection
+     */
+    public function listWithFilters(
+        String $with = null,
+        Int $per_page = null,
+        Int $page = null,
+        Array $attributes = null,
+        Array $vendors = null,
+        Array $categories = null,
+        Array $sort = null,
+    )
+    {
+        $data = [
+            'status'        => 'published',
+            'with'          => $with,
+            'mpe_paginate'  => $per_page,
+            'page'          => $page,
+        ];
+
+        // only include params if they are set
+        $attributes ? $data['attributes'] = $attributes : false;
+        $vendors ? $data['vendors'] = $vendors : false;
+        $categories ? $data['categories'] = $categories : false;
+        $sort ? $data['sort'] = $sort : false;
+
+        // call
+        $response = $this->http()->post($this->getPath() . '/products/filter', $data);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the products!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        // return $response->json()['data'] ? collect($response->json()['data']) : collect();
+        if($per_page) return $response->json() ? collect($response->json()) : collect();
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
@@ -130,18 +180,25 @@ class ProductService extends Service
         // get array of category ids from the product
         $categoryIDs = collect($product['categories'])->pluck('id')->toArray();
 
-        // create exclusion list of ids
+        // create exclusion list of this product's id and that of products already found
         $exclude = collect($product['id'])->merge($products->pluck('id'))->toArray();
 
         // loop over them
         foreach ($categoryIDs as $id) {
 
-            // gather products from category
-            $categoryProducts = MPECategories::productsByCategory($id)
+            // retrieve category and products
+            $category = MPECategories::get($id, 'products.images,products.vendor');
+
+            // exclude duplicates and restrict to amount required
+            $categoryProducts = collect($category['products'])
                                     ->whereNotIn('id', $exclude)
+                                    ->where('status', 'published')
                                     ->take($returnCount - $products->count());
 
+            // merge into products collection
             $products = $products->merge($categoryProducts);
+
+            // update exclusion list
             $exclude = collect($product['id'])->merge($products->pluck('id'))->toArray();
 
             // if enough products found
@@ -202,14 +259,13 @@ class ProductService extends Service
 
     /**
      * Add to recently viewed products
-     * 
+     *
      * @param array $product
-     * 
+     *
      */
     public function addToRecentlyViewed($product)
     {
         if(!session('recently_viewed_products')) {
-
             session()->put('recently_viewed_products');
         }
 
@@ -217,6 +273,7 @@ class ProductService extends Service
         session([
             'recently_viewed_products' => collect(session('recently_viewed_products'))
                                                 ->prepend($product)
+                                                ->unique('id')
                                                 ->slice(0, config('marketplace-laravel-sdk.products.recently_viewed_max'))
         ]);
     }

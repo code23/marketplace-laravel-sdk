@@ -19,7 +19,7 @@ class BlogService extends Service
         $response = $this->http()->get($this->getPath() . '/blog/posts', ['with' => $with]);
 
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the blog posts.', 422);
+        if ($response->failed()) throw new Exception($response->body(), 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
