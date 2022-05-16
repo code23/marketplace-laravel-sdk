@@ -38,16 +38,20 @@ class ReviewService extends Service
      * @param Int $profile_id
      *      (optional) The user profile ID to get reviews by.
      *
+     * @param Int $vendor_id
+     *      (optional) The vendor ID to get reviews by.
+     *
      * @return Collection
      */
-    public function list(Int $product_id = null, Int $profile_id = null)
+    public function list(Int $product_id = null, Int $profile_id = null, Int $vendor_id = null, $with = 'product.images')
     {
-        // create params - include products & images
-        $params = ['with' => 'product.images'];
+        // create params & include relationships
+        $params = ['with' => $with];
 
         // conditionally include provided IDs
-        if($product_id) $params['product_id'] = $product_id;
-        if($profile_id) $params['profile_id'] = $profile_id;
+        $product_id ? $params['product_id'] = $product_id : null;
+        $profile_id ? $params['profile_id'] = $profile_id : null;
+        $vendor_id ? $params['vendor_id'] = $vendor_id : null;
 
         // call to api
         $response = $this->http()->get($this->getPath() . '/reviews', $params);
