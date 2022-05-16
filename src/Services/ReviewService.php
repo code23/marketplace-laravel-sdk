@@ -38,12 +38,15 @@ class ReviewService extends Service
      * @param Int $paginate
      *      Pagination items per page. Defaults to all.
      *
+     * @param Int $page
+     *      Pagination page to retrieve. Defaults to 1.
+     *
      * @param String $with
      *      Relationships to include, defaults to product images
 
      * @return Collection
      */
-    public function list(Array $ids = [], $paginate = 0, $with = 'product.images')
+    public function list(Array $ids = [], $paginate = 0, $page = 1, $with = 'product.images')
     {
         // create params & include relationships
         $params = ['with' => $with];
@@ -55,6 +58,7 @@ class ReviewService extends Service
 
         // paginate results
         $paginate ? $params['paginate'] = $paginate : null;
+        $page > 1 ? $params['page'] = $page : null;
 
         // call to api
         $response = $this->http()->get($this->getPath() . '/reviews', $params);
