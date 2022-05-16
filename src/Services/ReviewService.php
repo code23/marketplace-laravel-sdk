@@ -32,26 +32,29 @@ class ReviewService extends Service
      *
      * By default returns all reviews on the site.
      *
-     * @param Int $product_id
-     *      (optional) The product ID to get reviews for.
+     * @param Array $ids
+     *      model and id pairs to filter by. E.g. ['product_id' => 1] or ['profile_id' => 1, 'vendor_id' => 1]
      *
-     * @param Int $profile_id
-     *      (optional) The user profile ID to get reviews by.
+     * @param Int $paginate
+     *      Pagination items per page. Defaults to all.
      *
-     * @param Int $vendor_id
-     *      (optional) The vendor ID to get reviews by.
-     *
+     * @param String $with
+     *      Relationships to include, defaults to product images
+
      * @return Collection
      */
-    public function list(Int $product_id = null, Int $profile_id = null, Int $vendor_id = null, $with = 'product.images')
+    public function list(Array $ids = [], $paginate = 0, $with = 'product.images')
     {
         // create params & include relationships
         $params = ['with' => $with];
 
         // conditionally include provided IDs
-        $product_id ? $params['product_id'] = $product_id : null;
-        $profile_id ? $params['profile_id'] = $profile_id : null;
-        $vendor_id ? $params['vendor_id'] = $vendor_id : null;
+        foreach ($ids as $key => $id) {
+            $params[$key] = $id;
+        }
+
+        // paginate results
+        $paginate ? $params['paginate'] = $paginate : null;
 
         // call to api
         $response = $this->http()->get($this->getPath() . '/reviews', $params);
@@ -63,6 +66,6 @@ class ReviewService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // return reviews list
-        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+        return $response->json()['code'] == 200 ? collect($response->json()) : collect();
     }
 }
