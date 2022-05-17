@@ -6,6 +6,23 @@ use Exception;
 
 class CartService extends Service
 {
+    public function add(Int $productId, Int $quantity = 1, String $variantCode = null)
+    {
+        // send request
+        $response = $this->http()->patch($this->getPath() . '/cart/add/' . $productId, [
+            'quantity' => $quantity,
+            'variant'  => $variantCode,
+        ]);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the cart.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return cart as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
     /**
      * Retrieve cart for authenticated user
      *
@@ -25,7 +42,7 @@ class CartService extends Service
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
 
     }
-    
+
     /**
      * Retrieve cart by Id
      *
