@@ -65,7 +65,7 @@ class CategoryService extends Service
         $response = $this->http()->get($this->getPath() . '/categories', ['with' => $with]);
 
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the categories.', 422);
+        if ($response->failed()) throw new Exception('Error attempting to retrieve the categories.', 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
@@ -102,7 +102,7 @@ class CategoryService extends Service
         if($response->status() == 404) throw new Exception('The given category was not found', 404);
 
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the products by category.', 422);
+        if ($response->failed()) throw new Exception('Error attempting to retrieve the products by category.', 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
@@ -120,7 +120,7 @@ class CategoryService extends Service
         if($response->status() == 404) throw new Exception('The given category was not found', 404);
 
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the products by category.', 422);
+        if ($response->failed()) throw new Exception('Error attempting to retrieve the products by category.', 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);

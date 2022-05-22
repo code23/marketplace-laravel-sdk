@@ -138,7 +138,7 @@ class ProductService extends Service
         ]);
 
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the latest products.', 422);
+        if ($response->failed()) throw new Exception('Error attempting to retrieve the latest products.', 422);
 
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);

@@ -270,7 +270,7 @@ class UserService extends Service
         $response = $this->http()->patch($this->getPath() . '/wishlist/add/' . $id);
 
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to add product to wishlist', 422);
+        if ($response->failed()) throw new Exception('Error attempting to add product to wishlist', 422);
 
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
@@ -288,7 +288,7 @@ class UserService extends Service
         $response = $this->http()->patch($this->getPath() . '/wishlist/remove/' . $id);
 
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to remove product from wishlist.', 422);
+        if ($response->failed()) throw new Exception('Error attempting to remove product from wishlist.', 422);
 
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);

@@ -81,7 +81,7 @@ class AuthenticationService extends Service
         $response = $this->http()->post($this->getPath() . '/auth/two-factor/' . $state);
 
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to ' . $state . ' two factor authentication on your account.', 422);
+        if ($response->failed()) throw new Exception('Error attempting to ' . $state . ' two factor authentication on your account.', 422);
 
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);

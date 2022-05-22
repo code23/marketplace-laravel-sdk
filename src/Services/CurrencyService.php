@@ -29,7 +29,7 @@ class CurrencyService extends Service
         ]);
 
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered whilst retrieving the currencies.', 422);
+        if ($response->failed()) throw new Exception('Error retrieving the currencies.', 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);

@@ -11,7 +11,7 @@ class AddressLookupService extends Service
      * Retrieve address by postcode
      *
      * @param String $postcode
-     * 
+     *
      */
     public function findByPostcode(String $postcode)
     {
@@ -21,7 +21,7 @@ class AddressLookupService extends Service
         ]);
 
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered whilst attempting to retrieve the address.', 422);
+        if ($response->failed()) throw new Exception('Error attempting to retrieve the address.', 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
@@ -30,5 +30,5 @@ class AddressLookupService extends Service
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
 
     }
-    
+
 }
