@@ -151,14 +151,17 @@ class CartService extends Service
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
-    public function updateGiftOptions($groupId, $isGift, $message)
+    public function updateGiftOptions($groupId, $isGift, $message = null)
     {
+        $data = [
+            'cart_group_id' => $groupId,
+            'is_gift' => $isGift,
+        ];
+
+        $message ? $data['gift_message'] = $message : null;
+
         // send request
-        $response = $this->http()->patch($this->getPath() . '/cart/is-gift/', [
-            'cart_group_id'  => $groupId,
-            'is_gift'  => $isGift,
-            'gift_message'  => $message,
-        ]);
+        $response = $this->http()->patch($this->getPath() . '/cart/is-gift/', $data);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to update gift options.', 422);
