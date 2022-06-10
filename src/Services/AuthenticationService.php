@@ -32,7 +32,7 @@ class AuthenticationService extends Service
         $response = $this->http()->post($this->getAuthPath() . '/token', $payload);
 
         // http request failed
-        if ($response->failed()) throw new Exception('A problem was encountered during the authentication process.', 422);
+        // if ($response->failed()) throw new Exception('A problem was encountered during the authentication process.', 422);
 
         // any other error
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);

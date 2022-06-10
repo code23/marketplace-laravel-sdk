@@ -17,63 +17,6 @@ class CartService extends Service
      */
     public function add(Int $productId, Int $quantity = 1, Int $variantId = null, Array $attributes = null)
     {
-        // // get user's cart
-        // $cart = $this->get();
-
-        // // if a non-empty cart exists
-        // if($cart && !empty($cart['cart_groups'])) {
-
-        //     // loop over cart groups
-        //     foreach ($cart['cart_groups'] as $group) {
-
-        //         // loop over the items
-        //         foreach ($group['items'] as $item) {
-
-        //             // if the item is a variant
-        //             if($item['variant_id']) {
-
-        //                 // if the variant ids match
-        //                 if ($item['variant_id'] == $variantId) {
-        //                     $att_matching = 0;
-
-        //                     // we need to compare all the attribute data.
-        //                     // so, for every attribute in the item
-        //                     foreach ($item['attributes_meta'] as $cart_attribute) {
-
-        //                         // loop over the request attributes
-        //                         foreach ($attributes as $attribute) {
-
-        //                             // if both have the same attribute_id and attribute_value
-        //                             if ($attribute['attribute_id'] == $cart_attribute['attribute_id'] &&
-        //                                 $attribute['attribute_value'] == $cart_attribute['attribute_value']) {
-
-        //                                 // count the matching attribute
-        //                                 $att_matching++;
-        //                             }
-        //                         }
-        //                     }
-
-        //                     // if all of the attributes match
-        //                     if($att_matching == count($attributes)) {
-
-        //                         // return update quantity on item['id']
-
-        //                     }
-
-        //                 }
-
-        //             // if the product ids match
-        //             } else if ($item['product_id'] == $productId) {
-
-        //                 // return update qty
-
-        //             }
-
-        //         }
-        //     }
-        // }
-
-
         // add to cart
         $response = $this->http()->patch($this->getPath() . '/cart/add/' . $productId, [
             'quantity' => $quantity,
