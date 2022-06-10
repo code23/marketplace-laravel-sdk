@@ -73,15 +73,18 @@ class CartService extends Service
         //     }
         // }
 
+
         // add to cart
         $response = $this->http()->patch($this->getPath() . '/cart/add/' . $productId, [
             'quantity' => $quantity,
-            'variant_id' => $variantId,
-            'attributes' => $attributes,
+            'variant_id' => $variantId ?? [],
+            'attributes' => $attributes ?? [],
         ]);
 
+        // dump($response);
+
         // api call failed
-        if ($response->failed()) throw new Exception('Error attempting to add to the cart.', 422);
+        if ($response->failed()) throw new Exception('Error attempting to add to the cart.' . $response['message'], 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
