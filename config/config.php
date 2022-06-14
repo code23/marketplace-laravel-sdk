@@ -10,12 +10,13 @@ return [
 
     'api' => [
         'base_path' => env('MPE_API_BASE_PATH', 'mpe.test'),
-        'keys' => [
-            'id'        => env('MPE_API_KEY'),
-            'secret'    => env('MPE_API_SECRET'),
+        'password_keys' => [
+            'id'        => env('MPE_PASSWORD_KEY'),
+            'secret'    => env('MPE_PASSWORD_SECRET'),
         ],
-        'pac_keys' => [
-            'id'        => env('MPE_PAC_KEY'),
+        'client_credential_keys' => [
+            'id'        => env('MPE_CLIENT_CREDENTIAL_KEY'),
+            'secret'    => env('MPE_CLIENT_CREDENTIAL_SECRET'),
         ],
         'version' => env('MPE_VERSION', 'v1'),
     ],

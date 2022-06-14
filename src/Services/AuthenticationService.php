@@ -21,8 +21,8 @@ class AuthenticationService extends Service
         // prepare payload
         $payload = [
             'grant_type'    => 'password',
-            'client_id'     => config('marketplace-laravel-sdk.api.keys.id'),
-            'client_secret' => config('marketplace-laravel-sdk.api.keys.secret'),
+            'client_id'     => config('marketplace-laravel-sdk.api.password_keys.id'),
+            'client_secret' => config('marketplace-laravel-sdk.api.password_keys.secret'),
             'username'      => $request->email,
             'password'      => $request->password,
             'scope'         => ''
@@ -142,24 +142,26 @@ class AuthenticationService extends Service
     /**
      * authenticate site
      */
-    public function authenticateSite(Request $request)
+    public function authenticateSite()
     {
-        // retrieve oAuth tokens
-        $response = $this->http()->post($this->getPath() . '/auth/site', [
-            'client_id' => config('marketplace-laravel-sdk.api.pac_keys.id'),
-        ]);
+        // prepare payload
+        $payload = [
+            'grant_type'    => 'client_credentials',
+            'client_id'     => config('marketplace-laravel-sdk.api.client_credential_keys.id'),
+            'client_secret' => config('marketplace-laravel-sdk.api.client_credential_keys.secret'),
+        ];
 
-        // http request failed
-        if ($response->failed()) throw new Exception('Unable to authenticate with MPE!', 422);
+        // retrieve oAuth tokens
+        $response = $this->http()->post($this->getAuthPath() . '/token', $payload);
 
         // any other error
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // set session
-        session()->put('oAuth', $response['data']);
+        session()->put('oAuth', $response->json());
 
-        // return
-        return $response['data'];
+        // back to welcome - login succeeded
+        return true;
     }
 
     /**
