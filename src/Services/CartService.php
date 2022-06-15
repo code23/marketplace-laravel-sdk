@@ -15,16 +15,20 @@ class CartService extends Service
      * @param Array|null $attributes
      * @return Collection
      */
-    public function add(Int $productId, Int $quantity = 1, Int $variantId = null, Array $attributes = null)
+    public function add(Int $productId, Int $quantity = 1, Int $variantId = null, Array $attributes = null, String $with = null)
     {
-        // add to cart
-        $response = $this->http()->patch($this->getPath() . '/cart/add/' . $productId, [
+        // create params array
+        $params = [
             'quantity' => $quantity,
-            'variant_id' => $variantId ?? [],
-            'attributes' => $attributes ?? [],
-        ]);
+        ];
 
-        // dump($response);
+        // conditionally add given params
+        if($variantId) $params['variant_id'] = $variantId;
+        if($attributes) $params['attributes'] = $attributes;
+        if($with) $params['with'] = $with;
+
+        // add to cart
+        $response = $this->http()->patch($this->getPath() . '/cart/add/' . $productId, $params);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to add to the cart.' . $response['message'], 422);
@@ -32,15 +36,21 @@ class CartService extends Service
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
+        // check for cart id and save to session
+        if(isset($response->json()['data']['id']) && $response->json()['data']['id']) {
+            session(['cart_id' => $response->json()['data']['id']]);
+        }
+
         // if successful, return cart as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
-    public function applyCoupon($code, $groupId)
+    public function applyCoupon($code, $groupId, String $with = null)
     {
         // send request
         $response = $this->http()->patch($this->getPath() . '/cart/apply-coupon/' . $code, [
             'cart_group_id'  => $groupId,
+            'with'           => $with,
         ]);
 
         // api call failed
@@ -53,11 +63,12 @@ class CartService extends Service
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
-    public function applyPromotion($id, $groupId)
+    public function applyPromotion($id, $groupId, String $with = null)
     {
         // send request
         $response = $this->http()->patch($this->getPath() . '/cart/apply-promotion/' . $id, [
             'cart_group_id'  => $groupId,
+            'with'           => $with,
         ]);
 
         // api call failed
@@ -97,11 +108,12 @@ class CartService extends Service
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
-    public function updateGiftOptions($groupId, $isGift, $message = null)
+    public function updateGiftOptions($groupId, $isGift, $message = null, String $with = null)
     {
         $data = [
             'cart_group_id' => $groupId,
-            'is_gift' => $isGift,
+            'is_gift'       => $isGift,
+            'with'          => $with,
         ];
 
         $message ? $data['gift_message'] = $message : null;
@@ -126,11 +138,12 @@ class CartService extends Service
      * @param Int|null $variantId
      * @return Collection
      */
-    public function remove(Int $productId, Int $variantId = null)
+    public function remove(Int $productId, Int $variantId = null, String $with = null)
     {
         // send request
         $response = $this->http()->patch($this->getPath() . '/cart/remove/' . $productId, [
             'variant_id'  => $variantId,
+            'with'        => $with,
         ]);
 
         // api call failed
@@ -152,7 +165,9 @@ class CartService extends Service
     public function get(string $with = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/cart');
+        $response = $this->http()->get($this->getPath() . '/cart', [
+            'with' => $with,
+        ]);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the cart.', 422);
@@ -170,10 +185,12 @@ class CartService extends Service
      *
      * @param Int $id
      */
-    public function getById(Int $id)
+    public function getById(Int $id, String $with = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/cart/' . $id);
+        $response = $this->http()->get($this->getPath() . '/cart/' . $id, [
+            'with' => $with,
+        ]);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the cart.', 422);
@@ -191,12 +208,13 @@ class CartService extends Service
      *
      * @param Int $id
      */
-    public function updateQuantity(Int $productId, Int $variantId, Int $quantity)
+    public function updateQuantity(Int $productId, Int $variantId, Int $quantity, String $with = null)
     {
         // send request
         $response = $this->http()->patch($this->getPath() . '/cart/update-quantity/' . $productId, [
             'variant_id' => $variantId,
-            'quantity' => $quantity,
+            'quantity'   => $quantity,
+            'with'       => $with,
         ]);
 
         // api call failed
