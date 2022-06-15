@@ -28,6 +28,13 @@ class Service
             'X-Currency-Code' => MPECurrencies::active() ? MPECurrencies::active()['code'] : null,
         ]);
 
+        // check session for cart id
+        if(session('cart_id')) {
+            $this->headers = array_merge($this->headers, [
+                'X-Cart-Id' => session('cart_id'),
+            ]);
+        }
+
         // TODO - put below back in after the domain matched the request origin
         //'X-MPE-Origin' => request()->header('host') ?? config('marketplace-laravel-sdk.app.url'),
 
