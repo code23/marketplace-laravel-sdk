@@ -88,13 +88,16 @@ class PaymentMethodService extends Service
         return $response;
     }
 
-    public function update(Int $id, array $data)
+    /**
+     * Update card details
+     */
+    public function update(array $data)
     {
         // call
-        $response = $this->http()->patch($this->getPath() . '/payment-method/' . $id, $data);
+        $response = $this->http()->patch($this->getPath() . '/settings/gateway/stripe/cards/update', $data);
 
         // api call failed
-        if ($response->failed()) throw new Exception('Error during call to update payment method!', 422);
+        if ($response->failed()) \Log::info($response->body()); //throw new Exception('Error during call to update payment method!', 422);
 
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
