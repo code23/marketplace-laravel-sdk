@@ -57,12 +57,13 @@ class CheckoutService extends Service
      * @param boolean $save - save the shipping address to the user profile?
      * @return Collection updated cart array
      */
-    public function details(Array $address, Bool $save = false)
+    public function details(Array $address, Bool $save = false, String $with = null)
     {
-        // add to cart
+        // save step 1
         $response = $this->http()->patch($this->getPath() . '/checkout/details/', [
-            'shipping_address' => $address,
+            'shipping_address'    => $address,
             'customer_saved_info' => $save,
+            'with'                => $with,
         ]);
 
         // api call failed
@@ -75,12 +76,13 @@ class CheckoutService extends Service
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
-    public function setCartGroupShippingService($groupId, $serviceId)
+    public function setCartGroupShippingService($groupId, $serviceId, String $with = null)
     {
         // call to api
         $response = $this->http()->patch($this->getPath() . '/checkout/shipping', [
-            'cart_group_id' => $groupId,
+            'cart_group_id'       => $groupId,
             'shipping_service_id' => $serviceId,
+            'with'                => $with,
         ]);
 
         // api call failed
