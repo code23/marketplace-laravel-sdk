@@ -11,17 +11,20 @@ class CheckoutService extends Service
      */
     public function setupDefaultPayment($payload)
     {
+        // \Log::info($payload);
         $response = $this->http()->post($this->getPath() . '/settings/gateway/stripe/setDefaultPaymentMethod', [
             'payment_method' => $payload['payment_method'], // Payment method provided by Stripe
-            'cart' => $payload['cart'], // Cart ID
+            'cart' => $payload['cart'] ?? null, // Cart ID
             'model' => 'App\\Models\\Api\\v1\\Tenant\\Users\\Profile', // Pass the model used
-            //'id' => $payload['user']['id'], // Pass the UUID or ID of the user with a Stripe account
+            'id' => $payload['user'], // Pass the UUID or ID of the user with a Stripe account
         ]);
 
         if ($response->failed()) throw new Exception('Unable to create Stripe customer', 422);
 
-        // Process Payment
-        $this->processPayment($payload['cart'], 'App\\Models\\Api\\v1\\Tenant\\Users\\Profile');
+        //Process Payment
+        if(!$response->failed() && $payload['process_payment'] === true) {
+            $this->processPayment($payload['cart'], 'App\\Models\\Api\\v1\\Tenant\\Users\\Profile');
+        }
 
         return $response;
 
