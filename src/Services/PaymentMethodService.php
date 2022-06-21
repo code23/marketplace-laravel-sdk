@@ -94,7 +94,6 @@ class PaymentMethodService extends Service
     public function update(array $data)
     {
         if($data) {
-
             // call
             $response = $this->http()->patch($this->getPath() . '/settings/gateway/stripe/cards/update', $data);
 

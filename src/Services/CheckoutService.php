@@ -23,7 +23,7 @@ class CheckoutService extends Service
 
         //Process Payment
         if(!$response->failed() && $payload['process_payment'] === true) {
-            $this->processPayment($payload['cart'], 'App\\Models\\Api\\v1\\Tenant\\Users\\Profile');
+            $this->processPayment($payload['cart'], 'App\\Models\\Api\\v1\\Tenant\\Users\\Profile', $card = null);
         }
 
         return $response;
