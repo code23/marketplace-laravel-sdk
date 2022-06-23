@@ -33,11 +33,9 @@ class CheckoutService extends Service
     /**
      * Process payment
      */
-    public function processPayment($cart = null, $model = null, $card = null)
+    public function processPayment($card = null)
     {
         $response = $this->http()->patch($this->getPath() . '/checkout/payment', [
-            'cart' => $cart, // Cart ID
-            'model' => $model, // Pass the model used
             'card' => $card
         ]);
 
