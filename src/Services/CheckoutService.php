@@ -7,48 +7,38 @@ use Exception;
 class CheckoutService extends Service
 {
     /**
-     * Retrieve payment methods from Stripe and charge the customer
+     * Add a new card and set it as default payment method
      */
-    public function setupDefaultPayment($payload)
+    public function addNewDefaultCard($payload)
     {
-        // \Log::info($payload);
         $response = $this->http()->post($this->getPath() . '/settings/gateway/stripe/setDefaultPaymentMethod', [
             'payment_method' => $payload['payment_method'], // Payment method provided by Stripe
-            'cart' => $payload['cart'] ?? null, // Cart ID
-            'model' => 'App\\Models\\Api\\v1\\Tenant\\Users\\Profile', // Pass the model used
-            'id' => $payload['user'], // Pass the UUID or ID of the user with a Stripe account
         ]);
 
-        if ($response->failed()) throw new Exception('Unable to create Stripe customer', 422);
+        // error
+        // if ($response->failed()) throw new Exception('Unable to create Stripe customer', 422);
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        //Process Payment
-        if(!$response->failed() && $payload['process_payment'] === true) {
-            $this->processPayment($payload['cart'], 'App\\Models\\Api\\v1\\Tenant\\Users\\Profile', $card = null);
-        }
-
-        return $response;
-
+        // if successful
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
     /**
      * Process payment
      */
-    public function processPayment($card = null)
+    public function processPayment($card = null, $billingAddress = null)
     {
         $response = $this->http()->patch($this->getPath() . '/checkout/payment', [
-            'card' => $card
+            'card' => $card,
+            'billing_address' => $billingAddress,
         ]);
 
-        if ($response->failed()) {
-            throw new Exception('Unable to create order: ' . $response->body(), 422);
-        }
+        // error
+        // if ($response->failed()) throw new Exception('Unable to create order: ' . $response->body(), 422);
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        // any other error
-        if ($response['error']) {
-            throw new Exception($response['message'], $response['code']);
-        }
-
-        return $response;
+        // if successful
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
     /*
