@@ -35,12 +35,6 @@ class Service
             ]);
         }
 
-        if(session('oAuth-grant')) {
-            $this->headers = array_merge($this->headers, [
-                'X-Oauth-Grant' => session('oAuth-grant'),
-            ]);
-        }
-
         // TODO - put below back in after the domain matched the request origin
         //'X-MPE-Origin' => request()->header('host') ?? config('marketplace-laravel-sdk.app.url'),
 
