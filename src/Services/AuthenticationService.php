@@ -159,6 +159,7 @@ class AuthenticationService extends Service
 
         // set session
         session()->put('oAuth', $response->json());
+        session()->put('oAuth-grant', 'client_credentials');
 
         // back to welcome - login succeeded
         return true;
@@ -171,6 +172,7 @@ class AuthenticationService extends Service
     {
         // set session
         session()->put('oAuth', $oAuth);
+        session()->put('oAuth-grant', 'password');
 
         // retrieve up-to-date user
         $user = MPEUser::get();
