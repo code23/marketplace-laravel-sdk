@@ -81,7 +81,7 @@ class VendorService extends Service
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // return the vendor
-        return collect($response['data']);
+        return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
     }
 
     /**

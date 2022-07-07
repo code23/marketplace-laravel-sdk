@@ -17,6 +17,19 @@ class PaymentMethodService extends Service
         // call failed
         if ($response->failed()) throw new Exception('Error retrieving Stripe keys', 422);
 
+        return $response->json()['data'] ? $response->json()['data']['publishable_key'] : null;
+    }
+
+    /**
+     * Setup Stripe Payment Intent
+     */
+    public function getPaymentIntent(array $data)
+    {
+        $response = $this->http()->post($this->getPath() . '/settings/gateway/stripe/setupIntent', $data);
+
+        // call failed
+        if ($response->failed()) throw new Exception('Error retrieving Stripe keys', 422);
+
         return $response->json()['data'] ? collect($response->json()['data']) : null;
     }
 
@@ -25,7 +38,6 @@ class PaymentMethodService extends Service
      */
     public function getSetupIntent(array $data)
     {
-
         $response = $this->http()->post($this->getPath() . '/settings/gateway/stripe/setupIntent', $data);
 
         // call failed
