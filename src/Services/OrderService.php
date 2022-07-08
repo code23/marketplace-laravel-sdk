@@ -35,7 +35,7 @@ class OrderService extends Service
     }
 
     /**
-     * Get a single Order 
+     * Get a single Order
      *
      * @param Int $id
      *      The Order ID to show.
@@ -52,7 +52,31 @@ class OrderService extends Service
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        // return order 
+        // return order
         return $response;
+    }
+
+    /**
+     * Get a single Order by order number
+     *
+     * @param String $number
+     *      The Order ID to show.
+     */
+    public function getByNumber(String $number, String $with = null)
+    {
+        // TODO : Check for final API route
+        // call api
+        $response = $this->http()->get($this->getPath() . '/orders/number/' . $number, [
+            'with' => $with
+        ]);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the order!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // return order
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 }
