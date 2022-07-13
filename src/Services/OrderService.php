@@ -12,15 +12,14 @@ class OrderService extends Service
      *
      * @return Collection
      */
-    public function list()
+    public function list($with = 'product.images, currency')
     {
         // create params - include products & images
-        $params = ['with' => 'product.images'];
+        $params = [
+            'with' => $with,
+            'profile_id' => auth()->user()->profile['id'],
+        ];
 
-        // get the authenticated user's profile id
-        $params['profile_id'] = Auth::user()->profile->id;
-
-        // TODO : Check for final API route
         // call to api
         $response = $this->http()->get($this->getPath() . '/orders', $params);
 
