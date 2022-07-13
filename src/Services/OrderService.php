@@ -62,7 +62,7 @@ class OrderService extends Service
      * @param String $number
      *      The Order ID to show.
      */
-    public function getByNumber(String $number, String $with = null)
+    public function getByNumberByCustomer(String $number, String $with = 'currency,transaction,order_groups.vendor,shipping_address,billing_address')
     {
         // TODO : Check for final API route
         // call api
@@ -71,7 +71,7 @@ class OrderService extends Service
         ]);
 
         // api call failed
-        if ($response->failed()) throw new Exception('Unable to retrieve the order!', 422);
+        // if ($response->failed()) throw new Exception('Unable to retrieve the order!', 422);
 
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
