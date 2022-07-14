@@ -12,15 +12,14 @@ class OrderService extends Service
      *
      * @return Collection
      */
-    public function list()
+    public function list($with = 'product.images, currency')
     {
         // create params - include products & images
-        $params = ['with' => 'product.images'];
+        $params = [
+            'with' => $with,
+            'profile_id' => auth()->user()->profile['id'],
+        ];
 
-        // get the authenticated user's profile id
-        $params['profile_id'] = Auth::user()->profile->id;
-
-        // TODO : Check for final API route
         // call to api
         $response = $this->http()->get($this->getPath() . '/orders', $params);
 
@@ -62,7 +61,7 @@ class OrderService extends Service
      * @param String $number
      *      The Order ID to show.
      */
-    public function getByNumber(String $number, String $with = null)
+    public function getByNumberByCustomer(String $number, String $with = 'currency,transaction,order_groups.vendor,shipping_address,billing_address')
     {
         // TODO : Check for final API route
         // call api
@@ -71,7 +70,7 @@ class OrderService extends Service
         ]);
 
         // api call failed
-        if ($response->failed()) throw new Exception('Unable to retrieve the order!', 422);
+        // if ($response->failed()) throw new Exception('Unable to retrieve the order!', 422);
 
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
