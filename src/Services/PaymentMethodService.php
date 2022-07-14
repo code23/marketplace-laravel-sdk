@@ -50,9 +50,9 @@ class PaymentMethodService extends Service
     /**
      * Retrieves available payment methods from API/Stripe
      */
-    public function retrieve()
+    public function retrieve($id)
     {
-        $response = $this->http()->post($this->getPath() . '/settings/gateway/stripe/retrievePaymentMethods');
+        $response = $this->http()->get($this->getPath() . '/settings/gateway/stripe/retrievePaymentMethods/' . $id);
 
         if ($response->failed()) throw new Exception('Error during call to retrive payment methods!', 422);
 
