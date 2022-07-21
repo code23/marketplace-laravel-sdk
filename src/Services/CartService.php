@@ -140,11 +140,15 @@ class CartService extends Service
      */
     public function remove(Int $productId, Int $variantId = null, String $with = null)
     {
+        // create headers
+        $params = [];
+
+        // add to params if passed in
+        $variantId ? $params['variant_id'] = $variantId : null;
+        $with ? $params['with'] = $with : null;
+
         // send request
-        $response = $this->http()->patch($this->getPath() . '/cart/remove/' . $productId, [
-            'variant_id'  => $variantId,
-            'with'        => $with,
-        ]);
+        $response = $this->http()->patch($this->getPath() . '/cart/remove/' . $productId, $params);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to remove from the cart.', 422);
