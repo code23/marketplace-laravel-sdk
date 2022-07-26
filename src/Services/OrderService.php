@@ -65,7 +65,7 @@ class OrderService extends Service
     {
         // TODO : Check for final API route
         // call api
-        $response = $this->http()->get($this->getPath() . '/orders/number/' . $number, [
+        $response = $this->http()->get($this->getPath() . '/orders/customer/number/' . $number, [
             'with' => $with
         ]);
 
