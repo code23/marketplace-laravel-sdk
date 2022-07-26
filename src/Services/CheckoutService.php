@@ -35,7 +35,7 @@ class CheckoutService extends Service
 
         // error
         if ($response->failed()) throw new Exception('Unable to create order: ' . $response->body(), 422);
-        // if (isset($response['error']) && $response['error']) throw new Exception($response['message'], $response['code']);
+        if (isset($response['error']) && $response['error'] == true) throw new Exception($response['message'], $response['code']);
 
         // if successful
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
