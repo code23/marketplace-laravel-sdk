@@ -16,8 +16,8 @@ class CheckoutService extends Service
         ]);
 
         // error
-        // if ($response->failed()) throw new Exception('Unable to create Stripe customer', 422);
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
+        if ($response->failed()) throw new Exception('Unable to create Stripe customer', 422);
+        //if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
