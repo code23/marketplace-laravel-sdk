@@ -6,6 +6,22 @@ use Exception;
 
 class PaymentMethodService extends Service
 {
+    /**
+     * Add a new card
+     */
+    public function add($payload)
+    {
+        $response = $this->http()->post($this->getPath() . '/settings/gateway/stripe/customers/payment-methods/add', [
+            'payment_method' => $payload['payment_method'], // Payment method provided by Stripe
+        ]);
+
+        // error
+        if ($response->failed()) throw new Exception('Unable to create Stripe customer', 422);
+        //if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
 
     /**
      * Get Stripe keys
@@ -50,12 +66,11 @@ class PaymentMethodService extends Service
     /**
      * Retrieves a user's available payment methods from API/Stripe
      *
-     * @param String $userId - uuid
      * @return void
      */
-    public function retrieve($userId)
+    public function retrieve()
     {
-        $response = $this->http()->get($this->getPath() . '/settings/gateway/stripe/retrievePaymentMethods/' . $userId);
+        $response = $this->http()->get($this->getPath() . '/settings/gateway/stripe/customers/payment-methods/list');
 
         // if ($response->failed()) throw new Exception('Error during call to retrive payment methods!', 422);
 
@@ -65,12 +80,15 @@ class PaymentMethodService extends Service
     }
 
     /**
-     * Delete card from customer
+     * Delete a payment method
+     *
+     * @param array $payment_method - payment method id - e.g. pm_xxxxx
+     * @return void
      */
-    public function delete(array $data)
+    public function delete(array $payment_method)
     {
         // call
-        $response = $this->http()->delete($this->getPath() . '/settings/gateway/stripe/cards/remove', $data);
+        $response = $this->http()->delete($this->getPath() . '/settings/gateway/stripe/customers/payment-methods/delete', $payment_method);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error during call to delete payment method', 422);
@@ -78,44 +96,6 @@ class PaymentMethodService extends Service
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        return $response;
-    }
-
-    /**
-     * Set Default card
-     */
-    public function setDefault(array $data)
-    {
-        // call
-        $response = $this->http()->patch($this->getPath() . '/settings/gateway/stripe/setDefaultPaymentMethod', $data);
-
-        // api call failed
-        if ($response->failed()) throw new Exception('Error during call to change default payment method', 422);
-
-        // any other error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
-
-        return $response;
-    }
-
-    /**
-     * Update card details
-     */
-    public function update(array $data)
-    {
-        if($data) {
-            // call
-            $response = $this->http()->patch($this->getPath() . '/settings/gateway/stripe/cards/update', $data);
-
-            // api call failed
-            if ($response->failed()) throw new Exception('Error during call to update payment method!', 422);
-
-            // any other error
-            if ($response['error']) throw new Exception($response['message'], $response['code']);
-
-            return $response;
-        } else {
-            return null;
-        }
+        return $response->json()['data'] ? collect($response->json()['data']) : null;
     }
 }

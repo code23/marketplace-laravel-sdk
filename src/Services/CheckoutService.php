@@ -7,23 +7,6 @@ use Exception;
 class CheckoutService extends Service
 {
     /**
-     * Add a new card and set it as default payment method
-     */
-    public function addNewDefaultCard($payload)
-    {
-        $response = $this->http()->post($this->getPath() . '/settings/gateway/stripe/setDefaultPaymentMethod', [
-            'payment_method' => $payload['payment_method'], // Payment method provided by Stripe
-        ]);
-
-        // error
-        if ($response->failed()) throw new Exception('Unable to create Stripe customer', 422);
-        //if ($response['error']) throw new Exception($response['message'], $response['code']);
-
-        // if successful
-        return $response->json()['data'] ? collect($response->json()['data']) : collect();
-    }
-
-    /**
      * Process payment
      */
     public function processPayment($paymentMethodId = null, $billingAddress = null)
