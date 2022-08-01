@@ -33,7 +33,7 @@ class PaymentMethodService extends Service
         // call failed
         if ($response->failed()) throw new Exception('Error retrieving Stripe keys', 422);
 
-        return $response->json()['data'] ? collect($response->json()['data']) : null;
+        return $response->json()['data'] ? $response->json()['data']['publishable_key'] : null;
     }
 
     /**
