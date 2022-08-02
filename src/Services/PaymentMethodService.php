@@ -80,6 +80,23 @@ class PaymentMethodService extends Service
     }
 
     /**
+     * Add a new card
+     */
+    public function setDefault($id)
+    {
+        $response = $this->http()->patch($this->getPath() . '/settings/gateway/stripe/customers/payment-methods/update-default', [
+            'payment_method' => $id,
+        ]);
+
+        // error
+        if ($response->failed()) throw new Exception('Unable to update default payment method', 422);
+        //if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * Delete a payment method
      *
      * @param array $payment_method - payment method id - e.g. pm_xxxxx
