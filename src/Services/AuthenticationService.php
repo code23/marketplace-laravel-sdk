@@ -56,10 +56,10 @@ class AuthenticationService extends Service
      *
      * @param String $email
      */
-    public function resetPasswordLinkRequest($email): bool
+    public function resetPasswordLinkRequest($email)
     {
         // send request
-        $response = $this->http()->post($this->getPath() . '/password/reset', [
+        $response = $this->http()->post($this->getPath() . '/auth/forgot-password', [
             'email' => $email,
         ]);
 
@@ -69,7 +69,7 @@ class AuthenticationService extends Service
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        return true;
+        return $response->json()['data'] ?? ['message' => $response['message']];
     }
 
     /**
@@ -125,8 +125,10 @@ class AuthenticationService extends Service
     public function updatePassword(Request $request): bool
     {
         // update password
-        $response = $this->http()->post($this->getPath() . '/password/reset', [
+        $response = $this->http()->post($this->getPath() . '/auth/reset-password', [
+            // 'email'  => $request->user()->email,
             'password'  => $request->password,
+            'password_confirmation'  => $request->password_confirmation,
             'token'     => $request->token,
         ]);
 

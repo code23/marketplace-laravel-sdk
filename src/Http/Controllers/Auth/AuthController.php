@@ -95,7 +95,7 @@ class AuthController extends Controller
             $response = MPEAuthentication::resetPasswordLinkRequest($request->email);
 
             // flash session
-            $request->session()->flash('status', $response->message);
+            $request->session()->flash('status', $response['message']);
 
             // return to on success
             return redirect('mls.login');
@@ -123,7 +123,7 @@ class AuthController extends Controller
      *
      * @param Request $request
      */
-    public function passwordUpdate(Request $request): View
+    public function passwordUpdate(Request $request)
     {
         try {
             // update password
