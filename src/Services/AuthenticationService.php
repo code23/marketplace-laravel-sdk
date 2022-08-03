@@ -120,25 +120,27 @@ class AuthenticationService extends Service
     /**
      * update password
      *
-     * @param Request $request - must contain password and token
+     * @param Request $request - must contain email, password, password_confirmation and token
      */
-    public function updatePassword(Request $request): bool
+    public function updatePassword(Request $request)
     {
         // update password
         $response = $this->http()->post($this->getPath() . '/auth/reset-password', [
-            // 'email'  => $request->user()->email,
+            'email'  => $request->email,
             'password'  => $request->password,
             'password_confirmation'  => $request->password_confirmation,
             'token'     => $request->token,
         ]);
 
+        return $response->json();
+
         // api call failed
-        if ($response->failed()) throw new Exception('A problem was encountered during the process of updating your password.', 422);
+        // if ($response->failed()) throw new Exception('A problem was encountered during the process of updating your password.', 422);
 
         // any other error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
+        // if ($response['errors']) throw new Exception($response['message'], 422);
 
-        return true;
+        // return true;
     }
 
     /**

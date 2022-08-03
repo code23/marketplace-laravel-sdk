@@ -129,8 +129,12 @@ class AuthController extends Controller
             // update password
             $response = MPEAuthentication::updatePassword($request);
 
+            // handle errors
+            if(isset($response['errors']) && !empty($response['errors'])) return back()->with('status', $response['errors']);
+            if(isset($response['error']) && $response['error'] == true) return back()->with('status', $response['message']);
+
             // flash session
-            $request->session()->flash('status', $response->message);
+            $request->session()->flash('status', $response['message']);
 
             // return to on success
             return view('marketplace-laravel-sdk::auth.login');
