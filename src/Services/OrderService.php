@@ -15,13 +15,10 @@ class OrderService extends Service
     public function list($with = 'product.images, currency')
     {
         // create params - include products & images
-        $params = [
-            'with' => $with,
-            'profile_id' => auth()->user()->profile['id'],
-        ];
+        $params = ['with' => $with];
 
         // call to api
-        $response = $this->http()->get($this->getPath() . '/orders', $params);
+        $response = $this->http()->get($this->getPath() . '/orders/customer', $params);
 
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the orders!', 422);
