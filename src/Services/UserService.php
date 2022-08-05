@@ -3,6 +3,7 @@
 namespace Code23\MarketplaceLaravelSDK\Services;
 
 use App\Models\User;
+use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
 use Code23\MarketplaceLaravelSDK\Rules\UniqueUserEmailInTeam;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -113,6 +114,12 @@ class UserService extends Service
 
             // any other error
             if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+            // logout
+            auth()->logout();
+
+            // clear session
+            session()->flush();
 
             // return success
             return true;
