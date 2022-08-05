@@ -212,14 +212,17 @@ class CartService extends Service
      *
      * @param Int $id
      */
-    public function updateQuantity(Int $productId, Int $variantId, Int $quantity, String $with = null)
+    public function updateQuantity($productId, $variantId = null, Int $quantity, String $with = null)
     {
+        //setup data array
+        $data = ['quantity'   => $quantity,];
+
+        // add to array if not null
+        if($variantId) $data['variantId'] = $variantId;
+        if($with) $data['with'] = $with;
+
         // send request
-        $response = $this->http()->patch($this->getPath() . '/cart/update-quantity/' . $productId, [
-            'variant_id' => $variantId,
-            'quantity'   => $quantity,
-            'with'       => $with,
-        ]);
+        $response = $this->http()->patch($this->getPath() . '/cart/update-quantity/' . $productId, $data);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to update cart product quantity.', 422);
@@ -229,7 +232,6 @@ class CartService extends Service
 
         // if successful, return cart as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
-
     }
 
 }
