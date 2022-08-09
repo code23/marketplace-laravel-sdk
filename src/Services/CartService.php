@@ -82,6 +82,26 @@ class CartService extends Service
     }
 
     /**
+     * Delete user's cart
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        // send request
+        $response = $this->http()->delete($this->getPath() . '/cart');
+
+        // api call failed
+        // if ($response->failed()) throw new Exception('Error attempting to apply the promotion.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return cart as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * Get promotions available on platform
      *
      * @param String $with - optional relationships to include, comma separated string
