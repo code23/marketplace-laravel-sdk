@@ -41,7 +41,7 @@ return [
         'recently_viewed_max' => env('RECENTLY_VIEWED_PRODUCTS_MAX', 4),
     ],
 
-    'category_retrieval_rate' => [
-        'category_retrieval_rate' => env('CATEGORY_RETRIEVAL_RATE', 10),
+    'categories' => [
+        'retrieval_rate' => env('CATEGORY_RETRIEVAL_RATE', 10),
     ],
 ];

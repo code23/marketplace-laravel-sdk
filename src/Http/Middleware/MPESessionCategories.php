@@ -22,24 +22,15 @@ class MPESessionCategories
     {
         try {
             // if session has no categories entry, OR if it does AND it was retrieved over X minutes ago
-            if( session()->missing('categories') || ( session()->has('categories') && session('categories')['retrieved_at']->lessThan(now()->subMinutes(config('category_retrieval_rate'))) ) ) {
+            if( session()->missing('categories') || ( session()->has('categories') && session('categories')['retrieved_at']->lt(now()->subMinutes(config('categories.retrieval_rate'))) ) ) {
 
                 // get the top-level categories
-                $response = MPECategories::list(0);
-
-                $cats = collect($response->where('is_active', true))
-                            ->map(function ($cat) {
-                                return [
-                                    'name'  => $cat['name'],
-                                    'slug'  => $cat['slug'],
-                                ];
-                            })
-                            ->toArray();
+                $response = MPECategories::list(0, 'images');
 
                 // retrieve categories and store data to user session
                 session(['categories' => [
                     'retrieved_at' => now(),
-                    'data'         => $cats,
+                    'data'         => $response->where('is_active', true)->toArray(),
                 ]]);
 
             }

@@ -57,7 +57,7 @@ class CategoryService extends Service
      * Get a list of categories
      *
      * @param integer $level How many levels deep to include - 0 = top level
-     * @param string $with optionally include comma separated relationships
+     * @param string $with optionally include comma separated relationships, e.g. 'images,products'
      */
     public function list($level = null, $with = null)
     {

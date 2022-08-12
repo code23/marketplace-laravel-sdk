@@ -51,15 +51,19 @@ class ProductService extends Service
      *
      * @return Collection
      */
-    public function list(String $with = null, Int $per_page = null, Int $page = null)
+    public function list(String $with = null, Int $per_page = null, Int $page = null, Int $category)
     {
-        // call
-        $response = $this->http()->get($this->getPath() . '/products', [
-            'with'     => $with,
+        // set up params
+        $params = [
             'status'   => 'published',
-            'paginate' => $per_page,
-            'page'     => $page,
-        ]);
+        ];
+        if($with) $params['with'] = $with;
+        if($per_page) $params['paginate'] = $per_page;
+        if($page) $params['page'] = $page;
+        if($category) $params['category'] = $category;
+
+        // call
+        $response = $this->http()->get($this->getPath() . '/products', $params);
 
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the products!', 422);
