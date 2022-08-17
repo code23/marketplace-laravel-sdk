@@ -25,12 +25,12 @@ class MPESessionCategories
             if( session()->missing('categories') || ( session()->has('categories') && session('categories')['retrieved_at']->lt(now()->subMinutes(config('categories.retrieval_rate'))) ) ) {
 
                 // get the top-level categories
-                $response = MPECategories::list(0, 'images');
+                $response = MPECategories::list();
 
                 // retrieve categories and store data to user session
                 session(['categories' => [
                     'retrieved_at' => now(),
-                    'data'         => $response->where('is_active', true)->toArray(),
+                    'data'         => $response->toArray(),
                 ]]);
 
             }
