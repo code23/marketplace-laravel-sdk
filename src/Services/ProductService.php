@@ -93,6 +93,7 @@ class ProductService extends Service
         Array $vendors = null,
         Array $categories = null,
         Array $sort = null,
+        String $searchTerm = null,
     )
     {
         $data = [
@@ -107,6 +108,7 @@ class ProductService extends Service
         $vendors ? $data['vendors'] = $vendors : false;
         $categories ? $data['categories'] = $categories : false;
         $sort ? $data['sort'] = $sort : false;
+        $searchTerm ? $data['searchTerm'] = $searchTerm : false;
 
         // call
         $response = $this->http()->post($this->getPath() . '/products/filter', $data);
