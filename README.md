@@ -6,6 +6,14 @@ work involved when integrating with the Markeplace Engine api from a new front-e
 Authentication is handled by installing the necessary models, views and components so you can use the Auth facade in the same way as traditional
 Laravel applications but but without the need for a database.
 
+## Server Requirements
+
+You may need to increase the server max file upload size to allow onboarding requests.
+
+Forge - click server's PHP tab:
+
+Max File Upload Size: 16mb
+
 ## Before Installation
 
 Please be aware that installing the Marketplace Laravel SDK on a default Laravel installation will replace the base User model with the SDK User model 
