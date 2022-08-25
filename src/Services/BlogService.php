@@ -3,7 +3,6 @@
 namespace Code23\MarketplaceLaravelSDK\Services;
 
 use Exception;
-use Illuminate\Support\Str;
 
 class BlogService extends Service
 {
@@ -26,6 +25,32 @@ class BlogService extends Service
 
         // if successful, return blog posts as collection
         return $response->json()['data'] ? collect($response->json()['data'])->where('status', 'published') : collect();
+    }
+
+    /**
+     * Get a blog category by slug with its posts
+     *
+     * @param string $with - optional - relationships to include, comma separated 'blog_posts,foobar'
+     *
+     */
+    public function categoryBySlug($slug, String $with = 'blog_posts.images,blog_categories')
+    {
+        $params = [
+            'is_active' => 1,
+            'with'   => $with,
+        ];
+
+        // send request
+        $response = $this->http()->get($this->getPath() . '/blog/categories/slug/' . $slug, $params);
+
+        // api call failed
+        // if ($response->failed()) throw new Exception('Error attempting to retrieve the blog category.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return blog categories as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
     /**
