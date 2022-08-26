@@ -62,7 +62,10 @@ class BlogService extends Service
     public function categories(String $with = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/blog/categories', ['with' => $with]);
+        $response = $this->http()->get($this->getPath() . '/blog/categories', [
+            'with' => $with,
+            'is_active' => true
+        ]);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the blog categories.', 422);
