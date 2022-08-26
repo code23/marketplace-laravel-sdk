@@ -15,7 +15,10 @@ class OrderService extends Service
     public function list($with = 'product.images, currency')
     {
         // create params - include products & images
-        $params = ['with' => $with];
+        $params = [
+            'with' => $with,
+            'sort' => 'created_at,desc',
+        ];
 
         // call to api
         $response = $this->http()->get($this->getPath() . '/orders/customer', $params);
