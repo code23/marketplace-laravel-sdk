@@ -28,6 +28,12 @@ class Service
             'X-Currency-Code' => MPECurrencies::active() ? MPECurrencies::active()['code'] : null,
         ]);
 
+        // update headers with active locale id
+        $this->headers = array_merge($this->headers, [
+            // 'X-Locale-Id' => MPECurrencies::active() ? MPECurrencies::active()['code'] : null,
+            'X-Locale-Id' => 1,
+        ]);
+
         // check session for cart id
         if(session('cart_id')) {
             $this->headers = array_merge($this->headers, [
