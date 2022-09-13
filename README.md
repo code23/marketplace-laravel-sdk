@@ -26,6 +26,7 @@ npx tailwindcss init
 ```
 
 Once installed add the following lines to your tailwind.config.js :-
+<!-- TODO: update this part for tailwind 3 & JIT -->
 ```php
 // tailwind.config.js
 module.exports = {
@@ -93,11 +94,12 @@ Before you can connect to the Marketplace Engine you'll need to add the followin
 ```bash
 # Marketplace
 MPE_VERSION=v1
-MPE_ORIGIN=tenanturl.com
-MPE_API_BASE_PATH=https://mpe.test
-MPE_PASSWORD_KEY=93ec3d35-f905-47bd-a22e-0090906776f4
-MPE_PASSWORD_SECRET=PuT2NZZ1fJAL30wxVcovPrS2Al8pVNzJ5nAFsC2b
-MPE_PAC_KEY=94736f1c-970b-41c7-a29d-a14cc09d4d13
+MPE_ORIGIN=marketplace.code23.co.uk
+MPE_API_BASE_PATH=https://exquisite-brook-che6tcbbksr0.vapor-farm-d1.com
+MPE_PASSWORD_KEY=946786a6-bf7d-48e9-8c54-9e57e6365a76
+MPE_PASSWORD_SECRET=r7kiMYyqYTi9qpNRf33rLGFlME3oZlfptJ83sp2U
+MPE_CLIENT_CREDENTIAL_KEY=9728f551-1f91-403c-9b24-ae55431e995a
+MPE_CLIENT_CREDENTIAL_SECRET=VK9PkEAOsJxhRTOAqjKLI4uIwYlV09j1bhAA0hzl
 ```
 Make sure your `MPE_API_BASE_PATH` reflects whether you are using an SSL certificate or not. Mismatched http/https in base path and environment will cause request route errors.
 
@@ -191,6 +193,8 @@ When creating a Service and its corresponding Facade, reference the Service via 
 ```
 
 ## Onboarding images mixin
+
+<!-- TODO: include these files in package and make publishable -->
 
 Place images.js in resources/js and add to webpack.mix.js:
 ```js
