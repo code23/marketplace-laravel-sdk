@@ -128,6 +128,7 @@ class VendorService extends Service
                 'password_confirmation'  => $data['password_confirmation'],
                 'terms'                 => $data['terms'] ? true : false,
                 'store_name'            => $data['store_name'],
+                'company_name'          => $data['company_name'] ?? null,
                 'country_id'            => $data['country_id'],
                 'vat'                   => isset($data['vat']) ? $data['vat'] : null,
                 'meta'                  => isset($data['meta']) ? $data['meta'] : null,
