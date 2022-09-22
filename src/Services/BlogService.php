@@ -110,7 +110,10 @@ class BlogService extends Service
     public function getPost($id, $with = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/blog/posts/' . $id, ['with' => $with]);
+        $response = $this->http()->get($this->getPath() . '/blog/posts/' . $id, [
+            'status' => 'published',
+            'with' => $with
+        ]);
 
         // blog post not found
         if($response->status() == 404) throw new Exception('The given blog post was not found', 404);
@@ -135,7 +138,10 @@ class BlogService extends Service
     public function getPostBySlug($slug, $with = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/blog/posts/slug/' . $slug, ['with' => $with]);
+        $response = $this->http()->get($this->getPath() . '/blog/posts/slug/' . $slug, [
+            'with' => $with,
+            'status' => 'published'
+        ]);
 
         // blog post not found
         if($response->status() == 404) throw new Exception('The given blog post was not found', 404);
