@@ -78,6 +78,7 @@ class UserService extends Service
                     'password'             => $request->password,
                     'password_confirmation' => $request->password_confirmation,
                     'terms'                => isset($request->terms) ? true : false,
+                    'type'                 => 'customer',
                 ]);
 
                 // api call failed
