@@ -12,7 +12,7 @@ class OrderService extends Service
      *
      * @return Collection
      */
-    public function list($with = 'product.images, currency')
+    public function list($with = 'product.images,currency')
     {
         // create params - include products & images
         $params = [

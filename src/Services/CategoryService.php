@@ -3,7 +3,6 @@
 namespace Code23\MarketplaceLaravelSDK\Services;
 
 use Exception;
-use Illuminate\Support\Str;
 
 class CategoryService extends Service
 {
