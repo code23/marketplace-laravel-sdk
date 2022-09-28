@@ -23,7 +23,7 @@ class ReviewService extends Service
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        // return product list
+        // return response
         return $response;
     }
 
@@ -71,5 +71,49 @@ class ReviewService extends Service
 
         // return reviews list
         return $response->json()['code'] == 200 ? collect($response->json()) : collect();
+    }
+
+    /**
+     * Create a review
+     */
+    public function create(Array $data)
+    {
+        // call api
+        $response = $this->http()->post($this->getPath() . '/reviews', [
+            'product_id' => $data['product_id'],
+            'review'     => $data['review'],
+            'rating'     => $data['rating'],
+        ]);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to create review!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // return product list
+        return $response;
+    }
+
+    /**
+     * Update a review
+     */
+    public function update(Array $data)
+    {
+        // call api
+        $response = $this->http()->patch($this->getPath() . '/reviews', [
+            'id'         => $data['id'],
+            'review'     => $data['review'],
+            'rating'     => $data['rating'],
+        ]);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to update review!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // return product list
+        return $response;
     }
 }
