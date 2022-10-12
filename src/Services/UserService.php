@@ -132,7 +132,7 @@ class UserService extends Service
     /**
      * Check user is not already registered with this tenant
      */
-    public function emailIsUniqueInTeam($email)
+    public function emailExistsInTeam($email)
     {
         // call to api
         $response = $this->http()->get($this->getPath() . '/tenants/has-user-with-email', [

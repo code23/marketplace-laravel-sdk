@@ -3,7 +3,6 @@
 namespace Code23\MarketplaceLaravelSDK\Rules;
 
 use Code23\MarketplaceLaravelSDK\Facades\MPEUser;
-use Code23\MarketplaceLaravelSDK\Facades\MPEVendors;
 use Illuminate\Contracts\Validation\Rule;
 
 class UniqueUserEmailInTeam implements Rule
@@ -20,7 +19,7 @@ class UniqueUserEmailInTeam implements Rule
     public function passes($attribute, $value)
     {
         // call to MPE to check email is unique within team
-        $this->response = MPEUser::emailIsUniqueInTeam($value);
+        $this->response = MPEUser::emailExistsInTeam($value);
 
         // if response gives true
         if (isset($this->response->json()['data']) && $this->response->json()['data'] === false) {
