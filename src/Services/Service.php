@@ -16,7 +16,7 @@ class Service
     /**
      * initialises a new http instance and returns the client
      */
-    public function http()
+    public function http($oauth = null)
     {
         // update headers with origin and currency
         $this->headers = array_merge($this->headers, [
@@ -51,6 +51,9 @@ class Service
         if (session()->has('oAuth') && isset(session('oAuth')['access_token'])) {
             // add bearer token
             $this->client->withToken(session('oAuth')['access_token']);
+        } elseif ($oauth) {
+            // add bearer token
+            $this->client->withToken($oauth['access_token']);
         }
 
         return $this->client;

@@ -165,7 +165,7 @@ class AuthenticationService extends Service
         session()->put('oAuth', $response->json());
 
         // back to welcome - login succeeded
-        return true;
+        return $response->json();
     }
 
     /**
