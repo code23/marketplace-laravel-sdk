@@ -101,16 +101,16 @@ class VendorService extends Service
             'postcode'          => 'required',
             'country_id'        => 'required',
             'terms'             => 'required',
-            'images.*.type'     => 'required|in:image/jpeg,image/png',
-            'images.*.size'     => 'required|max:3145728',
-            'images.*.response' => 'required|array'
+            'images.*.type'     => 'sometimes|in:image/jpeg,image/png',
+            'images.*.size'     => 'sometimes|max:3145728',
+            'images.*.response' => 'sometimes|array'
         ];
 
         $messages = [
             'password.regex'                => 'Password must include at least one upper & lowercase letter.',
             'images.*.type.in'              => 'Image must be either jpeg or png format.',
             'images.*.size.max'             => 'Image filesize too large - max 3MB.',
-            'images.*.response.required'    => 'Payload must contain as response from the storage provider.'
+            // 'images.*.response.required'    => 'Payload must contain a response from the storage provider.'
         ];
 
         // use our validation method in Service.php
