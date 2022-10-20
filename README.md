@@ -1,12 +1,13 @@
 # Marketplace Laravel SDK
 
-Marketplace Laravel SDK provides an easy interface to the Code23 Marketplace Engine API.  Designed and developed for use with Laravel, it will reduce the 
-work involved when integrating with the Markeplace Engine api from a new front-end application.
+Marketplace Laravel SDK provides an easy interface to the Code23 Marketplace Engine API.  Designed and developed for use with Laravel, it will reduce the work involved when integrating with the Markeplace Engine api from a new front-end application.
 
 Authentication is handled by installing the necessary models, views and components so you can use the Auth facade in the same way as traditional
 Laravel applications but but without the need for a database.
 
 ## Server Requirements
+
+PHP 8
 
 You may need to increase the server max file upload size to allow onboarding requests.
 
@@ -16,18 +17,17 @@ Max File Upload Size: 16mb
 
 ## Before Installation
 
-Please be aware that installing the Marketplace Laravel SDK on a default Laravel installation will replace the base User model with the SDK User model 
-developed to work directly with the API. 
+Please be aware that installing the Marketplace Laravel SDK on a default Laravel installation will replace the base User model with the SDK User model developed to work directly with the API. 
 
-The blade files provided by the SDK utilise Tailwind CSS so it's recommended that you install Tailwind on your Laravel instance :-
+<!-- The blade files provided by the SDK utilise Tailwind CSS so it's recommended that you install Tailwind on your Laravel instance :-
 ```php
 npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
 npx tailwindcss init
-```
+``` -->
 
-Once installed add the following lines to your tailwind.config.js :-
+<!-- Once installed add the following lines to your tailwind.config.js :- -->
 <!-- TODO: update this part for tailwind 3 & JIT -->
-```php
+<!-- ```php
 // tailwind.config.js
 module.exports = {
    purge: [
@@ -36,21 +36,20 @@ module.exports = {
      './resources/**/*.vue',
    ],
    ...
-```
+``` -->
 
-And finally, configure Laravel Mix :-
+<!-- And finally, configure Laravel Mix :-
 ```php
 // webpack.mix.js
 mix.js("resources/js/app.js", "public/js")
     .postCss("resources/css/app.css", "public/css", [
         require("tailwindcss"),
     ]);
-```
+``` -->
 
 ## SDK Installation
 
-You can install this package via composer.  Marketplace Laravel SDK resides in a private GitHub repository so you will need to update your composer.json by
-adding the following:
+You can install this package via composer. Marketplace Laravel SDK resides in a private GitHub repository so you will need to update your composer.json by adding the following:
 ```bash
     ...
 
@@ -74,7 +73,7 @@ Once the package is included in your project you can install the models, config,
 php artisan marketplace-laravel-sdk:install
 ```
 
-Note:  If you don't want to install all of the resources included with Marketplace SDK you can install them individually:
+Note: If you don't want to install all of the resources included with Marketplace SDK you can install them individually:
 ```bash
 php artisan vendor:publish --tag=marketplace-laravel-sdk-config
 php artisan vendor:publish --tag=marketplace-laravel-sdk-controllers
@@ -103,7 +102,7 @@ MPE_CLIENT_CREDENTIAL_SECRET=VK9PkEAOsJxhRTOAqjKLI4uIwYlV09j1bhAA0hzl
 ```
 Make sure your `MPE_API_BASE_PATH` reflects whether you are using an SSL certificate or not. Mismatched http/https in base path and environment will cause request route errors.
 
-You will also need to add the MPEPACAuthentication middleware to your `web` middleware group in `App\Http\Kernel.php`.  You MUST make sure that it is the last middleware in the middleware `web` group.
+You will also need to add the MPEPACAuthentication middleware to your `web` middleware group in `App\Http\Kernel.php`. Place this as the last middleware in the middleware `web` group.
 
 You can publish this middleware to your project should you need to make changes to it, just remember to reference the published version from within the kernel rather than the SDK version.
 
@@ -144,6 +143,25 @@ class Kernel extends HttpKernel
         ],
     ];
 ```
+## Middleware
+
+In addition to the above auth middleware, add the following in the same fashion:
+
+### Users
+
+Add `MPEUserEmailVerification` middleware *below* the `MPEPACAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
+
+This will detect the `email_verified=true` query parameter on the redirect url after a user has confirmed their email address via their confirmation email, and redirect the user to a route named `email-verified`. Add this route to your web.php routes file and a view informing the user of their successful email verification.
+
+Overwrite the route name using the env variable `EMAIL_VERIFIED_ROUTE_NAME` and adjust your route declaration to match.
+
+### Categories
+
+Add `MPESessionCategories` middleware *below* the `MPEPACAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
+
+This middleware stores the available categories to an object in the user's session, to reduce API traffic.
+
+The rate at which the categories are updated can be set via the env var `CATEGORY_RETRIEVAL_RATE`, default 10 minutes.
 
 ### Currencies
 
@@ -151,7 +169,7 @@ If you require multi-currency options, you'll need to include the `MPESessionCur
 
 This middleware stores the available currencies to an object in the user's session.
 
-## Usage
+## Users
 
 To ensure that your application authenticates using Marketplace Laravel SDK you'll need to ensure that Laravel knows where to look for users.  To do this you'll need to update your config.auth by commenting out the current driver for `users` and adding the custom driver provided by Marketplace Laravel SDK
 ```php
@@ -174,23 +192,7 @@ return [
     ....
 ```
 
-## Creating SDK Services
-
-When creating a Service and its corresponding Facade, reference the Service via it's class name and add a `use` statement at the top of the file.
-
-### Facade
-```php
-    use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
-
-    class MPEAuthentication extends Facade
-    {
-        protected static function getFacadeAccessor()
-        {
-            // return the service
-            return AuthenticationService::class;
-        }
-    }
-```
+Remember to add the appropriate middleware outlined previously for user email verification.
 
 ## Onboarding images mixin
 

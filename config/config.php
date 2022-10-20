@@ -44,4 +44,8 @@ return [
     'categories' => [
         'retrieval_rate' => env('CATEGORY_RETRIEVAL_RATE', 10),
     ],
+
+    'user' => [
+        'email_verified_route_name' => env('EMAIL_VERIFIED_ROUTE_NAME', 'email-verified'),
+    ],
 ];
