@@ -153,6 +153,8 @@ Add `MPEUserEmailVerification` middleware *below* the `MPEPACAuthentication` cla
 
 This will detect the `email_verified=true` query parameter on the redirect url after a user has confirmed their email address via their confirmation email, and redirect the user to a route named `email-verified`. Add this route to your web.php routes file and a view informing the user of their successful email verification.
 
+NOTE: requires your homepage route to be named `home`.
+
 Overwrite the route name using the env variable `EMAIL_VERIFIED_ROUTE_NAME` and adjust your route declaration to match.
 
 ### Categories
