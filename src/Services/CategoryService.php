@@ -12,7 +12,7 @@ class CategoryService extends Service
      * @param array $params - See postman for available parameters
      */
     public function list($params = [
-        'with' => 'images,children_categories',
+        'with' => 'images,active_children_categories',
         'is_null' => 'top_id',
         'is_active' => true,
     ])
