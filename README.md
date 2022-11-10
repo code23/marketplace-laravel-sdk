@@ -157,13 +157,15 @@ NOTE: requires your homepage route to be named `home`.
 
 Overwrite the route name using the env variable `EMAIL_VERIFIED_ROUTE_NAME` and adjust your route declaration to match.
 
-### Categories
+### Categories & Tags
 
 Add `MPESessionCategories` middleware *below* the `MPEPACAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
 
 This middleware stores the available categories to an object in the user's session, to reduce API traffic.
 
 The rate at which the categories are updated can be set via the env var `CATEGORY_RETRIEVAL_RATE`, default 10 minutes.
+
+Tags has a separate middleware called `MPESessionTags` that functions the same way as categories.
 
 ### Currencies
 
