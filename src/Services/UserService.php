@@ -5,10 +5,10 @@ namespace Code23\MarketplaceLaravelSDK\Services;
 use App\Models\User;
 use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
 use Code23\MarketplaceLaravelSDK\Rules\UniqueUserEmailInTeam;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Exception;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class UserService extends Service
@@ -108,7 +108,7 @@ class UserService extends Service
     {
         try {
             // call
-            $response = $this->http()->delete($this->getPath() . '/user');
+            $response = $this->http()->delete($this->getPath() . '/customers');
 
             // api call failed
             if ($response->failed()) throw new Exception('Unable to delete the user!', 422);
@@ -206,7 +206,7 @@ class UserService extends Service
     public function updateProfile(Array $data)
     {
             // call
-            $response = $this->http()->patch($this->getPath() . '/user', [
+            $response = $this->http()->patch($this->getPath() . '/customers', [
                 'first_name'            => $data['first_name'],
                 'last_name'            => $data['last_name'],
                 'password'             => $data['password'],

@@ -142,6 +142,7 @@ class VendorService extends Service
                 ],
                 'logo'                  => isset($data['logo']) ? $data['logo'] : null,
                 'images'                => $data['images'],
+                'commission_group_id'   => $data['commission_group_id'] ?? null,
             ]);
 
             // api call failed
