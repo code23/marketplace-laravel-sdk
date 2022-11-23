@@ -57,10 +57,10 @@ class ProductService extends Service
         $params = [
             'status'   => 'published',
         ];
-        if($with) $params['with'] = $with;
-        if($per_page) $params['paginate'] = $per_page;
-        if($page) $params['page'] = $page;
-        if($category) $params['category'] = $category;
+        if ($with) $params['with'] = $with;
+        if ($per_page) $params['paginate'] = $per_page;
+        if ($page) $params['page'] = $page;
+        if ($category) $params['category'] = $category;
 
         // call
         $response = $this->http()->get($this->getPath() . '/products', $params);
@@ -73,7 +73,7 @@ class ProductService extends Service
 
         // if successful, return collection of products or empty collection
         // return $response->json()['data'] ? collect($response->json()['data']) : collect();
-        if($per_page) return $response->json() ? collect($response->json()) : collect();
+        if ($per_page) return $response->json() ? collect($response->json()) : collect();
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
@@ -89,14 +89,14 @@ class ProductService extends Service
         String $with = null,
         Int $per_page = null,
         Int $page = null,
-        Array $attributes = null,
-        Array $vendors = null,
-        Array $categories = null,
-        Array $sort = null,
+        array $attributes = null,
+        array $vendors = null,
+        array $categories = null,
+        array $sort = null,
         String $searchTerm = null,
-        Array $tags = null,
-    )
-    {
+        array $tags = null,
+        array $specifications = null,
+    ) {
         $data = [
             'status'        => 'published',
             'with'          => $with,
@@ -111,6 +111,7 @@ class ProductService extends Service
         $sort ? $data['sort'] = $sort : false;
         $searchTerm ? $data['searchTerm'] = $searchTerm : false;
         $tags ? $data['tags'] = $tags : false;
+        $specifications ? $data['specifications'] = $specifications : false;
 
         // call
         $response = $this->http()->post($this->getPath() . '/products/filter', $data);
@@ -123,7 +124,7 @@ class ProductService extends Service
 
         // if successful, return collection of products or empty collection
         // return $response->json()['data'] ? collect($response->json()['data']) : collect();
-        if($per_page) return $response->json() ? collect($response->json()) : collect();
+        if ($per_page) return $response->json() ? collect($response->json()) : collect();
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
@@ -164,21 +165,20 @@ class ProductService extends Service
      *
      * @param int $returnCount max number of results to return
      */
-    public function related(Array $product, Int $returnCount = 4)
+    public function related(array $product, Int $returnCount = 4)
     {
         // create empty products collection
         $products = collect();
 
         // first we check for product's cross-sells
-        if($product['has_cross_sells']) {
+        if ($product['has_cross_sells']) {
 
             // filter by published status
             $products = collect($product['cross_sells'])->where('status', 'published');
-
         }
 
         // if number of cross sells is greater than or equal to max return amount
-        if($products->count() >= $returnCount) {
+        if ($products->count() >= $returnCount) {
             // return in random order limited to return count
             return $products->shuffle()->take($returnCount);
         }
@@ -199,9 +199,9 @@ class ProductService extends Service
 
             // exclude duplicates and restrict to amount required
             $categoryProducts = collect($category['products'])
-                                    ->whereNotIn('id', $exclude)
-                                    ->where('status', 'published')
-                                    ->take($returnCount - $products->count());
+                ->whereNotIn('id', $exclude)
+                ->where('status', 'published')
+                ->take($returnCount - $products->count());
 
             // merge into products collection
             $products = $products->merge($categoryProducts);
@@ -215,18 +215,18 @@ class ProductService extends Service
             }
         }
 
-            //     // return cross sells and however many more products are required, merged
-            //     return $products = $products->merge($categoryProducts->random($returnCount - $products->count()))->unique('id');
+        //     // return cross sells and however many more products are required, merged
+        //     return $products = $products->merge($categoryProducts->random($returnCount - $products->count()))->unique('id');
 
-            // } else {
+        // } else {
 
-            //     // else, add the products from this category to the collection and repeat with the next category
-            //     $products = $products->merge($categoryProducts);
+        //     // else, add the products from this category to the collection and repeat with the next category
+        //     $products = $products->merge($categoryProducts);
 
-            //     // add new products to exclude
-            //     $exclude = collect($exclude)->merge($categoryProducts->pluck('id'))->toArray();
+        //     // add new products to exclude
+        //     $exclude = collect($exclude)->merge($categoryProducts->pluck('id'))->toArray();
 
-            // }
+        // }
 
         // get cross sells
         // count them
@@ -273,16 +273,16 @@ class ProductService extends Service
      */
     public function addToRecentlyViewed($product)
     {
-        if(!session('recently_viewed_products')) {
+        if (!session('recently_viewed_products')) {
             session()->put('recently_viewed_products');
         }
 
         // add to recently viewed products collection within session and set collection length limit
         session([
             'recently_viewed_products' => collect(session('recently_viewed_products'))
-                                                ->prepend($product)
-                                                ->unique('id')
-                                                ->slice(0, config('marketplace-laravel-sdk.products.recently_viewed_max'))
+                ->prepend($product)
+                ->unique('id')
+                ->slice(0, config('marketplace-laravel-sdk.products.recently_viewed_max'))
         ]);
     }
 }
