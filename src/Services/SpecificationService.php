@@ -13,10 +13,10 @@ class SpecificationService extends Service
      * @param integer $id specification id to get
      * @param string $with optionally include comma separated relationships
      */
-    public function get(Int $id, String $with = 'values')
+    public function get(String $code, String $with = 'values')
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/specifications/' . $id, ['with' => $with]);
+        $response = $this->http()->get($this->getPath() . '/specifications/code/' . $code, ['with' => $with]);
 
         // specification not found
         if ($response->status() == 404) throw new Exception('The given specification was not found', 404);
