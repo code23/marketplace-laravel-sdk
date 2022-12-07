@@ -167,6 +167,17 @@ The rate at which the categories are updated can be set via the env var `CATEGOR
 
 Tags has a separate middleware called `MPESessionTags` that functions the same way as categories.
 
+*Note* session data cannot be used in views/templates that dont use middleware, such as the 404 page. To overcome this, add the following to the bottom of the web.php routes file:
+
+```
+// Adding this fallback route to the 404 view solves the issue of 404 page not having access to session data.
+// which is used to populate the header navigation with categories
+// https://laravel.com/docs/9.x/routing#fallback-routes
+Route::fallback(function () {
+    return view('errors/404');
+});
+```
+
 ### Currencies
 
 If you require multi-currency options, you'll need to include the `MPESessionCurrencies` middleware *below* the `MPEPACAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
