@@ -72,7 +72,10 @@ class VendorService extends Service
     public function list($with = null)
     {
         // retrieve vendors
-        $response = $this->http()->get($this->getPath() . '/vendors', ['with' => $with]);
+        $response = $this->http()->get($this->getPath() . '/vendors', [
+            'with' => $with,
+            'is_approved' => true,
+        ]);
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the vendors retrieval.', 422);
