@@ -235,10 +235,10 @@ class CartService extends Service
     public function updateQuantity($productId, $variantId = null, Int $quantity, String $with = null)
     {
         //setup data array
-        $data = ['quantity'   => $quantity,];
+        $data = ['quantity' => $quantity];
 
         // add to array if not null
-        if($variantId) $data['variantId'] = $variantId;
+        if($variantId) $data['variant_id'] = $variantId;
         if($with) $data['with'] = $with;
 
         // send request
