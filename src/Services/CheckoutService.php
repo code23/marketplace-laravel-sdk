@@ -31,13 +31,14 @@ class CheckoutService extends Service
      * @param boolean $save - save the shipping address to the user profile?
      * @return Collection updated cart array
      */
-    public function details(Array $address, Bool $save = false, String $with = null)
+    public function details(array $address, Bool $save = false, String $with = null, array $vatRelief)
     {
         // save step 1
         $response = $this->http()->patch($this->getPath() . '/checkout/details/', [
             'shipping_address'    => $address,
             'customer_saved_info' => $save,
             'with'                => $with,
+            'vat_relief'          => $vatRelief,
         ]);
 
         // api call failed
