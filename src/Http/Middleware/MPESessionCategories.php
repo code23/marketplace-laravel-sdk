@@ -4,7 +4,6 @@ namespace Code23\MarketplaceLaravelSDK\Http\Middleware;
 
 use Closure;
 use Code23\MarketplaceLaravelSDK\Facades\MPECategories;
-use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
