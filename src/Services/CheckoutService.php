@@ -30,10 +30,10 @@ class CheckoutService extends Service
      * @param Array $address
      * @param boolean $save - save the shipping address to the user profile?
      * @param string $with - relationships to include
-     * @param Array $vatRelief - if it applies and what's the reason
+     * @param Array $vatRelief - if it applies, and the reason
      * @return Collection updated cart array
      */
-    public function details(array $address, Bool $save = false, String $with = null, array $vatRelief)
+    public function details(array $address, Bool $save = false, String $with = null, array $vatRelief = null)
     {
         // save step 1
         $response = $this->http()->patch($this->getPath() . '/checkout/details/', [
