@@ -48,7 +48,8 @@ class VendorService extends Service
     {
         // retrieve vendor
         $response = $this->http()->get($this->getPath() . '/vendors/slug/' . $slug, [
-            'with' => $with
+            'with' => $with,
+            'is_active' => true,
         ]);
 
         // vendor not found
@@ -74,7 +75,7 @@ class VendorService extends Service
         // retrieve vendors
         $response = $this->http()->get($this->getPath() . '/vendors', [
             'with' => $with,
-            'is_approved' => true,
+            'is_active' => true,
         ]);
 
         // api call failed
