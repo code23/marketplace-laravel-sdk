@@ -302,7 +302,7 @@ class ProductService extends Service
     /**
      * Add to recently viewed products
      *
-     * @param array $product
+     * @param int $id - product ID to add to array in session
      *
      */
     public function addToRecentlyViewed($id)
