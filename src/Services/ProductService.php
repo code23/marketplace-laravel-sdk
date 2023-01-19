@@ -44,6 +44,40 @@ class ProductService extends Service
     }
 
     /**
+     * Get a single product by id, with optional relationships
+     *
+     * @param int $id
+     *      Product id
+     * @param string $with
+     *      Comma-separated relationships to include in the api call - example: 'images,vendor,variants.images'
+     *
+     * @return Collection
+     */
+    public function getById(int $id, $with = null)
+    {
+        // call api
+        $response = $this->http()->get($this->getPath() . '/products/' . $id, [
+            'with' => $with,
+            'status' => 'published',
+        ]);
+
+        // not found
+        if ($response->status() == 404) throw new Exception($response['message'], 404);
+
+        // not published
+        if (isset($response->json()['data']) && empty($response->json()['data']['products'])) throw new Exception('Product not published', 404);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the product!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * Get a list of all products across all vendors
      *
      * @param String $with
@@ -271,18 +305,19 @@ class ProductService extends Service
      * @param array $product
      *
      */
-    public function addToRecentlyViewed($product)
+    public function addToRecentlyViewed($id)
     {
         if (!session('recently_viewed_products')) {
             session()->put('recently_viewed_products');
         }
 
-        // add to recently viewed products collection within session and set collection length limit
+        // add to recently viewed products collection within session and trim to length limit
         session([
             'recently_viewed_products' => collect(session('recently_viewed_products'))
-                ->prepend($product)
-                ->unique('id')
+                ->prepend($id)
+                ->unique()
                 ->slice(0, config('marketplace-laravel-sdk.products.recently_viewed_max'))
+                ->toArray()
         ]);
     }
 }
