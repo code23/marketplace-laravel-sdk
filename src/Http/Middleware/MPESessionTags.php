@@ -21,7 +21,7 @@ class MPESessionTags
     {
         try {
             // if session has no tags entry, OR if it does AND it was retrieved over X minutes ago
-            if( session()->missing('tags') || ( session()->has('tags') && session('tags')['retrieved_at']->lt(now()->subMinutes(config('tags.retrieval_rate'))) ) ) {
+            if( session()->missing('tags') || ( session()->has('tags') && session('tags')['retrieved_at']->lt(now()->subMinutes(config('marketplace-laravel-sdk.tags.retrieval_rate'))) ) ) {
 
                 // get the top-level tags
                 $response = MPETags::list();

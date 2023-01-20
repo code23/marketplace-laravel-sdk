@@ -21,7 +21,7 @@ class MPESessionCategories
     {
         try {
             // if session has no categories entry, OR if it does AND it was retrieved over X minutes ago
-            if( session()->missing('categories') || ( session()->has('categories') && session('categories')['retrieved_at']->lt(now()->subMinutes(config('categories.retrieval_rate'))) ) ) {
+            if( session()->missing('categories') || ( session()->has('categories') && session('categories')['retrieved_at']->lt(now()->subMinutes(config('marketplace-laravel-sdk.categories.retrieval_rate'))) ) ) {
 
                 // get the top-level categories
                 $response = MPECategories::list();
