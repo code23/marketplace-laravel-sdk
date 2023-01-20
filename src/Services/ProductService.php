@@ -85,7 +85,13 @@ class ProductService extends Service
      *
      * @return Collection
      */
-    public function list(String $with = null, Int $per_page = null, Int $page = null, Int $category)
+    public function list(
+        String $with = null,
+        Int $per_page = null,
+        Int $page = null,
+        Int $category = null,
+        String $in = null,
+    )
     {
         // set up params
         $params = [
@@ -95,6 +101,7 @@ class ProductService extends Service
         if ($per_page) $params['paginate'] = $per_page;
         if ($page) $params['page'] = $page;
         if ($category) $params['category'] = $category;
+        if ($in) $params['in'] = $in;
 
         // call
         $response = $this->http()->get($this->getPath() . '/products', $params);
