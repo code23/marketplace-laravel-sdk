@@ -63,6 +63,9 @@ class AuthenticationService extends Service
             'email' => $email,
         ]);
 
+        // user with $email not found
+        if ($response->status() == 404) throw new Exception('There was no user found against that email address, please try again.', 404);
+
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the request for a password reset link.', 422);
 
@@ -180,7 +183,7 @@ class AuthenticationService extends Service
         $user = MPEUser::get();
 
         // activate preferred currency
-        if($user && isset($user->profile['currency'])) {
+        if ($user && isset($user->profile['currency'])) {
             MPECurrencies::setActiveByCode($user->profile['currency']['code']);
         }
     }
