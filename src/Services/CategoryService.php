@@ -12,7 +12,7 @@ class CategoryService extends Service
      * @param array $params - See postman for available parameters
      */
     public function list($params = [
-        'with' => 'images,active_children_categories',
+        'with' => 'images,active_children_categories.images',
         'is_null' => 'top_id',
         'is_active' => true,
     ])
@@ -65,7 +65,7 @@ class CategoryService extends Service
         $response = $this->http()->get($this->getPath() . '/categories/' . $id, ['with' => $with]);
 
         // category not found
-        if($response->status() == 404) throw new Exception('The given category was not found', 404);
+        if ($response->status() == 404) throw new Exception('The given category was not found', 404);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the products by category.', 422);
@@ -83,7 +83,7 @@ class CategoryService extends Service
         $response = $this->http()->get($this->getPath() . '/categories/slug/' . $slug, ['with' => $with]);
 
         // category not found
-        if($response->status() == 404) throw new Exception('The given category was not found', 404);
+        if ($response->status() == 404) throw new Exception('The given category was not found', 404);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the products by category.', 422);
