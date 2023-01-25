@@ -91,8 +91,7 @@ class ProductService extends Service
         Int $page = null,
         Int $category = null,
         String $in = null,
-    )
-    {
+    ) {
         // set up params
         $params = [
             'status'   => 'published',
@@ -137,6 +136,7 @@ class ProductService extends Service
         String $searchTerm = null,
         array $tags = null,
         array $specifications = null,
+        array $price = null,
     ) {
         $data = [
             'status'        => 'published',
@@ -153,6 +153,7 @@ class ProductService extends Service
         $searchTerm ? $data['searchTerm'] = $searchTerm : false;
         $tags ? $data['tags'] = $tags : false;
         $specifications ? $data['specifications'] = $specifications : false;
+        $price ? $data['price'] = $price : false;
 
         // call
         $response = $this->http()->post($this->getPath() . '/products/filter', $data);
