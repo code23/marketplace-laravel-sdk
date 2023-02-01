@@ -52,11 +52,12 @@ class UserService extends Service
     public function create(Request $request)
     {
         $rules = [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email'     => ['required', 'email', new UniqueUserEmailInTeam],
-            'password'  => config('marketplace-laravel-sdk.passwords.rules'),
-            'terms'     => 'required',
+            'first_name'   => 'required',
+            'last_name'   => 'required',
+            'email'       => ['required', 'email', new UniqueUserEmailInTeam],
+            'password'    => config('marketplace-laravel-sdk.passwords.rules'),
+            'terms'       => 'required',
+            'currency_id' => 'required',
         ];
 
         $messages = [
@@ -79,6 +80,7 @@ class UserService extends Service
                     'password_confirmation' => $request->password_confirmation,
                     'terms'                => isset($request->terms) ? true : false,
                     'type'                 => 'customer',
+                    'currency_id'          => $request->currency_id,
                 ]);
 
                 // api call failed
