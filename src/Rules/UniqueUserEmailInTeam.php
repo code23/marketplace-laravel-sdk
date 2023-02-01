@@ -39,6 +39,6 @@ class UniqueUserEmailInTeam implements Rule
     public function message()
     {
         // use error message from MPE or state the api call failed
-        return 'That email address is already in use' ?? 'Unable to check email is unique';
+        return 'Forgot your password or having trouble logging into your account? Reset your password and get a recovery link sent to your inbox.' ?? 'Unable to check email is unique';
     }
 }
