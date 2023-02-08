@@ -52,7 +52,7 @@ class ContactService extends Service
      * @param array $data Repairs form data
      *
      */
-    public function submitRepairsForm(array $data)
+    public function submitServiceForm(array $data)
     {
         // api call
         $response = $this->http()->post($this->getPath() . '/contact-service-form', $data);
@@ -72,7 +72,7 @@ class ContactService extends Service
      * @param array $data Private seller form data
      *
      */
-    public function submitPrivateSellerForm(array $data)
+    public function submitSalesForm(array $data)
     {
         // api call
         $response = $this->http()->post($this->getPath() . '/contact-sales-form', $data);
