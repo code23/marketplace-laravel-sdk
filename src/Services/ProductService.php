@@ -8,6 +8,28 @@ use Exception;
 class ProductService extends Service
 {
     /**
+     * Add to recently viewed products
+     *
+     * @param int $id - product ID to add to array in session
+     *
+     */
+    public function addToRecentlyViewed($id)
+    {
+        if (!session('recently_viewed_products')) {
+            session()->put('recently_viewed_products');
+        }
+
+        // add to recently viewed products collection within session and trim to length limit
+        session([
+            'recently_viewed_products' => collect(session('recently_viewed_products'))
+                ->prepend($id)
+                ->unique()
+                ->slice(0, config('marketplace-laravel-sdk.products.recently_viewed_max'))
+                ->toArray()
+        ]);
+    }
+
+    /**
      * Get a single product by product & vendor slug, with optional relationships
      *
      * @param string $vendorSlug
@@ -305,27 +327,5 @@ class ProductService extends Service
 
         // if successful, return collection of products or empty collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
-    }
-
-    /**
-     * Add to recently viewed products
-     *
-     * @param int $id - product ID to add to array in session
-     *
-     */
-    public function addToRecentlyViewed($id)
-    {
-        if (!session('recently_viewed_products')) {
-            session()->put('recently_viewed_products');
-        }
-
-        // add to recently viewed products collection within session and trim to length limit
-        session([
-            'recently_viewed_products' => collect(session('recently_viewed_products'))
-                ->prepend($id)
-                ->unique()
-                ->slice(0, config('marketplace-laravel-sdk.products.recently_viewed_max'))
-                ->toArray()
-        ]);
     }
 }
