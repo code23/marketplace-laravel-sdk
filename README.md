@@ -157,7 +157,7 @@ NOTE: requires your homepage route to be named `home`.
 
 Overwrite the route name using the env variable `EMAIL_VERIFIED_ROUTE_NAME` and adjust your route declaration to match.
 
-### Categories & Tags
+### Categories, Tags, Attributes
 
 Add `MPESessionCategories` middleware *below* the `MPEPACAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
 
@@ -165,7 +165,7 @@ This middleware stores the available categories to an object in the user's sessi
 
 The rate at which the categories are updated can be set via the env var `CATEGORY_RETRIEVAL_RATE`, default 10 minutes.
 
-Tags has a separate middleware called `MPESessionTags` that functions the same way as categories.
+Tags has a separate middleware called `MPESessionTags` that functions the same way as categories, as does `MPESessionAttributes`.
 
 *Note* session data cannot be used in views/templates that dont use middleware, such as the 404 page. To overcome this, add the following to the bottom of the web.php routes file:
 
