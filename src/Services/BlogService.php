@@ -15,6 +15,7 @@ class BlogService extends Service
      * @param string $sort - optional - order of results
      * @param string $has - optional - 'has' filter
      * @param string $sort_json - optional - order of results by json column
+     * @param string $is_featured - optional - 0 gets only NON featured posts, 1 gets only featured posts, null has no effect
      *
      */
     public function posts(
@@ -24,7 +25,7 @@ class BlogService extends Service
         string $sort = null,
         string $has = null,
         string $sort_json = null,
-
+        string $is_featured = null,
     ) {
         $data = [];
 
@@ -35,6 +36,7 @@ class BlogService extends Service
         $sort ? $data['sort'] = $sort : false;
         $has ? $data['has'] = $has : false;
         $sort_json ? $data['sort_json'] = $sort_json : false;
+        isset($is_featured) ? $data['is_featured'] = $is_featured : false;
 
         // send request
         $response = $this->http()->get($this->getPath() . '/blog/posts', $data);
