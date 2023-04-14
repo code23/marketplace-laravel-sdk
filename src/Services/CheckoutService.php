@@ -40,7 +40,7 @@ class CheckoutService extends Service
             'shipping_address'    => $address,
             'customer_saved_info' => $save,
             'with'                => $with,
-            'vat_relief'          => $vatRelief,
+            'tax_relief'          => $vatRelief,
         ]);
 
         // api call failed
