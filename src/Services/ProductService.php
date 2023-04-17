@@ -100,6 +100,37 @@ class ProductService extends Service
     }
 
     /**
+     * Get a single product by id, with optional relationships
+     *
+     * @param string $slug
+     *      Product slug
+     * @param string $with
+     *      Comma-separated relationships to include in the api call - example: 'images,vendor,variants.images'
+     *
+     * @return Collection
+     */
+    public function getBySlug(string $slug, $with = null)
+    {
+        // call api
+        $response = $this->http()->get($this->getPath() . '/products/slug/' . $slug, [
+            'with' => $with,
+            'status' => 'published',
+        ]);
+
+        // not found
+        if ($response->status() == 404) throw new Exception($response['message'], 404);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the product!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * Get a list of all products across all vendors
      *
      * @param String $with
