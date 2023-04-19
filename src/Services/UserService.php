@@ -203,7 +203,7 @@ class UserService extends Service
     }
 
     /**
-     * update the given user's profile - first name, last name, password
+     * update the given user's profile - first name, last name, phone, password
      */
     public function updateProfile(array $data)
     {
