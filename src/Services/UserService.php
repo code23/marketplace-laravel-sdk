@@ -255,10 +255,12 @@ class UserService extends Service
     /**
      * Get the user's wishlist
      */
-    public function wishlist()
+    public function wishlist($with = null)
     {
         // call to api
-        $response = $this->http()->get($this->getPath() . '/wishlist');
+        $response = $this->http()->get($this->getPath() . '/wishlist', [
+            'with' => $with,
+        ]);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error getting the wishlist', 422);
