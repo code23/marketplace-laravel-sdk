@@ -16,12 +16,9 @@ class AddressLookupService extends Service
     public function findByPostcode(String $postcode)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/postcoder/lookup', [
+        $response = $this->http()->get($this->getPath() . '/postcode/lookup', [
             'postcode' => $postcode
         ]);
-
-        // api call failed
-        if ($response->failed()) throw new Exception('Error attempting to retrieve the address.', 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
