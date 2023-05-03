@@ -144,6 +144,7 @@ class ProductService extends Service
         Int $page = null,
         Int $category = null,
         String $in = null,
+        String $json_contains = null,
     ) {
         // set up params
         $params = [
@@ -154,6 +155,7 @@ class ProductService extends Service
         if ($page) $params['page'] = $page;
         if ($category) $params['category'] = $category;
         if ($in) $params['in'] = $in;
+        if ($json_contains) $params['json_contains'] = $json_contains;
 
         // call
         $response = $this->http()->get($this->getPath() . '/products', $params);
