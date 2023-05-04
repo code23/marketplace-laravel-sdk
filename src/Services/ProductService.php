@@ -237,7 +237,7 @@ class ProductService extends Service
     {
         // call to api
         $response = $this->http()->get($this->getPath() . '/products', [
-            'sort' => 'created_at',
+            'sort' => 'created_at,desc',
             'status' => 'published',
             'limit' => $count,
             'with' => 'images,vendor',
