@@ -102,6 +102,28 @@ class CartService extends Service
     }
 
     /**
+     * Email share code to someone
+     * @param String $email - email address to send to
+     */
+    public function emailShareCode(string $email)
+    {
+        // send request
+        $response = $this->http()->patch($this->getPath() . '/cart/share', [
+            'recipient_email' => $email,
+            'with' => ''
+        ]);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error attempting to send the email.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return cart as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * Get promotions available on platform
      *
      * @param String $with - optional relationships to include, comma separated string
@@ -120,6 +142,23 @@ class CartService extends Service
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to get the promotions.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return cart as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    public function getViaCode(String $code, String $with = null)
+    {
+        // send request
+        $response = $this->http()->get($this->getPath() . '/cart/share/' . $code, [
+            'with' => $with,
+        ]);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error attempting to get the cart.', 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
@@ -227,6 +266,21 @@ class CartService extends Service
 
     }
 
+    public function getShareCode()
+    {
+        // send request
+        $response = $this->http()->patch($this->getPath() . '/cart/share');
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error attempting to share the cart.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return cart as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
     /**
      * Update item quantity
      *
@@ -235,10 +289,10 @@ class CartService extends Service
     public function updateQuantity($productId, $variantId = null, Int $quantity, String $with = null)
     {
         //setup data array
-        $data = ['quantity'   => $quantity,];
+        $data = ['quantity' => $quantity];
 
         // add to array if not null
-        if($variantId) $data['variantId'] = $variantId;
+        if($variantId) $data['variant_id'] = $variantId;
         if($with) $data['with'] = $with;
 
         // send request

@@ -22,7 +22,7 @@ class ShippingService extends Service
         if(!empty($vendorIds)) $params['in'] = 'vendor_id,' . implode(',', $vendorIds);
 
         // add to cart
-        $response = $this->http()->get($this->getPath() . '/settings/shipping/services', $params);
+        $response = $this->http()->get($this->getPath() . '/shipping/services', $params);
 
         // api call failed
         // if ($response->failed()) throw new Exception('Error attempting to update checkout', 422);

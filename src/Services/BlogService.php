@@ -10,12 +10,36 @@ class BlogService extends Service
      * Get a list of blog posts
      *
      * @param string $with - optional - relationships to include, comma separated 'images,blog_categories'
+     * @param int $per_page - optional - pagination controls - per page
+     * @param int $page - optional - pagination controls - page number
+     * @param string $sort - optional - order of results
+     * @param string $has - optional - 'has' filter
+     * @param string $sort_json - optional - order of results by json column
+     * @param string $is_featured - optional - 0 gets only NON featured posts, 1 gets only featured posts, null has no effect
      *
      */
-    public function posts($with = null)
-    {
+    public function posts(
+        string $with = null,
+        int $per_page = null,
+        int $page = null,
+        string $sort = null,
+        string $has = null,
+        string $sort_json = null,
+        string $is_featured = null,
+    ) {
+        $data = [];
+
+        // only include params if they are set
+        $with ? $data['with'] = $with : false;
+        $per_page ? $data['paginate'] = $per_page : false;
+        $page ? $data['page'] = $page : false;
+        $sort ? $data['sort'] = $sort : false;
+        $has ? $data['has'] = $has : false;
+        $sort_json ? $data['sort_json'] = $sort_json : false;
+        isset($is_featured) ? $data['is_featured'] = $is_featured : false;
+
         // send request
-        $response = $this->http()->get($this->getPath() . '/blog/posts', ['with' => $with]);
+        $response = $this->http()->get($this->getPath() . '/blog/posts', $data);
 
         // api call failed
         if ($response->failed()) throw new Exception($response->body(), 422);
@@ -24,7 +48,8 @@ class BlogService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return blog posts as collection
-        return $response->json()['data'] ? collect($response->json()['data'])->where('status', 'published') : collect();
+        if ($per_page) return $response->json() ? collect($response->json()) : collect();
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
     /**
@@ -88,7 +113,7 @@ class BlogService extends Service
         $response = $this->http()->get($this->getPath() . '/blog/categories/' . $id, ['with' => $with]);
 
         // category not found
-        if($response->status() == 404) throw new Exception('The given blog category was not found', 404);
+        if ($response->status() == 404) throw new Exception('The given blog category was not found', 404);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the posts by blog category.', 422);
@@ -116,7 +141,7 @@ class BlogService extends Service
         ]);
 
         // blog post not found
-        if($response->status() == 404) throw new Exception('The given blog post was not found', 404);
+        if ($response->status() == 404) throw new Exception('The given blog post was not found', 404);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the blog post.', 422);
@@ -125,7 +150,7 @@ class BlogService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return blog post as collection
-        if($response->json()['data']) return collect($response->json()['data']);
+        if ($response->json()['data']) return collect($response->json()['data']);
     }
 
     /**
@@ -144,7 +169,7 @@ class BlogService extends Service
         ]);
 
         // blog post not found
-        if($response->status() == 404) throw new Exception('The given blog post was not found', 404);
+        if ($response->status() == 404) throw new Exception('The given blog post was not found', 404);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the blog post.', 422);
@@ -153,6 +178,6 @@ class BlogService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return blog post as collection
-        if($response->json()['data']) return collect($response->json()['data']);
+        if ($response->json()['data']) return collect($response->json()['data']);
     }
 }

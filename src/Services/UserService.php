@@ -52,11 +52,12 @@ class UserService extends Service
     public function create(Request $request)
     {
         $rules = [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email'     => ['required', 'email', new UniqueUserEmailInTeam],
-            'password'  => config('marketplace-laravel-sdk.passwords.rules'),
-            'terms'     => 'required',
+            'first_name'   => 'required',
+            'last_name'   => 'required',
+            'email'       => ['required', 'email', new UniqueUserEmailInTeam],
+            'password'    => config('marketplace-laravel-sdk.passwords.rules'),
+            'terms'       => 'required',
+            'currency_id' => 'required',
         ];
 
         $messages = [
@@ -75,10 +76,12 @@ class UserService extends Service
                     'first_name'            => $request->first_name,
                     'last_name'            => $request->last_name,
                     'email'                => $request->email,
+                    'phone'                => $request->phone,
                     'password'             => $request->password,
                     'password_confirmation' => $request->password_confirmation,
                     'terms'                => isset($request->terms) ? true : false,
                     'type'                 => 'customer',
+                    'currency_id'          => $request->currency_id,
                 ]);
 
                 // api call failed
@@ -89,7 +92,6 @@ class UserService extends Service
 
                 // return
                 return true;
-
             } catch (Exception $e) {
 
                 return $e;
@@ -201,27 +203,28 @@ class UserService extends Service
     }
 
     /**
-     * update the given user's profile - first name, last name, password
+     * update the given user's profile - first name, last name, phone, password
      */
-    public function updateProfile(Array $data)
+    public function updateProfile(array $data)
     {
-            // call
-            $response = $this->http()->patch($this->getPath() . '/customers', [
-                'first_name'            => $data['first_name'],
-                'last_name'            => $data['last_name'],
-                'password'             => $data['password'],
-                'password_confirmation' => $data['password_confirmation'],
-                'currency_id'          => $data['currency_id'],
-            ]);
+        // call
+        $response = $this->http()->patch($this->getPath() . '/customers', [
+            'first_name'            => $data['first_name'],
+            'last_name'            => $data['last_name'],
+            'phone'                 => $data['phone'],
+            'password'             => $data['password'],
+            'password_confirmation' => $data['password_confirmation'],
+            'currency_id'          => $data['currency_id'],
+        ]);
 
-            // api call failed
-            if ($response->failed()) throw new Exception('Unable to edit the user!', 422);
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to edit the user!', 422);
 
-            // any other error
-            if ($response['error']) throw new Exception($response['message'], $response['code']);
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-            // return success
-            return $response->json()['data'] ? collect($response->json()['data']) : collect();
+        // return success
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
     /**
@@ -241,23 +244,23 @@ class UserService extends Service
             if ($response['error']) throw new Exception($response['message'], $response['code']);
 
             return 'Verification email sent';
-
         } catch (Exception $e) {
 
             Log::error($e->getMessage());
 
             return $e->getMessage();
-
         }
     }
 
     /**
      * Get the user's wishlist
      */
-    public function wishlist()
+    public function wishlist($with = null)
     {
         // call to api
-        $response = $this->http()->get($this->getPath() . '/wishlist');
+        $response = $this->http()->get($this->getPath() . '/wishlist', [
+            'with' => $with,
+        ]);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error getting the wishlist', 422);

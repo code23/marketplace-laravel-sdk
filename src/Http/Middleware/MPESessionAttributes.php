@@ -3,12 +3,12 @@
 namespace Code23\MarketplaceLaravelSDK\Http\Middleware;
 
 use Closure;
-use Code23\MarketplaceLaravelSDK\Facades\MPECategories;
+use Code23\MarketplaceLaravelSDK\Facades\MPEAttributes;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class MPESessionCategories
+class MPESessionAttributes
 {
     /**
      * Handle an incoming request.
@@ -20,14 +20,14 @@ class MPESessionCategories
     public function handle(Request $request, Closure $next)
     {
         try {
-            // if session has no categories entry, OR if it does AND it was retrieved over X minutes ago
-            if( session()->missing('categories') || ( session()->has('categories') && session('categories')['retrieved_at']->lt(now()->subMinutes(config('marketplace-laravel-sdk.categories.retrieval_rate'))) ) ) {
+            // if session has no attributes entry, OR if it does AND it was retrieved over X minutes ago
+            if( session()->missing('attributes') || ( session()->has('attributes') && session('attributes')['retrieved_at']->lt(now()->subMinutes(config('marketplace-laravel-sdk.attributes.retrieval_rate'))) ) ) {
 
-                // get the top-level categories
-                $response = MPECategories::list();
+                // get the top-level attributes
+                $response = MPEAttributes::list();
 
-                // retrieve categories and store data to user session
-                session(['categories' => [
+                // retrieve attributes and store data to user session
+                session(['attributes' => [
                     'retrieved_at' => now(),
                     'data'         => $response->toArray(),
                 ]]);

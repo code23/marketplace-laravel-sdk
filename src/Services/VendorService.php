@@ -36,6 +36,36 @@ class VendorService extends Service
     }
 
     /**
+     * Retrieve a vendor by id
+     *
+     * @param Int $id
+     *      Vendor id to retrieve.
+     *
+     * @param String $with
+     *      Vendor relationships (comma separated) to include
+     */
+    public function get(Int $id, String $with = null)
+    {
+        // retrieve vendor
+        $response = $this->http()->get($this->getPath() . '/vendors/' . $id, [
+            'with' => $with,
+            'is_active' => true,
+        ]);
+
+        // vendor not found
+        if ($response->status() == 404) return $response;
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the vendor retrieval.', 422);
+
+        // any other errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+        // return the vendor
+        return $response['data'];
+    }
+
+    /**
      * Retrieve a vendor by slug
      *
      * @param String $slug
@@ -48,7 +78,8 @@ class VendorService extends Service
     {
         // retrieve vendor
         $response = $this->http()->get($this->getPath() . '/vendors/slug/' . $slug, [
-            'with' => $with
+            'with' => $with,
+            'is_active' => true,
         ]);
 
         // vendor not found
@@ -72,7 +103,10 @@ class VendorService extends Service
     public function list($with = null)
     {
         // retrieve vendors
-        $response = $this->http()->get($this->getPath() . '/vendors', ['with' => $with]);
+        $response = $this->http()->get($this->getPath() . '/vendors', [
+            'with' => $with,
+            'is_active' => true,
+        ]);
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the vendors retrieval.', 422);

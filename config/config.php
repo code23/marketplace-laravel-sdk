@@ -45,7 +45,7 @@ return [
         'retrieval_rate' => env('CATEGORY_RETRIEVAL_RATE', 10),
     ],
 
-    'categories' => [
+    'tags' => [
         'retrieval_rate' => env('TAG_RETRIEVAL_RATE', 10),
     ],
 
