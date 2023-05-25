@@ -86,9 +86,6 @@ class ProductService extends Service
         // not found
         if ($response->status() == 404) throw new Exception($response['message'], 404);
 
-        // not published
-        if (isset($response->json()['data']) && empty($response->json()['data']['products'])) throw new Exception('Product not published', 404);
-
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the product!', 422);
 
