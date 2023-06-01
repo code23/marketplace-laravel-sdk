@@ -230,14 +230,15 @@ class ProductService extends Service
      *
      * @return Collection
      */
-    public function latest(Int $count = 3)
+    public function latest(Int $count = 3, String $with = 'images,vendor')
     {
         // call to api
         $response = $this->http()->get($this->getPath() . '/products', [
             'sort' => 'created_at,desc',
             'status' => 'published',
-            'limit' => $count,
-            'with' => 'images,vendor',
+            'paginate' => $count,
+            'page' => 1,
+            'with' => $with,
         ]);
 
         // api call failed
