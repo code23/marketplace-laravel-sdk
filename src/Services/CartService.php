@@ -13,9 +13,17 @@ class CartService extends Service
      * @param Int $quantity
      * @param Int|null $variantId
      * @param Array|null $attributes
+     * @param String|null $with - relationships to include in returned cart, comma separated string
+     * @param Int|null $addonId
      * @return Collection
      */
-    public function add(Int $productId, Int $quantity = 1, Int $variantId = null, Array $attributes = null, String $with = null)
+    public function add(
+        Int $productId,
+        Int $quantity = 1,
+        Int $variantId = null,
+        Array $attributes = null,
+        String $with = null,
+        Int $addonId = null)
     {
         // create params array
         $params = [
@@ -26,6 +34,7 @@ class CartService extends Service
         if($variantId) $params['variant_id'] = $variantId;
         if($attributes) $params['attributes'] = $attributes;
         if($with) $params['with'] = $with;
+        if($addonId) $params['addon_id'] = $addonId;
 
         // add to cart
         $response = $this->http()->patch($this->getPath() . '/cart/add/' . $productId, $params);
