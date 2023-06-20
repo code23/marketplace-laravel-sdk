@@ -17,32 +17,17 @@ class StoredDataService extends Service
      * called from frontend's app/Console/Kernel.php schedule() method.
      */
     public function retrieve($string) {
-        // try for cached data
-        if($cached = $this->retrieveCache($string)) return $cached;
+        // return cached data if available, as array
+        if(Cache::has($string)) return Cache::get($string)->toArray();
+
+        Log::error($string . ' not found in cache');
 
         // or get from file (…storage/app/filename.json) and return as array
-        if($file = $this->retrieveFile($string . '.json')) {
-            return $file ? json_decode($file, true) : null;
-        }
+        if($file = Storage::get($string . '.json')) return json_decode($file, true);
+
+        Log::error($string . '.json not found in storage');
 
         // or return null
         return null;
-    }
-
-    private function retrieveCache(string $key) {
-        // return cached data if available, as array
-        if(Cache::has($key)) return Cache::get($key)->toArray();
-
-        Log::error($key . ' not found in cache');
-        return false;
-    }
-
-    private function retrieveFile(string $filename) {
-        if(!$file = Storage::get($filename)) {
-            Log::error($filename . ' not found in storage');
-            return false;
-        }
-        // return file contents as array
-        return $file;
     }
 }
