@@ -6,6 +6,10 @@ use App\Models\User;
 
 use Code23\MarketplaceLaravelSDK\View\Components\Layout;
 use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
+use Code23\MarketplaceLaravelSDK\Console\FetchAttributes;
+use Code23\MarketplaceLaravelSDK\Console\FetchCategories;
+use Code23\MarketplaceLaravelSDK\Console\FetchCurrencies;
+use Code23\MarketplaceLaravelSDK\Console\FetchSpecifications;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 
@@ -66,6 +70,10 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
             // registering package commands
             $this->commands([
                 InstallCommand::class,
+                FetchAttributes::class,
+                FetchCategories::class,
+                FetchCurrencies::class,
+                FetchSpecifications::class,
             ]);
         }
 

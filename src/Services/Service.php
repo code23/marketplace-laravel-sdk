@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
+use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
 use Code23\MarketplaceLaravelSDK\Facades\MPECurrencies;
 use Exception;
 use Illuminate\Support\Facades\Http;
@@ -40,9 +41,6 @@ class Service
                 'X-Cart-Id' => session('cart_id'),
             ]);
         }
-
-        // TODO - put below back in after the domain matched the request origin
-        //'X-MPE-Origin' => request()->header('host') ?? config('marketplace-laravel-sdk.app.url'),
 
         // new http client with options expecting json from the api
         $this->client = Http::withHeaders($this->headers)->withOptions($this->getOptions())->acceptJson();
