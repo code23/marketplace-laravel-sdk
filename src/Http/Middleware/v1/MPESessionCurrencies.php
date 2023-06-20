@@ -23,7 +23,7 @@ class MPESessionCurrencies
             // if active_currency_code not in session
             if(!session('active_currency_code')) {
                 // set to default currency for site
-                session(['active_currency_code' => collect(MPEStored::currencies())->firstWhere('is_default', true)['code']]);
+                session(['active_currency_code' => collect(MPEStored::retrieve('currencies'))->firstWhere('is_default', true)['code']]);
             }
         } catch (Exception $e) {
             Log::error($e);

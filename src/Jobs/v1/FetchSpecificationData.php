@@ -9,6 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
@@ -29,6 +30,9 @@ class FetchSpecificationData implements ShouldQueue
             // Save the data to a JSON file
             $filePath = storage_path('app/specifications.json');
             File::put($filePath, json_encode($response));
+
+            // save data to cache
+            Cache::put('specifications', $response);
 
             // return success
             return true;

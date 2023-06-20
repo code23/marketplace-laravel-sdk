@@ -13,8 +13,8 @@ class CurrencyService extends Service
      */
     public function active()
     {
-        return (MPEStored::currencies() && session('active_currency_code'))
-            ? collect(MPEStored::currencies())->firstWhere('code', session('active_currency_code'))
+        return (MPEStored::retrieve('currencies') && session('active_currency_code'))
+            ? collect(MPEStored::retrieve('currencies'))->firstWhere('code', session('active_currency_code'))
             : null;
     }
 
