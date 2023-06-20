@@ -8,21 +8,39 @@ use Illuminate\Support\Facades\Storage;
 
 class StoredDataService extends Service
 {
-    public function categories() {
-        if(!$file = Storage::get('categories.json')) {
-            Log::error('Categories file not found in storage');
+    public function attributes() {
+        if(!$file = Storage::get('attributes.json')) {
+            Log::error('attributes.json not found in storage');
             return false;
         }
-        // true to return an array instead of an object
+        // return file contents as array
         return json_decode($file, true);
     }
 
-    public function attributes() {
-        if(!$file = Storage::get('attributes.json')) {
-            Log::error('Attributes file not found in storage');
+    public function categories() {
+        if(!$file = Storage::get('categories.json')) {
+            Log::error('categories.json not found in storage');
             return false;
         }
-        // true to return an array instead of an object
+        // return file contents as array
+        return json_decode($file, true);
+    }
+
+    public function currencies() {
+        if(!$file = Storage::get('currencies.json')) {
+            Log::error('currencies.json not found in storage');
+            return false;
+        }
+        // return file contents as array
+        return json_decode($file, true);
+    }
+
+    public function specifications() {
+        if(!$file = Storage::get('specifications.json')) {
+            Log::error('specifications.json not found in storage');
+            return false;
+        }
+        // return file contents as array
         return json_decode($file, true);
     }
 }
