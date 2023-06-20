@@ -40,6 +40,9 @@ class FetchCurrencyData implements ShouldQueue
             $filePath = storage_path('app/currencies.json');
             File::put($filePath, json_encode($currencyData));
 
+            // save data to cache
+            Cache::put('currencies', $currencyData);
+
             // return success
             return true;
 

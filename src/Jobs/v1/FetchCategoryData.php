@@ -32,6 +32,9 @@ class FetchCategoryData implements ShouldQueue
             $filePath = storage_path('app/categories.json');
             File::put($filePath, json_encode($response));
 
+            // save data to cache
+            Cache::put('categories', $response);
+
             // return success
             return true;
 

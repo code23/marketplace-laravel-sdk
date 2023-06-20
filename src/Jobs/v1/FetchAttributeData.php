@@ -31,6 +31,9 @@ class FetchAttributeData implements ShouldQueue
             $filePath = storage_path('app/attributes.json');
             File::put($filePath, json_encode($response));
 
+            // save data to cache
+            Cache::put('attributes', $response);
+
             // return success
             return true;
 
