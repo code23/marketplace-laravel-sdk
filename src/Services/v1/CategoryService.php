@@ -13,7 +13,7 @@ class CategoryService extends Service
      */
     public function breadcrumb($id) {
         // get all categories from storage, or quit
-        if(!$categories = MPEStored::retrieved('categories')) return false;
+        if(!$categories = MPEStored::retrieve('categories')) return false;
 
         // flatten the categories
         $flat_categories = $this->flattenCategories($categories);
