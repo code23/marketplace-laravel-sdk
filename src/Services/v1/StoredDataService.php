@@ -8,39 +8,43 @@ use Illuminate\Support\Facades\Storage;
 
 class StoredDataService extends Service
 {
-    public function attributes() {
-        if(!$file = Storage::get('attributes.json')) {
-            Log::error('attributes.json not found in storage');
+    private function retrieve(string $filename) {
+        if(!$file = Storage::get($filename)) {
+            Log::error($filename . ' not found in storage');
             return false;
         }
         // return file contents as array
-        return json_decode($file, true);
+        return $file;
+    }
+
+    public function attributes() {
+        $file = $this->retrieve('attributes.json');
+        // return file contents as array (true)
+        return $file ? json_decode($file, true) : null;
     }
 
     public function categories() {
-        if(!$file = Storage::get('categories.json')) {
-            Log::error('categories.json not found in storage');
-            return false;
-        }
-        // return file contents as array
-        return json_decode($file, true);
+        $file = $this->retrieve('categories.json');
+        // return file contents as array (true)
+        return $file ? json_decode($file, true) : null;
     }
 
     public function currencies() {
-        if(!$file = Storage::get('currencies.json')) {
-            Log::error('currencies.json not found in storage');
-            return false;
-        }
-        // return file contents as array
-        return json_decode($file, true);
+        $file = $this->retrieve('currencies.json');
+        // return file contents as array (true)
+        return $file ? json_decode($file, true) : null;
     }
 
     public function specifications() {
-        if(!$file = Storage::get('specifications.json')) {
-            Log::error('specifications.json not found in storage');
-            return false;
-        }
-        // return file contents as array
-        return json_decode($file, true);
+        $file = $this->retrieve('specifications.json');
+        // return file contents as array (true)
+        return $file ? json_decode($file, true) : null;
     }
+
+    // TODO
+    // public function vendors() {
+    //     $file = $this->retrieve('vendors.json');
+    //     // return file contents as array (true)
+    //     return $file ? json_decode($file, true) : null;
+    // }
 }
