@@ -23,7 +23,7 @@ class CurrencyService extends Service
      */
     public function list($params = [
         'is_enabled' => true,
-    ], $oauth)
+    ], $oauth = null)
     {
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/settings/currencies', $params);

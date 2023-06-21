@@ -52,4 +52,28 @@ return [
     'user' => [
         'email_verified_route_name' => env('EMAIL_VERIFIED_ROUTE_NAME', 'email-verified'),
     ],
+
+    'cache' => [
+
+        'attributes' => [
+            'key' => env('ATTRIBUTES_CACHE_KEY', 'attributes'),
+            'minutes' => env('ATTRIBUTES_CACHE_MINUTES', 10),
+        ],
+
+        'categories' => [
+            'key' => env('CATEGORIES_CACHE_KEY', 'categories'),
+            'minutes' => env('CATEGORIES_CACHE_MINUTES', 10),
+        ],
+
+        'currencies' => [
+            'key' => env('CURRENCIES_CACHE_KEY', 'currencies'),
+            'minutes' => env('CURRENCIES_CACHE_MINUTES', 10),
+        ],
+
+        'specifications' => [
+            'key' => env('SPECIFICATIONS_CACHE_KEY', 'specifications'),
+            'minutes' => env('SPECIFICATIONS_CACHE_MINUTES', 10),
+        ],
+
+    ],
 ];

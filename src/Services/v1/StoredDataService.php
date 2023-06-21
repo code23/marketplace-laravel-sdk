@@ -2,32 +2,120 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services\v1;
 
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPEAttributes;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECategories;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECurrencies;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPESpecifications;
+use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
 use Code23\MarketplaceLaravelSDK\Services\Service;
+use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class StoredDataService extends Service
 {
     /**
-     * The main method to retrieve data from the cache or storage
-     * @param string $string The name of the file / cache key to retrieve
-     *
-     * Files are stored in storage/app/filename.json by use of the fetch commands in Console,
-     * called from frontend's app/Console/Kernel.php schedule() method.
+     * Retrieve stored MPE data
+     * @param string $string The name of the cache key to retrieve
      */
     public function retrieve($string) {
-        // return cached data if available, as array
-        if(Cache::has($string)) return Cache::get($string)->toArray();
+        // storage time
+        $seconds = config('marketplace-laravel-sdk.cache.'.$string.'.minutes') * 60;
 
-        Log::error($string . ' not found in cache');
+        // get key from cache or retrieve data and save it
+        $data = Cache::remember($string, $seconds, function () use ($string) {
 
-        // or get from file (…storage/app/filename.json) and return as array
-        if($file = Storage::get($string . '.json')) return json_decode($file, true);
+            switch ($string) {
+                case 'attributes':
+                    return $this->retrieveAttributes();
+                    break;
 
-        Log::error($string . '.json not found in storage');
+                case 'categories':
+                    return $this->retrieveCategories();
+                    break;
+
+                case 'currencies':
+                    return $this->retrieveCurrencies();
+                    break;
+
+                case 'specifications':
+                    return $this->retrieveSpecifications();
+                    break;
+
+                default:
+                    # code...
+                    break;
+            }
+
+        })->toArray();
 
         // or return null
-        return null;
+        return $data ?? null;
+    }
+
+    private function retrieveAttributes() {
+        try {
+            $params = [
+                'with' => 'values',
+            ];
+
+            // get the categories from API
+            return MPEAttributes::list($params);
+
+        } catch (Exception $e) {
+            Log::error($e);
+
+            return false;
+        }
+    }
+
+    private function retrieveCategories() {
+        try {
+            $params = [
+                'with' => 'images,active_children_categories.images',
+                'is_null' => 'top_id',
+                'is_active' => true,
+            ];
+
+            // get the categories from API
+            return MPECategories::list($params);
+
+        } catch (Exception $e) {
+            Log::error($e);
+
+            return false;
+        }
+    }
+
+    private function retrieveCurrencies() {
+        try {
+            $params = [
+                'is_enabled' => true,
+            ];
+
+            // get the categories from API
+            return MPECurrencies::list($params);
+
+        } catch (Exception $e) {
+            Log::error($e);
+
+            return false;
+        }
+    }
+
+    private function retrieveSpecifications() {
+        try {
+            $params = [
+                'with' => 'values',
+            ];
+
+            // get the categories from API
+            return MPESpecifications::list($params);
+
+        } catch (Exception $e) {
+            Log::error($e);
+
+            return false;
+        }
     }
 }

@@ -70,10 +70,6 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
             // registering package commands
             $this->commands([
                 InstallCommand::class,
-                FetchAttributes::class,
-                FetchCategories::class,
-                FetchCurrencies::class,
-                FetchSpecifications::class,
             ]);
         }
 

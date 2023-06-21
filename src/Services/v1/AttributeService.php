@@ -12,11 +12,13 @@ class AttributeService extends Service
      * @param array $params - See postman for available parameters
      * @param $oauth - oauth token for when calling from artisan command
      */
-    public function list($params = [
-        'with' => 'values',
-        'is_active' => 1,
-    ], $oauth = null)
-    {
+    public function list(
+        $params = [
+            'with' => 'values',
+            'is_active' => 1,
+        ],
+        $oauth = null
+    ) {
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/attributes', $params);
 

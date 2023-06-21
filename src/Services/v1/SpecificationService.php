@@ -12,7 +12,7 @@ class SpecificationService extends Service
      */
     public function list($params = [
         'with' => 'values',
-    ], $oauth)
+    ], $oauth = null)
     {
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/specifications', $params);
