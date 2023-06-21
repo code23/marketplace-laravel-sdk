@@ -6,7 +6,7 @@ use Code23\MarketplaceLaravelSDK\Facades\v1\MPEAttributes;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECategories;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECurrencies;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPESpecifications;
-use Code23\MarketplaceLaravelSDK\Facades\MPEVendors;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPEVendors;
 use Code23\MarketplaceLaravelSDK\Services\Service;
 use Exception;
 use Illuminate\Support\Facades\Cache;
