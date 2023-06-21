@@ -6,7 +6,7 @@ use Code23\MarketplaceLaravelSDK\Facades\v1\MPEAttributes;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECategories;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECurrencies;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPESpecifications;
-use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
+use Code23\MarketplaceLaravelSDK\Facades\MPEVendors;
 use Code23\MarketplaceLaravelSDK\Services\Service;
 use Exception;
 use Illuminate\Support\Facades\Cache;
@@ -40,6 +40,10 @@ class StoredDataService extends Service
 
                 case 'specifications':
                     return $this->retrieveSpecifications();
+                    break;
+
+                case 'vendors':
+                    return $this->retrieveVendors();
                     break;
 
                 default:
@@ -111,6 +115,18 @@ class StoredDataService extends Service
 
             // get the categories from API
             return MPESpecifications::list($params);
+
+        } catch (Exception $e) {
+            Log::error($e);
+
+            return false;
+        }
+    }
+
+    private function retrieveVendors() {
+        try {
+            // get the categories from API
+            return MPEVendors::list();
 
         } catch (Exception $e) {
             Log::error($e);
