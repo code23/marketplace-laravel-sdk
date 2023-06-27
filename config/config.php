@@ -75,6 +75,11 @@ return [
             'minutes' => env('SPECIFICATIONS_CACHE_MINUTES', 10),
         ],
 
+        'tags' => [
+            'key' => env('TAGS_CACHE_KEY', 'tags'),
+            'minutes' => env('TAGS_CACHE_MINUTES', 10),
+        ],
+
         'vendors' => [
             'key' => env('VENDORS_CACHE_KEY', 'vendors'),
             'minutes' => env('VENDORS_CACHE_MINUTES', 10),

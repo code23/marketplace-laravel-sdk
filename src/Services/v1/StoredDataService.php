@@ -6,6 +6,7 @@ use Code23\MarketplaceLaravelSDK\Facades\v1\MPEAttributes;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECategories;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECurrencies;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPESpecifications;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPETags;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPEVendors;
 use Code23\MarketplaceLaravelSDK\Services\Service;
 use Exception;
@@ -17,34 +18,39 @@ class StoredDataService extends Service
 {
     /**
      * Retrieve stored MPE data
-     * @param string $string The name of the cache key to retrieve
+     * @param string $key The name of the cache key to retrieve
+     * @param array $params Optional - parameters to pass to the API
      */
-    public function retrieve($string) {
+    public function retrieve($key, ...$params) {
         // storage time
-        $seconds = config('marketplace-laravel-sdk.cache.'.$string.'.minutes') * 60;
+        $seconds = config('marketplace-laravel-sdk.cache.'.$key.'.minutes') * 60;
 
         // get key from cache or retrieve data and save it
-        $data = Cache::remember($string, $seconds, function () use ($string) {
+        $data = Cache::remember($key, $seconds, function () use ($key, $params) {
 
-            switch ($string) {
+            switch ($key) {
                 case 'attributes':
-                    return $this->retrieveAttributes();
+                    return $this->retrieveAttributes(...$params);
                     break;
 
                 case 'categories':
-                    return $this->retrieveCategories();
+                    return $this->retrieveCategories(...$params);
                     break;
 
                 case 'currencies':
-                    return $this->retrieveCurrencies();
+                    return $this->retrieveCurrencies(...$params);
                     break;
 
                 case 'specifications':
-                    return $this->retrieveSpecifications();
+                    return $this->retrieveSpecifications(...$params);
+                    break;
+
+                case 'tags':
+                    return $this->retrieveTags(...$params);
                     break;
 
                 case 'vendors':
-                    return $this->retrieveVendors();
+                    return $this->retrieveVendors(...$params);
                     break;
 
                 default:
@@ -58,12 +64,12 @@ class StoredDataService extends Service
         return $data->toArray() ?? null;
     }
 
-    private function retrieveAttributes() {
+    private function retrieveAttributes(
+        $params = [
+            'with' => 'values',
+        ]
+    ) {
         try {
-            $params = [
-                'with' => 'values',
-            ];
-
             // get the categories from API
             return MPEAttributes::list($params);
 
@@ -75,14 +81,15 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveCategories() {
+    /**
+     * Retrieve nested categories and children
+     */
+    private function retrieveCategories($params = [
+        'with' => 'images,active_children_categories.images',
+        'is_null' => 'top_id',
+        'is_active' => true,
+    ]) {
         try {
-            $params = [
-                'with' => 'images,active_children_categories.images',
-                'is_null' => 'top_id',
-                'is_active' => true,
-            ];
-
             // get the categories from API
             return MPECategories::list($params);
 
@@ -94,12 +101,10 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveCurrencies() {
+    private function retrieveCurrencies($params = [
+        'is_enabled' => true,
+    ]) {
         try {
-            $params = [
-                'is_enabled' => true,
-            ];
-
             // get the categories from API
             return MPECurrencies::list($params);
 
@@ -111,12 +116,10 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveSpecifications() {
+    private function retrieveSpecifications($params = [
+        'with' => 'values',
+    ]) {
         try {
-            $params = [
-                'with' => 'values',
-            ];
-
             // get the categories from API
             return MPESpecifications::list($params);
 
@@ -128,10 +131,23 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveVendors() {
+    private function retrieveTags($params = []) {
         try {
             // get the categories from API
-            return MPEVendors::list();
+            return MPETags::list($params);
+
+        } catch (Exception $e) {
+            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.name') . "* StoredDataService.php: _Error retrieving tags from API_");
+            Log::error($e);
+
+            return false;
+        }
+    }
+
+    private function retrieveVendors($params = []) {
+        try {
+            // get the categories from API
+            return MPEVendors::list($params);
 
         } catch (Exception $e) {
             if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.name') . "* StoredDataService.php: _Error retrieving vendors from API_");
