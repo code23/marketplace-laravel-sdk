@@ -11,6 +11,7 @@ use Code23\MarketplaceLaravelSDK\Services\Service;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class StoredDataService extends Service
 {
@@ -67,6 +68,7 @@ class StoredDataService extends Service
             return MPEAttributes::list($params);
 
         } catch (Exception $e) {
+            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.name') . "* StoredDataService.php: _Error retrieving attributes from API_");
             Log::error($e);
 
             return false;
@@ -85,6 +87,7 @@ class StoredDataService extends Service
             return MPECategories::list($params);
 
         } catch (Exception $e) {
+            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.name') . "* StoredDataService.php: _Error retrieving categories from API_");
             Log::error($e);
 
             return false;
@@ -101,6 +104,7 @@ class StoredDataService extends Service
             return MPECurrencies::list($params);
 
         } catch (Exception $e) {
+            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.name') . "* StoredDataService.php: _Error retrieving currencies from API_");
             Log::error($e);
 
             return false;
@@ -117,6 +121,7 @@ class StoredDataService extends Service
             return MPESpecifications::list($params);
 
         } catch (Exception $e) {
+            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.name') . "* StoredDataService.php: _Error retrieving specifications from API_");
             Log::error($e);
 
             return false;
@@ -129,6 +134,7 @@ class StoredDataService extends Service
             return MPEVendors::list();
 
         } catch (Exception $e) {
+            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.name') . "* StoredDataService.php: _Error retrieving vendors from API_");
             Log::error($e);
 
             return false;
