@@ -52,10 +52,10 @@ class StoredDataService extends Service
                     break;
             }
 
-        })->toArray();
+        });
 
         // or return null
-        return $data ?? null;
+        return $data->toArray() ?? null;
     }
 
     private function retrieveAttributes() {
@@ -68,7 +68,7 @@ class StoredDataService extends Service
             return MPEAttributes::list($params);
 
         } catch (Exception $e) {
-            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.name') . "* StoredDataService.php: _Error retrieving attributes from API_");
+            if(config('app.env') == 'production' && env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving attributes from API_");
             Log::error($e);
 
             return false;

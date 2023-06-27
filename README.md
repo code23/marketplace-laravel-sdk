@@ -173,7 +173,7 @@ NOTE: requires your homepage route to be named `home`.
 
 Overwrite the route name using the env variable `EMAIL_VERIFIED_ROUTE_NAME` and adjust your route declaration to match.
 
-### Categories, Tags, Attributes
+### DEPRECATED: Categories, Tags, Attributes (use MPEStored below instead)
 
 Add `MPESessionCategories` middleware _below_ the `MPESessionAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
 
@@ -194,11 +194,32 @@ Route::fallback(function () {
 });
 ```
 
-### Currencies
+### DEPRECATED: Currencies (use MPEStored below instead)
 
 If you require multi-currency options, you'll need to include the `MPESessionCurrencies` middleware _below_ the `MPESessionAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
 
 This middleware stores the available currencies to an object in the user's session.
+
+## Filters & Cached Data
+
+To reduce data transfer and speed up frontend rendering, filters and other data that is used across multiple pages is cached. This data is updated on a schedule defined in the config file (default 10 minutes).
+
+The cached data is accessed via the `MPEStored` facade's `retrieve()` method, registered in the SDK service provider, so you can use it anywhere in your application.
+
+Examples:
+
+```php
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPEStored;
+
+// Get all categories
+MPEStored::retrieve('categories');
+
+// Get all specifications
+MPEStored::retrieve('specifications');
+
+```
+
+The method first checks the cache for the requested data to return. If not found in cache, sends a request to the API to retrieve the data, and stores it in the cache for future requests. Cached data is stored for 10 minutes by default, but can be changed in the config file.
 
 ## Users
 
