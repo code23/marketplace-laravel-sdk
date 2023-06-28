@@ -81,7 +81,7 @@ class OrderService extends Service
      * @param String $number
      *      The Order ID to show.
      */
-    public function getByNumberByCustomer(String $number, String $with = 'currency,transaction,order_groups.vendor,shipping_address,billing_address,invoice')
+    public function getByNumberByCustomer(String $number, String $with = 'currency,transaction,order_groups.vendor,shipping_address,billing_address,invoice.files')
     {
         // TODO : Check for final API route
         // call api
