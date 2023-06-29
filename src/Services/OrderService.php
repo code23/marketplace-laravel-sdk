@@ -8,6 +8,26 @@ use Exception;
 class OrderService extends Service
 {
     /**
+     * Download an invoice relating to an order
+     * 
+     * @param int $id   invoice id
+     * 
+     * @return
+     */
+    public function downloadInvoiceById(int $id)
+    {
+        // call to api
+        $response = $this->http()->get($this->getPath() . '/invoices/' . $id . '/download');
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the invoice requested!', 422);
+
+        // return orders list
+        return $response->body();
+    }
+
+
+    /**
      * Return a list of authenticated user's Orders.
      *
      * @return Collection
@@ -61,7 +81,7 @@ class OrderService extends Service
      * @param String $number
      *      The Order ID to show.
      */
-    public function getByNumberByCustomer(String $number, String $with = 'currency,transaction,order_groups.vendor,shipping_address,billing_address')
+    public function getByNumberByCustomer(String $number, String $with = 'currency,transaction,order_groups.vendor,shipping_address,billing_address,invoice.files')
     {
         // TODO : Check for final API route
         // call api
@@ -77,5 +97,22 @@ class OrderService extends Service
 
         // return order
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Get invoice by ID
+     *
+     * @param Int $id Invoice ID
+     */
+    public function getInvoiceByID(Int $id)
+    {
+        // TODO : Check for final API route
+        // call api
+        $response = $this->http(null, 'application/pdf')->get($this->getPath() . '/invoices/' . $id . '/download');
+
+        if ($response->failed()) throw new Exception('Unable to download the invoice!', 422);
+
+        // return order        
+        return $response->body();
     }
 }

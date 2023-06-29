@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
+use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
 use Code23\MarketplaceLaravelSDK\Facades\MPECurrencies;
 use Exception;
 use Illuminate\Support\Facades\Http;
@@ -16,7 +17,7 @@ class Service
     /**
      * initialises a new http instance and returns the client
      */
-    public function http($oauth = null)
+    public function http($oauth = null, $contentType = 'application/json')
     {
         // update headers with origin and currency
         $this->headers = array_merge($this->headers, [
@@ -35,17 +36,14 @@ class Service
         ]);
 
         // check session for cart id
-        if(session('cart_id')) {
+        if (session('cart_id')) {
             $this->headers = array_merge($this->headers, [
                 'X-Cart-Id' => session('cart_id'),
             ]);
         }
 
-        // TODO - put below back in after the domain matched the request origin
-        //'X-MPE-Origin' => request()->header('host') ?? config('marketplace-laravel-sdk.app.url'),
-
         // new http client with options expecting json from the api
-        $this->client = Http::withHeaders($this->headers)->withOptions($this->getOptions())->acceptJson();
+        $this->client = Http::withHeaders($this->headers)->withOptions($this->getOptions())->accept($contentType);
 
         // determine whether tokens already exist
         if (session()->has('oAuth') && isset(session('oAuth')['access_token'])) {
@@ -88,7 +86,7 @@ class Service
      */
     public function getOptions()
     {
-        if(!config('marketplace-laravel-sdk.http.origin')) {
+        if (!config('marketplace-laravel-sdk.http.origin')) {
             Log::error('MPE_ORIGIN value missing from env!');
             throw new Exception("MPE_ORIGIN value missing from env", 500);
         }
@@ -125,13 +123,12 @@ class Service
             // validate data
             $validator = Validator::make($data, $rules, $messages);
 
-            if($validator->fails()) {
+            if ($validator->fails()) {
                 return $validator->errors();
             }
 
             // if passes validation
             return true;
-
         } catch (Exception $e) {
 
             // if the exception contains a validator object

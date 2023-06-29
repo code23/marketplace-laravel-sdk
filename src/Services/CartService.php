@@ -13,9 +13,17 @@ class CartService extends Service
      * @param Int $quantity
      * @param Int|null $variantId
      * @param Array|null $attributes
+     * @param String|null $with - relationships to include in returned cart, comma separated string
+     * @param Int|null $addonId
      * @return Collection
      */
-    public function add(Int $productId, Int $quantity = 1, Int $variantId = null, Array $attributes = null, String $with = null)
+    public function add(
+        Int $productId,
+        Int $quantity = 1,
+        Int $variantId = null,
+        Array $attributes = null,
+        String $with = null,
+        Int $addonId = null)
     {
         // create params array
         $params = [
@@ -26,6 +34,7 @@ class CartService extends Service
         if($variantId) $params['variant_id'] = $variantId;
         if($attributes) $params['attributes'] = $attributes;
         if($with) $params['with'] = $with;
+        if($addonId) $params['addon_id'] = $addonId;
 
         // add to cart
         $response = $this->http()->patch($this->getPath() . '/cart/add/' . $productId, $params);
@@ -102,6 +111,28 @@ class CartService extends Service
     }
 
     /**
+     * Email share code to someone
+     * @param String $email - email address to send to
+     */
+    public function emailShareCode(string $email)
+    {
+        // send request
+        $response = $this->http()->patch($this->getPath() . '/cart/share', [
+            'recipient_email' => $email,
+            'with' => ''
+        ]);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error attempting to send the email.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return cart as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * Get promotions available on platform
      *
      * @param String $with - optional relationships to include, comma separated string
@@ -120,6 +151,23 @@ class CartService extends Service
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to get the promotions.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return cart as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    public function getViaCode(String $code, String $with = null)
+    {
+        // send request
+        $response = $this->http()->get($this->getPath() . '/cart/share/' . $code, [
+            'with' => $with,
+        ]);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error attempting to get the cart.', 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
@@ -225,6 +273,21 @@ class CartService extends Service
         // if successful, return cart as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
 
+    }
+
+    public function getShareCode()
+    {
+        // send request
+        $response = $this->http()->patch($this->getPath() . '/cart/share');
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error attempting to share the cart.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return cart as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
     /**

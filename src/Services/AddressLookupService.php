@@ -16,19 +16,40 @@ class AddressLookupService extends Service
     public function findByPostcode(String $postcode)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/postcoder/lookup', [
+        $response = $this->http()->get($this->getPath() . '/postcode/lookup', [
             'postcode' => $postcode
         ]);
-
-        // api call failed
-        if ($response->failed()) throw new Exception('Error attempting to retrieve the address.', 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return address as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
-
     }
 
+    /**
+     * Retrieve model by proximity to postcode
+     *
+     * @param String $postcode
+     * @param String $model
+     * @param Int $radius
+     * @param Int $limit
+     *
+     */
+    public function getNearbyModel(String $postcode, String $model, Int $radius = 10, Int $limit = 10)
+    {
+        // send request
+        $response = $this->http()->get($this->getPath() . '/postcode/nearby', [
+            'postcode' => $postcode,
+            'model' => $model,
+            'radius' => $radius,
+            'limit' => $limit
+        ]);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return address as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
 }

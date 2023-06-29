@@ -1,7 +1,9 @@
 <?php
 
-namespace Code23\MarketplaceLaravelSDK\Services;
+namespace Code23\MarketplaceLaravelSDK\Services\v1;
 
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPEStored;
+use Code23\MarketplaceLaravelSDK\Services\Service;
 use Exception;
 
 class CategoryService extends Service
@@ -10,11 +12,11 @@ class CategoryService extends Service
      * Generate a breadcrumb trail for a given category id
      */
     public function breadcrumb($id) {
-        // get all categories from session, or quit
-        if(!$session_categories = session('categories')['data']) return false;
+        // get all categories from storage, or quit
+        if(!$categories = MPEStored::retrieve('categories')) return false;
 
         // flatten the categories
-        $flat_categories = $this->flattenCategories($session_categories);
+        $flat_categories = $this->flattenCategories($categories);
 
         // if category not found in session data, return false
         if(!$category = $this->findInArrayByID($id, $flat_categories)) return false;
@@ -30,25 +32,6 @@ class CategoryService extends Service
 
         // return the reversed breadcrumb
         return array_reverse($breadcrumb);
-    }
-
-    /**
-     * parent walker
-     */
-    public function parentWalker($category, $categories, &$parents = []) {
-        // if the category has a parent
-        if(isset($category['parent_id']) && $category['parent_id']) {
-            // if parent category exists
-            if($parent_category = $this->findInArrayByID($category['parent_id'], $categories)) {
-                // add it to the array
-                $parents[] = $parent_category;
-
-                // if the parent has a parent, recurse
-                $this->parentWalker($parent_category, $categories, $parents);
-            }
-        }
-
-        return $parents;
     }
 
     /**
@@ -96,15 +79,16 @@ class CategoryService extends Service
      * Get a nested list of categories and subcategories
      *
      * @param array $params - See postman for available parameters
+     * @param $oauth - oauth token for when calling from artisan command
      */
     public function list($params = [
         'with' => 'images,active_children_categories.images',
         'is_null' => 'top_id',
         'is_active' => true,
-    ])
+    ], $oauth = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/categories', $params);
+        $response = $this->http($oauth)->get($this->getPath() . '/categories', $params);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the categories.', 422);
@@ -117,56 +101,21 @@ class CategoryService extends Service
     }
 
     /**
-     * @param string $with - relationships to include
+     * parent walker
      */
-    public function listTopLevel($with = 'images')
-    {
-        return $this->list([
-            'with' => $with,
-            'is_null' => 'top_id',
-            'is_active' => true,
-        ]);
-    }
+    public function parentWalker($category, $categories, &$parents = []) {
+        // if the category has a parent
+        if(isset($category['parent_id']) && $category['parent_id']) {
+            // if parent category exists
+            if($parent_category = $this->findInArrayByID($category['parent_id'], $categories)) {
+                // add it to the array
+                $parents[] = $parent_category;
 
-    /**
-     * Get a category by id
-     *
-     * @param integer $id category id to get
-     * @param string $with optionally include comma separated relationships
-     */
-    public function get(Int $id, String $with = null)
-    {
-        // send request
-        $response = $this->http()->get($this->getPath() . '/categories/' . $id, ['with' => $with]);
+                // if the parent has a parent, recurse
+                $this->parentWalker($parent_category, $categories, $parents);
+            }
+        }
 
-        // category not found
-        if ($response->status() == 404) throw new Exception('The given category was not found', 404);
-
-        // api call failed
-        if ($response->failed()) throw new Exception('Error attempting to retrieve the products by category.', 422);
-
-        // any other errors
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
-
-        // return products as collection
-        return $response->json()['data'] ? collect($response->json()['data']) : collect();
-    }
-
-    public function getBySlug(String $slug, String $with = null)
-    {
-        // send request
-        $response = $this->http()->get($this->getPath() . '/categories/slug/' . $slug, ['with' => $with]);
-
-        // category not found
-        if ($response->status() == 404) throw new Exception('The given category was not found', 404);
-
-        // api call failed
-        if ($response->failed()) throw new Exception('Error attempting to retrieve the products by category.', 422);
-
-        // any other errors
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
-
-        // return products as collection
-        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+        return $parents;
     }
 }

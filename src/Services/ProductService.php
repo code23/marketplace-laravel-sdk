@@ -86,9 +86,6 @@ class ProductService extends Service
         // not found
         if ($response->status() == 404) throw new Exception($response['message'], 404);
 
-        // not published
-        if (isset($response->json()['data']) && empty($response->json()['data']['products'])) throw new Exception('Product not published', 404);
-
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the product!', 422);
 
@@ -144,6 +141,7 @@ class ProductService extends Service
         Int $page = null,
         Int $category = null,
         String $in = null,
+        String $json_contains = null,
     ) {
         // set up params
         $params = [
@@ -154,6 +152,7 @@ class ProductService extends Service
         if ($page) $params['page'] = $page;
         if ($category) $params['category'] = $category;
         if ($in) $params['in'] = $in;
+        if ($json_contains) $params['json_contains'] = $json_contains;
 
         // call
         $response = $this->http()->get($this->getPath() . '/products', $params);
@@ -231,14 +230,15 @@ class ProductService extends Service
      *
      * @return Collection
      */
-    public function latest(Int $count = 3)
+    public function latest(Int $count = 3, String $with = 'images,vendor')
     {
         // call to api
         $response = $this->http()->get($this->getPath() . '/products', [
-            'sort' => 'created_at',
+            'sort' => 'created_at,desc',
             'status' => 'published',
-            'limit' => $count,
-            'with' => 'images,vendor',
+            'paginate' => $count,
+            'page' => 1,
+            'with' => $with,
         ]);
 
         // api call failed
