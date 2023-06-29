@@ -61,7 +61,7 @@ class StoredDataService extends Service
         });
 
         // or return null
-        return $data->toArray() ?? null;
+        return $data ? $data->toArray() : null;
     }
 
     private function retrieveAttributes(
