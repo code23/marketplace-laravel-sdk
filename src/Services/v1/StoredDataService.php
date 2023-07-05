@@ -144,7 +144,9 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveVendors($params = []) {
+    private function retrieveVendors($params = [
+        'is_onboarded' => true,
+    ]) {
         try {
             // get the categories from API
             return MPEVendors::list($params);
