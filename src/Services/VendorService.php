@@ -97,14 +97,19 @@ class VendorService extends Service
 
     /**
      * Retrieve all vendors
-     *
+     * @param Int $with
+     *      Vendor relationships (comma separated) to include
+     * @param String $sort
+     *     Sort vendors by field
+     * 
      * @return Collection of vendors
      */
-    public function list($with = null)
+    public function list($with = null, String $sort = null)
     {
         // retrieve vendors
         $response = $this->http()->get($this->getPath() . '/vendors', [
             'with' => $with,
+            'sort' => $sort,
             'is_active' => true,
         ]);
 
@@ -121,7 +126,7 @@ class VendorService extends Service
     /**
      * Save a vendor
      */
-    public function save(Array $data)
+    public function save(array $data)
     {
         $rules = [
             'first_name'        => 'required',
@@ -151,7 +156,7 @@ class VendorService extends Service
         $validated = $this->validator($data, $rules, $messages);
 
         // if validation passes
-        if($validated === true) {
+        if ($validated === true) {
             // send data
             $response = $this->http()->post($this->getPath() . '/vendors/register', [
                 'first_name'             => $data['first_name'],
@@ -186,7 +191,6 @@ class VendorService extends Service
             if ($response['error']) throw new Exception($response['message'], $response['code']);
 
             return true;
-
         } else {
             // perform laravel validation failed behaviour
             return $validated;
