@@ -146,6 +146,8 @@ class StoredDataService extends Service
 
     private function retrieveVendors($params = [
         'is_onboarded' => true,
+        'is_active' => true,
+        'is_approved' => true,
     ]) {
         try {
             // get the categories from API
