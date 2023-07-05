@@ -37,4 +37,28 @@ class CurrencyService extends Service
         // return as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
+
+    /**
+     * Sets the active currency in user's session
+     *
+     * @param string $code A currency code
+     *
+     * @return boolean
+     */
+    public function setActiveByCode(String $code)
+    {
+        // get the currencies from the stored data
+        $currencies = MPEStored::retrieve('currencies');
+
+        // if not found
+        if(!$currencies) return false;
+
+        // if code not found in available currencies
+        if(!collect($currencies)->firstWhere('code', $code)) return false;
+
+        // update active currency in session
+        session(['active_currency_code' => $code]);
+
+        return true;
+    }
 }
