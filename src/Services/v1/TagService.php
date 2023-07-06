@@ -5,7 +5,7 @@ namespace Code23\MarketplaceLaravelSDK\Services\v1;
 use Code23\MarketplaceLaravelSDK\Services\Service;
 use Exception;
 
-class SpecificationService extends Service
+class TagService extends Service
 {
     /**
      * Retrieve available tags from API
@@ -13,7 +13,7 @@ class SpecificationService extends Service
     public function list(
         $params = [],
         $oauth = null
-    ){
+    ) {
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/tags', $params);
 
