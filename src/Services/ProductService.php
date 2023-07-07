@@ -254,7 +254,7 @@ class ProductService extends Service
     /**
      * Get a given product's related products.
      *
-     * TODO: WIP
+     * TODO: WIP - this is not yet complete, and expensive to run
      *
      * @param array $product The product array
      *
