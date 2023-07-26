@@ -42,7 +42,7 @@ class ReviewService extends Service
      *      Pagination page to retrieve. Defaults to 1.
      *
      * @param String $with
-     *      Relationships to include, defaults to product images
+     *      Relationships to include, defaults to product with images
 
      * @return Collection
      */
