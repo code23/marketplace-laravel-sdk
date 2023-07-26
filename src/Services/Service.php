@@ -2,8 +2,8 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
-use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
 use Code23\MarketplaceLaravelSDK\Facades\MPECurrencies;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECurrencies as MPECurrenciesV1;
 use Exception;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -19,14 +19,17 @@ class Service
      */
     public function http($oauth = null, $contentType = 'application/json')
     {
-        // update headers with origin and currency
+        // update headers with origin
         $this->headers = array_merge($this->headers, [
             'X-MPE-Origin' => config('marketplace-laravel-sdk.http.origin'),
         ]);
 
+        // get active currency from applicable source (session or cache based)
+        $code = MPECurrencies::active() ?? MPECurrenciesV1::active();
+
         // update headers with active currency code
         $this->headers = array_merge($this->headers, [
-            'X-Currency-Code' => MPECurrencies::active() ? MPECurrencies::active()['code'] : null,
+            'X-Currency-Code' => $code ? $code['code'] : null,
         ]);
 
         // update headers with active locale id
