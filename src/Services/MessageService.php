@@ -79,4 +79,23 @@ class MessageService extends Service
 		// if successful, return blog posts as collection
 		return $response->json()['data'] ? collect($response->json()['data']) : collect();
 	}
+
+	/**
+	 * Close a channel
+	 * @param $channelId the id of the channel to close
+	 */
+	public function closeChannel(String $channelId)
+	{
+		// send request
+		$response = $this->http()->patch($this->getPath() . '/messaging/close/' . $channelId);
+
+		// api call failed
+		if ($response->failed()) throw new Exception($response->body(), 422);
+
+		// any other errors
+		if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+		// if successful, return blog posts as collection
+		return $response->json()['data'] ? collect($response->json()['data']) : collect();
+	}
 }
