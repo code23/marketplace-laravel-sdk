@@ -8,12 +8,15 @@ class ReferenceValuesService extends Service
 {
     /**
      * Lookup a reference value by category
+     * @param string $category The category to lookup
+     * @param bool $filterByMarketType Filter by market type
      */
-    public function byCategory($category)
+    public function byCategory($category, $filterByMarketType = false,)
     {
         // call to api
         $response = $this->http()->get($this->getPath() . '/reference-values/lookup', [
             'category' => $category,
+            'filter_by_market_type' => $filterByMarketType,
         ]);
 
         // api call failed
