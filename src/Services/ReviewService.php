@@ -43,10 +43,13 @@ class ReviewService extends Service
      *
      * @param String $with
      *      Relationships to include, defaults to product with images
+     *
+     * @param String $sort
+     *      sort results by
 
      * @return Collection
      */
-    public function list(Array $ids = [], $paginate = 0, $page = 1, $with = 'product.images')
+    public function list(Array $ids = [], $paginate = 0, $page = 1, $with = 'product.images', $sort = null)
     {
         // create params & include relationships
         $params = ['with' => $with];
@@ -57,8 +60,11 @@ class ReviewService extends Service
         }
 
         // paginate results
-        $paginate ? $params['paginate'] = $paginate : null;
-        $page > 1 ? $params['page'] = $page : null;
+        if($paginate) $params['paginate'] = $paginate;
+        if($page > 1) $params['page'] = $page;
+
+        // sort results
+        if($sort) $params['sort'] = $sort;
 
         // call to api
         $response = $this->http()->get($this->getPath() . '/reviews', $params);
