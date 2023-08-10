@@ -189,6 +189,8 @@ class ProductService extends Service
         array $tags = null,
         array $specifications = null,
         array $price = null,
+        String $postcode = null,
+        String $radius = null,
     ) {
         $data = [
             'status'        => 'published',
@@ -206,6 +208,8 @@ class ProductService extends Service
         $tags ? $data['tags'] = $tags : false;
         $specifications ? $data['specifications'] = $specifications : false;
         $price ? $data['price'] = $price : false;
+        $postcode ? $data['postcode'] = $postcode : false;
+        $radius ? $data['postcode'] = $radius : false;
 
         // call
         $response = $this->http()->post($this->getPath() . '/products/filter', $data);
