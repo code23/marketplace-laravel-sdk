@@ -34,16 +34,18 @@ class AddressLookupService extends Service
      * @param String $model
      * @param Int $radius
      * @param Int $limit
+     * @param String $with
      *
      */
-    public function getNearbyModel(String $postcode, String $model, Int $radius = 10, Int $limit = 10)
+    public function getNearbyModel(String $postcode, String $model, Int $radius = 10, Int $limit = 10, String $with = null)
     {
         // send request
         $response = $this->http()->get($this->getPath() . '/postcode/nearby', [
             'postcode' => $postcode,
             'model' => $model,
             'radius' => $radius,
-            'limit' => $limit
+            'limit' => $limit,
+            'with' => $with,
         ]);
 
         // any other errors
