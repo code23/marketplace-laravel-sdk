@@ -70,6 +70,11 @@ return [
             'minutes' => env('CURRENCIES_CACHE_MINUTES', 10),
         ],
 
+        'modules' => [
+            'key' => env('MODULES_CACHE_KEY', 'modules'),
+            'minutes' => env('MODULES_CACHE_MINUTES', 10),
+        ],
+
         'specifications' => [
             'key' => env('SPECIFICATIONS_CACHE_KEY', 'specifications'),
             'minutes' => env('SPECIFICATIONS_CACHE_MINUTES', 10),

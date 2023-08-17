@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services\v1;
 
+use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPEAttributes;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECategories;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECurrencies;
@@ -19,7 +20,7 @@ class StoredDataService extends Service
     /**
      * Retrieve stored MPE data
      * @param string $key The name of the cache key to retrieve
-     * @param array $params Optional - parameters to pass to the API
+     * @param array $params Optional - parameters to pass to the API, contents depending on key's endpoint
      */
     public function retrieve($key, ...$params) {
         // storage time
@@ -39,6 +40,10 @@ class StoredDataService extends Service
 
                 case 'currencies':
                     return $this->retrieveCurrencies(...$params);
+                    break;
+
+                case 'modules':
+                    return $this->retrieveModules(...$params);
                     break;
 
                 case 'specifications':
@@ -62,6 +67,21 @@ class StoredDataService extends Service
 
         // or return null
         return $data ? $data->toArray() : null;
+    }
+
+    /**
+     * Search active modules
+     */
+    public function hasModule(String $code, $params = [])
+    {
+        // if modules retrieved successfully
+        if($modules = $this->retrieve('modules', $params)) {
+            // check if string is in modules
+            if(in_array($code, $modules)) return true;
+        }
+
+        // else return false
+        return false;
     }
 
     private function retrieveAttributes(
@@ -110,6 +130,19 @@ class StoredDataService extends Service
 
         } catch (Exception $e) {
             if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving currencies from API_");
+            Log::error($e);
+
+            return false;
+        }
+    }
+
+    private function retrieveModules($params = []) {
+        try {
+            // get the active modules from API
+            return MPEAuthentication::getModules($params);
+
+        } catch (Exception $e) {
+            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
             Log::error($e);
 
             return false;

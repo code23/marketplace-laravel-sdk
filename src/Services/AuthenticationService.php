@@ -169,6 +169,23 @@ class AuthenticationService extends Service
     }
 
     /**
+     * get the tenant's active modules
+     */
+    public function getModules()
+    {
+        // send request
+        $response = $this->http()->get($this->getPath() . '/auth/modules');
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the request for tenant modules', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * authenticate the user by setting the session and retrieving the user from MPE
      */
     private function authenticateUser($oAuth): void
