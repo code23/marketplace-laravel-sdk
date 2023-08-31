@@ -209,7 +209,7 @@ class ProductService extends Service
         $specifications ? $data['specifications'] = $specifications : false;
         $price ? $data['price'] = $price : false;
         $postcode ? $data['postcode'] = $postcode : false;
-        $radius ? $data['postcode'] = $radius : false;
+        $radius ? $data['radius'] = $radius : false;
 
         // call
         $response = $this->http()->post($this->getPath() . '/products/filter', $data);
