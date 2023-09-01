@@ -35,6 +35,17 @@ return [
 
     's3' => [
         'signed_storage_url_expires_after' => env('SIGNED_STORAGE_URL_EXPIRES_AFTER', 15),
+        'bucket' => env('AWS_BUCKET'),
+        'region' => env('AWS_DEFAULT_REGION'),
+        'key'    => env('AWS_ACCESS_KEY_ID'),
+        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+        'url'    => env('AWS_URL'),
+        'lamda_function_version' => env('AWS_LAMBDA_FUNCTION_VERSION'),
+        'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+        'endpoint' => env('AWS_ENDPOINT'),
+        'version' => env('AWS_VERSION'),
+        'signature_version' => env('AWS_SIGNATURE_VERSION'),
+        'token' => env('AWS_SESSION_TOKEN'),
     ],
 
     'products' => [
@@ -42,11 +53,11 @@ return [
     ],
 
     'categories' => [
-        'retrieval_rate' => env('CATEGORY_RETRIEVAL_RATE', 10),
+        'retrieval_rate' => env('CATEGORY_RETRIEVAL_RATE', 10), // deprecated
     ],
 
     'tags' => [
-        'retrieval_rate' => env('TAG_RETRIEVAL_RATE', 10),
+        'retrieval_rate' => env('TAG_RETRIEVAL_RATE', 10), // deprecated
     ],
 
     'user' => [
