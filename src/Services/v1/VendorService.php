@@ -1,6 +1,7 @@
 <?php
 
 namespace Code23\MarketplaceLaravelSDK\Services\v1;
+
 use Code23\MarketplaceLaravelSDK\Services\Service;
 use Exception;
 
@@ -26,5 +27,22 @@ class VendorService extends Service
 
         // return the vendor
         return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Save a vendor
+     */
+    public function save(array $data)
+    {
+        // send data
+        $response = $this->http()->post($this->getPath() . '/vendors/register', $data);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new user & vendor.', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        return true;
     }
 }
