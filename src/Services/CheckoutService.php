@@ -9,11 +9,12 @@ class CheckoutService extends Service
     /**
      * Process payment
      */
-    public function processPayment($paymentMethodId = null, $billingAddress = null)
+    public function processPayment($paymentMethodId = null, $billingAddress = null, Bool $save = false)
     {
         $response = $this->http()->patch($this->getPath() . '/checkout/payment', [
             'paymentMethodId' => $paymentMethodId,
             'billing_address' => $billingAddress,
+            'customer_saved_info' => $save,
         ]);
 
         // error
