@@ -13,7 +13,7 @@ You may need to increase the server max file upload size to allow onboarding req
 
 Forge - click server's PHP tab:
 
-Max File Upload Size: 16
+Max File Upload Size: 100
 
 ## Before Installation
 
