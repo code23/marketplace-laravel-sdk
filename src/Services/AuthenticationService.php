@@ -2,7 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services;
 
-use Code23\MarketplaceLaravelSDK\Facades\MPECurrencies;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECurrencies;
 use Code23\MarketplaceLaravelSDK\Facades\MPEUser;
 use Exception;
 use Illuminate\Http\Request;
