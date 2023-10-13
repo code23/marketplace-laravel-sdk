@@ -45,7 +45,7 @@ class CheckoutService extends Service
         ]);
 
         // api call failed
-        if ($response->failed()) throw new Exception('Error attempting to update checkout', 422);
+        if ($response->failed()) throw new Exception('Error attempting to update user details in checkout ', 422);
 
         // any other errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
