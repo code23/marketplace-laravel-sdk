@@ -208,7 +208,7 @@ class StoredDataService extends Service
             // get the categories from API
             return MPECharities::list($params);
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving vendors from API_");
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving charities from API_");
             Log::error($e);
 
             return false;
