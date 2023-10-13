@@ -5,6 +5,7 @@ namespace Code23\MarketplaceLaravelSDK\Services\v1;
 use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPEAttributes;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECategories;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECharities;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECurrencies;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPESpecifications;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPETags;
@@ -22,9 +23,10 @@ class StoredDataService extends Service
      * @param string $key The name of the cache key to retrieve
      * @param array $params Optional - parameters to pass to the API, contents depending on key's endpoint
      */
-    public function retrieve($key, ...$params) {
+    public function retrieve($key, ...$params)
+    {
         // storage time
-        $seconds = config('marketplace-laravel-sdk.cache.'.$key.'.minutes') * 60;
+        $seconds = config('marketplace-laravel-sdk.cache.' . $key . '.minutes') * 60;
 
         // get key from cache or retrieve data and save it
         $data = Cache::remember($key, $seconds, function () use ($key, $params) {
@@ -58,11 +60,14 @@ class StoredDataService extends Service
                     return $this->retrieveVendors(...$params);
                     break;
 
+                case 'charities':
+                    return $this->retrieveCharities(...$params);
+                    break;
+
                 default:
                     # code...
                     break;
             }
-
         });
 
         // or return null
@@ -75,9 +80,9 @@ class StoredDataService extends Service
     public function hasModule(String $code, $params = [])
     {
         // if modules retrieved successfully
-        if($modules = $this->retrieve('modules', $params)) {
+        if ($modules = $this->retrieve('modules', $params)) {
             // check if string is in modules
-            if(in_array($code, $modules)) return true;
+            if (in_array($code, $modules)) return true;
         }
 
         // else return false
@@ -92,9 +97,8 @@ class StoredDataService extends Service
         try {
             // get the categories from API
             return MPEAttributes::list($params);
-
         } catch (Exception $e) {
-            if(config('app.env') == 'production' && env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving attributes from API_");
+            if (config('app.env') == 'production' && env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving attributes from API_");
             Log::error($e);
 
             return false;
@@ -108,13 +112,13 @@ class StoredDataService extends Service
         'with' => 'images,active_children_categories.images',
         'is_null' => 'top_id',
         'is_active' => true,
-    ]) {
+    ])
+    {
         try {
             // get the categories from API
             return MPECategories::list($params);
-
         } catch (Exception $e) {
-            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving categories from API_");
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving categories from API_");
             Log::error($e);
 
             return false;
@@ -123,26 +127,26 @@ class StoredDataService extends Service
 
     private function retrieveCurrencies($params = [
         'is_enabled' => true,
-    ]) {
+    ])
+    {
         try {
             // get the categories from API
             return MPECurrencies::list($params);
-
         } catch (Exception $e) {
-            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving currencies from API_");
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving currencies from API_");
             Log::error($e);
 
             return false;
         }
     }
 
-    private function retrieveModules($params = []) {
+    private function retrieveModules($params = [])
+    {
         try {
             // get the active modules from API
             return MPEAuthentication::getModules($params);
-
         } catch (Exception $e) {
-            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
             Log::error($e);
 
             return false;
@@ -151,26 +155,26 @@ class StoredDataService extends Service
 
     private function retrieveSpecifications($params = [
         'with' => 'values',
-    ]) {
+    ])
+    {
         try {
             // get the categories from API
             return MPESpecifications::list($params);
-
         } catch (Exception $e) {
-            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving specifications from API_");
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving specifications from API_");
             Log::error($e);
 
             return false;
         }
     }
 
-    private function retrieveTags($params = []) {
+    private function retrieveTags($params = [])
+    {
         try {
             // get the categories from API
             return MPETags::list($params);
-
         } catch (Exception $e) {
-            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
             Log::error($e);
 
             return false;
@@ -181,13 +185,30 @@ class StoredDataService extends Service
         'is_onboarded' => true,
         'is_active' => true,
         'is_approved' => true,
-    ]) {
+    ])
+    {
         try {
             // get the categories from API
             return MPEVendors::list($params);
-
         } catch (Exception $e) {
-            if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving vendors from API_");
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving vendors from API_");
+            Log::error($e);
+
+            return false;
+        }
+    }
+
+    private function retrieveCharities($params = [
+        'is_onboarded' => true,
+        'is_live' => true,
+        'is_approved' => true,
+    ])
+    {
+        try {
+            // get the categories from API
+            return MPECharities::list($params);
+        } catch (Exception $e) {
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving charities from API_");
             Log::error($e);
 
             return false;
