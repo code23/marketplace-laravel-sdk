@@ -11,9 +11,8 @@ class ErrorService extends Service
     /**
      * Alert via Slack, log, etc.
      */
-    public function report(String $filename, String $message, $e) {
+    public function report(String $filename, String $message) {
         Log::error($filename . ': ' . $message);
-        // if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* " . $filename . ": _" . $message . "_");
-        if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message($e);
+        if(env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* " . $filename . ": _" . $message . "_");
     }
 }
