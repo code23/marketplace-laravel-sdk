@@ -11,15 +11,16 @@ class CategoryService extends Service
     /**
      * Generate a breadcrumb trail for a given category id
      */
-    public function breadcrumb($id) {
+    public function breadcrumb($id)
+    {
         // get all categories from storage, or quit
-        if(!$categories = MPEStored::retrieve('categories')) return false;
+        if (!$categories = MPEStored::retrieve('categories')) return false;
 
         // flatten the categories
         $flat_categories = $this->flattenCategories($categories);
 
         // if category not found in session data, return false
-        if(!$category = $this->findInArrayByID($id, $flat_categories)) return false;
+        if (!$category = $this->findInArrayByID($id, $flat_categories)) return false;
 
         // create breadcrumb array (in reverse order)
         $breadcrumb = [$category];
@@ -28,7 +29,7 @@ class CategoryService extends Service
         $parents = $this->parentWalker($category, $flat_categories);
 
         // merge the parents into the breadcrumb
-        if(!empty($parents)) $breadcrumb = array_merge($breadcrumb, $parents);
+        if (!empty($parents)) $breadcrumb = array_merge($breadcrumb, $parents);
 
         // return the reversed breadcrumb
         return array_reverse($breadcrumb);
@@ -45,7 +46,7 @@ class CategoryService extends Service
             $hold_cat = $category;
             foreach ($hold_cat as $key => $value) {
                 // only include the keys we want
-                if(!in_array($key, $include)) unset($hold_cat[$key]);
+                if (!in_array($key, $include)) unset($hold_cat[$key]);
             }
 
             // add the category to the result array
@@ -66,10 +67,10 @@ class CategoryService extends Service
     public function findInArrayByID($id, $categories = null)
     {
         // if no categories passed in and none in session, return false
-        if(!$categories && !$session_categories = session('categories')['data']) return false;
+        if (!$categories && !$session_categories = session('categories')['data']) return false;
 
         // if no categories passed in, but some in session, flatten them
-        if(!$categories) $categories = $this->flattenCategories($session_categories);
+        if (!$categories) $categories = $this->flattenCategories($session_categories);
 
         // search the categories for id
         return collect($categories)->firstWhere('id', $id);
@@ -103,11 +104,12 @@ class CategoryService extends Service
     /**
      * parent walker
      */
-    public function parentWalker($category, $categories, &$parents = []) {
+    public function parentWalker($category, $categories, &$parents = [])
+    {
         // if the category has a parent
-        if(isset($category['parent_id']) && $category['parent_id']) {
+        if (isset($category['parent_id']) && $category['parent_id']) {
             // if parent category exists
-            if($parent_category = $this->findInArrayByID($category['parent_id'], $categories)) {
+            if ($parent_category = $this->findInArrayByID($category['parent_id'], $categories)) {
                 // add it to the array
                 $parents[] = $parent_category;
 
@@ -117,5 +119,23 @@ class CategoryService extends Service
         }
 
         return $parents;
+    }
+
+    /**
+     * Get a nested list of categories and subcategories with products
+     */
+    public function categoriesWithProducts($params = [], $oauth = null)
+    {
+        // send request
+        $response = $this->http($oauth)->get($this->getPath() . '/categories/menu', $params);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error attempting to retrieve the categories.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return categories as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 }
