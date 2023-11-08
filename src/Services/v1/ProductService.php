@@ -2,8 +2,8 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services\v1;
 
-use Code23\MarketplaceLaravelSDK\Facades\v1\MPECategories;
 use Code23\MarketplaceLaravelSDK\Services\Service;
+use Illuminate\Support\Facades\Log;
 use Exception;
 
 class ProductService extends Service
@@ -53,5 +53,69 @@ class ProductService extends Service
         // return $response->json()['data'] ? collect($response->json()['data']) : collect();
         if (in_array('paginate', $params)) return $response->json() ? collect($response->json()) : collect();
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Get a given product's related products.
+     * @param array $product The product to find related products for
+     * @param int $limit max number of results to return
+     * @param array $params API parameters to use
+     */
+    public function related(
+        array $product,
+        int $limit = 10,
+        array $params = [
+            'with' => 'images,vendor',
+        ],
+    )
+    {
+        // create empty products collection
+        $products = collect();
+
+        // check for up-sells
+        if (isset($product['up_sells']) && count($product['up_sells'])) {
+            // convert to collection & filter by published status
+            $products = collect($product['up_sells']);
+        }
+
+        // if number of cross sells is greater than or equal to max return amount
+        if ($products->count() >= $limit) {
+            // return in random order limited to return count
+            return $products->shuffle()->take($limit);
+        }
+
+        // if not enough cross sells…
+
+        // get array of category ids from the product
+        $categoryIDs = collect($product['categories'])->pluck('id')->toArray();
+
+        // create string of category ids to include in api call
+        $categoryString = '';
+        foreach ($categoryIDs as $catId) {
+            $categoryString .= 'categories|category_id|' . $catId . '^';
+        }
+        // trim final ^ from string
+        $categoryString = rtrim($categoryString, '^');
+
+        // create exclusion list of this product's id and that of products already found
+        $exclude = collect($product['id'])->merge($products->pluck('id'))->toArray();
+
+        // create api call parameters
+        $params['has'] = $categoryString;
+        $params['not_in'] = 'id,' . implode(',', $exclude);
+        $params['sort'] = 'random';
+        $params['paginate'] = $limit - $products->count();
+
+        // call api for the extra products required
+        try {
+            $shortfall = $this->list($params);
+        } catch(Exception $e) {
+            Log::error($e);
+            // if error, return the products found so far
+            return $products;
+        }
+
+        // merge shortfall into products collection and return
+        return $products->merge($shortfall);
     }
 }
