@@ -109,9 +109,7 @@ class StoredDataService extends Service
      * Retrieve nested categories and children
      */
     private function retrieveCategories($params = [
-        'with' => 'images,active_children_categories.images',
-        'is_null' => 'top_id',
-        'is_active' => true,
+        'with' => 'images',
     ])
     {
         try {
