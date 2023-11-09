@@ -14,7 +14,7 @@ use App\Http\Controllers\Auth\AuthController;
 
 Route::group(['as' => 'mls.', 'middleware' => ['web']], function () {
 
-    // Route::get('/login',                    [AuthController::class,    'index'])->name('login');
+    Route::get('/login',                    [AuthController::class,    'index'])->name('login');
     Route::get('/logout',                   [AuthController::class,    'logout'])->name('logout');
     Route::get('/password/forgot',          [AuthController::class,    'passwordForgot'])->name('password.forgot');
     Route::get('/password/reset',           [AuthController::class,    'passwordReset'])->name('password.reset');
