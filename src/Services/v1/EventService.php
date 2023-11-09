@@ -21,7 +21,7 @@ class EventService extends Service
 		// any other error
 		if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-		return true;
+		return $response['data'];
 	}
 
 	/**
