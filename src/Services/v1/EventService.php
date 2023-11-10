@@ -33,7 +33,7 @@ class EventService extends Service
 		$params = [],
 		$oauth = null,
 	) {
-		// retrieve vendors
+		// retrieve events
 		$response = $this->http($oauth)->get($this->getPath() . '/events', $params);
 
 		// api call failed
@@ -60,7 +60,25 @@ class EventService extends Service
 		// any other errors
 		if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
-		// return the events
+		// return the event
 		return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
+	}
+
+	/**
+	 * Cancel an event	  
+	 */
+	public function cancel($id, $params = [], $oauth = null)
+	{
+		// cancel event
+		$response = $this->http($oauth)->delete($this->getPath() . '/events/' . $id, $params);
+
+		// api call failed
+		if ($response->failed()) throw new Exception('A problem was encountered during the event cancellation.', 422);
+
+		// any other errors
+		if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+		// return response
+		return $response;
 	}
 }
