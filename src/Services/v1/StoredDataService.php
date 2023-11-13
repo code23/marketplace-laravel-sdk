@@ -40,6 +40,10 @@ class StoredDataService extends Service
                     return $this->retrieveCategories(...$params);
                     break;
 
+                case 'populated_categories':
+                    return $this->retrievePopulatedCategories(...$params);
+                    break;
+
                 case 'currencies':
                     return $this->retrieveCurrencies(...$params);
                     break;
@@ -109,12 +113,32 @@ class StoredDataService extends Service
      * Retrieve nested categories and children
      */
     private function retrieveCategories($params = [
-        'with' => 'images',
+        'with' => 'images,active_children_categories.images',
+        'is_null' => 'top_id',
+        'is_active' => true,
     ])
     {
         try {
             // get the categories from API
             return MPECategories::list($params);
+        } catch (Exception $e) {
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving categories from API_");
+            Log::error($e);
+
+            return false;
+        }
+    }
+
+    /**
+     * Retrieve nested categories and children
+     */
+    private function retrievePopulatedCategories($params = [
+        'with' => 'images',
+    ])
+    {
+        try {
+            // get the categories from API
+            return MPECategories::populatedList($params);
         } catch (Exception $e) {
             if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving categories from API_");
             Log::error($e);

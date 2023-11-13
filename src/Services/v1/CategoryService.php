@@ -83,6 +83,31 @@ class CategoryService extends Service
      * @param $oauth - oauth token for when calling from artisan command
      */
     public function list($params = [
+        'with' => 'images,active_children_categories.images',
+        'is_null' => 'top_id',
+        'is_active' => true,
+    ], $oauth = null)
+    {
+        // send request
+        $response = $this->http($oauth)->get($this->getPath() . '/categories', $params);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error attempting to retrieve the categories.', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return categories as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Get a nested list of populated categories and subcategories
+     *
+     * @param array $params - See postman for available parameters
+     * @param $oauth - oauth token for when calling from artisan command
+     */
+    public function populatedList($params = [
         'with' => 'images',
     ], $oauth = null)
     {
