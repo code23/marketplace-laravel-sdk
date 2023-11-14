@@ -72,4 +72,27 @@ class CheckoutService extends Service
         // if successful, return cart as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
+
+    /**
+     * Save charity
+     * @param int $charity_id
+     * @param string $with
+     */
+    public function donation($charity_id, String $with = 'null')
+    {
+
+        $response = $this->http()->patch($this->getPath() . '/checkout/donation', [
+            'charity_id' => $charity_id,
+            'with'       => $with,
+        ]);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Error attempting to update checkout', 422);
+
+        // any other errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return cart as collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
 }
