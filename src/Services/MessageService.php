@@ -35,10 +35,12 @@ class MessageService extends Service
 	 * Get a channel
 	 * @param $channelId the id of the channel to get
 	 */
-	public function getChannel(String $channelId)
+	public function getChannel(String $channelId, Int $paginate = 30)
 	{
 		// send request
-		$response = $this->http()->get($this->getPath() . '/messaging/view/' . $channelId);
+		$response = $this->http()->get($this->getPath() . '/messaging/view/' . $channelId, [
+			'paginate' => $paginate
+		]);
 
 		// api call failed
 		if ($response->failed()) throw new Exception($response->body(), 422);
@@ -48,6 +50,30 @@ class MessageService extends Service
 
 		// if successful, return blog posts as collection
 		return $response->json()['data'] ? collect($response->json()['data']) : collect();
+	}
+
+	/**
+	 * Load more messages
+	 * @param $channelId the id of the channel to get
+	 * @param $page the page to load
+	 * @param $paginate the number of messages to load
+	 */
+	public function loadMoreMessages(String $channelId, Int $page, Int $paginate = 30)
+	{
+		// send request
+		$response = $this->http()->get($this->getPath() . '/messaging/' . $channelId . '/messages', [
+			'page' => $page,
+			'paginate' => $paginate
+		]);
+
+		// api call failed
+		if ($response->failed()) throw new Exception($response->body(), 422);
+
+		// any other errors
+		if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+		// if successful, return blog posts as collection
+		return $response->json() ? collect($response->json()) : collect();
 	}
 
 	/**
