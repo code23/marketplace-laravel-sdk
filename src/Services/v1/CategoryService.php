@@ -52,8 +52,8 @@ class CategoryService extends Service
             // add the category to the result array
             $result[] = $hold_cat;
 
-            if (isset($category['children']) && !empty($category['children'])) {
-                $children = $this->flattenCategories($category['children']);
+            if (isset($category['active_children']) && !empty($category['active_children'])) {
+                $children = $this->flattenCategories($category['active_children']);
                 $result = array_merge($result, $children);
             }
         }
