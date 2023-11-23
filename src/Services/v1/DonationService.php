@@ -27,9 +27,9 @@ class DonationService extends Service
 	/**
 	 * Get donation by number
 	 */
-	public function getByNumber($donation_number)
+	public function getByNumber($donation_number, $params = [])
 	{
-		$response = $this->http()->get($this->getPath() . '/donations/number/' . $donation_number);
+		$response = $this->http()->get($this->getPath() . '/donations/number/' . $donation_number, $params);
 
 		// error
 		if ($response->failed()) throw new Exception('Unable to get donation: ' . $response->body(), 422);
