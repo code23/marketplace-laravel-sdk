@@ -76,6 +76,11 @@ return [
             'minutes' => env('CATEGORIES_CACHE_MINUTES', 10),
         ],
 
+        'populated_categories' => [
+            'key' => env('POPULATED_CATEGORIES_CACHE_KEY', 'populated_categories'),
+            'minutes' => env('POPULATED_CATEGORIES_CACHE_MINUTES', 10),
+        ],
+
         'currencies' => [
             'key' => env('CURRENCIES_CACHE_KEY', 'currencies'),
             'minutes' => env('CURRENCIES_CACHE_MINUTES', 10),
