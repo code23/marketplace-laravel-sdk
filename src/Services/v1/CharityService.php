@@ -86,7 +86,7 @@ class CharityService extends Service
         $response = $this->http()->get($this->getPath() . '/charities/slug/' . $slug, $params);
 
         // charity not found
-        if ($response->status() == 404) return $response;
+        if ($response->status() == 404) throw new Exception($response['message'], 404);
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the charity retrieval.', 422);
