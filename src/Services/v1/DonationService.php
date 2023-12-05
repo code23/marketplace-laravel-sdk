@@ -31,6 +31,9 @@ class DonationService extends Service
 	{
 		$response = $this->http()->get($this->getPath() . '/donations/number/' . $donation_number, $params);
 
+		// not found
+		if ($response->status() == 404) throw new Exception($response['message'], 404);
+
 		// error
 		if ($response->failed()) throw new Exception('Unable to get donation: ' . $response->body(), 422);
 
