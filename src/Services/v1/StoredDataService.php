@@ -99,7 +99,7 @@ class StoredDataService extends Service
         ]
     ) {
         try {
-            // get the categories from API
+            // get the attributes from API
             return MPEAttributes::list($params);
         } catch (Exception $e) {
             if (config('app.env') == 'production' && env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving attributes from API_");
@@ -130,7 +130,7 @@ class StoredDataService extends Service
     }
 
     /**
-     * Retrieve nested categories and children
+     * Retrieve nested categories and children, that have products assigned
      */
     private function retrievePopulatedCategories($params = [
         'with' => 'images',
@@ -140,7 +140,7 @@ class StoredDataService extends Service
             // get the categories from API
             return MPECategories::populatedList($params);
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving categories from API_");
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving populated categories from API_");
             Log::error($e);
 
             return false;
@@ -152,7 +152,7 @@ class StoredDataService extends Service
     ])
     {
         try {
-            // get the categories from API
+            // get the currencies from API
             return MPECurrencies::list($params);
         } catch (Exception $e) {
             if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving currencies from API_");
@@ -180,7 +180,7 @@ class StoredDataService extends Service
     ])
     {
         try {
-            // get the categories from API
+            // get the specifications from API
             return MPESpecifications::list($params);
         } catch (Exception $e) {
             if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving specifications from API_");
@@ -193,7 +193,7 @@ class StoredDataService extends Service
     private function retrieveTags($params = [])
     {
         try {
-            // get the categories from API
+            // get the tags from API
             return MPETags::list($params);
         } catch (Exception $e) {
             if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
@@ -210,7 +210,7 @@ class StoredDataService extends Service
     ])
     {
         try {
-            // get the categories from API
+            // get the vendors from API
             return MPEVendors::list($params);
         } catch (Exception $e) {
             if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving vendors from API_");
@@ -227,7 +227,7 @@ class StoredDataService extends Service
     ])
     {
         try {
-            // get the categories from API
+            // get the charities from API
             return MPECharities::list($params);
         } catch (Exception $e) {
             if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving charities from API_");
