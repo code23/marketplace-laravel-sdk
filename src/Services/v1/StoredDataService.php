@@ -40,8 +40,8 @@ class StoredDataService extends Service
                     return $this->retrieveCategories(...$params);
                     break;
 
-                case 'populated_categories':
-                    return $this->retrievePopulatedCategories(...$params);
+                case 'charities':
+                    return $this->retrieveCharities(...$params);
                     break;
 
                 case 'currencies':
@@ -50,6 +50,10 @@ class StoredDataService extends Service
 
                 case 'modules':
                     return $this->retrieveModules(...$params);
+                    break;
+
+                case 'populated_categories':
+                    return $this->retrievePopulatedCategories(...$params);
                     break;
 
                 case 'specifications':
@@ -62,10 +66,6 @@ class StoredDataService extends Service
 
                 case 'vendors':
                     return $this->retrieveVendors(...$params);
-                    break;
-
-                case 'charities':
-                    return $this->retrieveCharities(...$params);
                     break;
 
                 default:
