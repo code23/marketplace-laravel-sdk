@@ -76,9 +76,9 @@ return [
             'minutes' => env('CATEGORIES_CACHE_MINUTES', 10),
         ],
 
-        'populated_categories' => [
-            'key' => env('POPULATED_CATEGORIES_CACHE_KEY', 'populated_categories'),
-            'minutes' => env('POPULATED_CATEGORIES_CACHE_MINUTES', 10),
+        'charities' => [
+            'key' => env('CHARITIES_CACHE_KEY', 'categories'),
+            'minutes' => env('CHARITIES_CACHE_MINUTES', 10),
         ],
 
         'currencies' => [
@@ -89,6 +89,11 @@ return [
         'modules' => [
             'key' => env('MODULES_CACHE_KEY', 'modules'),
             'minutes' => env('MODULES_CACHE_MINUTES', 10),
+        ],
+
+        'populated_categories' => [
+            'key' => env('POPULATED_CATEGORIES_CACHE_KEY', 'populated_categories'),
+            'minutes' => env('POPULATED_CATEGORIES_CACHE_MINUTES', 10),
         ],
 
         'specifications' => [
