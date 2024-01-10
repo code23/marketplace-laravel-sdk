@@ -49,9 +49,10 @@ class ProductService extends Service
         // any other error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
+        // if paginated, return collection of full response data or empty collection
+        if (isset($params['paginate'])) return $response->json() ? collect($response->json()) : collect();
+
         // if successful, return collection of products or empty collection
-        // return $response->json()['data'] ? collect($response->json()['data']) : collect();
-        if (in_array('paginate', $params)) return $response->json() ? collect($response->json()) : collect();
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
