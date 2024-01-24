@@ -3,6 +3,7 @@
 namespace Code23\MarketplaceLaravelSDK\Services\v1;
 
 use Code23\MarketplaceLaravelSDK\Facades\MPEAuthentication;
+use Code23\MarketplaceLaravelSDK\Facades\MPEBlog;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPEAttributes;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECategories;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPECharities;
@@ -34,6 +35,10 @@ class StoredDataService extends Service
             switch ($key) {
                 case 'attributes':
                     return $this->retrieveAttributes(...$params);
+                    break;
+
+                case 'blog_categories':
+                    return $this->retrieveBlogCategories(...$params);
                     break;
 
                 case 'categories':
@@ -231,6 +236,19 @@ class StoredDataService extends Service
             return MPECharities::list($params);
         } catch (Exception $e) {
             if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving charities from API_");
+            Log::error($e);
+
+            return false;
+        }
+    }
+
+    private function retrieveBlogCategories($params = [])
+    {
+        try {
+            // get the blog categories from API
+            return MPEBlog::categories();
+        } catch (Exception $e) {
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving blog categories from API_");
             Log::error($e);
 
             return false;
