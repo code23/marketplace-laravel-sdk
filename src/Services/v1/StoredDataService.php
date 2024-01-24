@@ -37,6 +37,10 @@ class StoredDataService extends Service
                     return $this->retrieveAttributes(...$params);
                     break;
 
+                case 'blog_categories':
+                    return $this->retrieveBlogCategories(...$params);
+                    break;
+
                 case 'categories':
                     return $this->retrieveCategories(...$params);
                     break;
@@ -67,10 +71,6 @@ class StoredDataService extends Service
 
                 case 'vendors':
                     return $this->retrieveVendors(...$params);
-                    break;
-                
-                case 'blog_categories':
-                    return $this->retrieveBlogCategories(...$params);
                     break;
 
                 default:
@@ -245,10 +245,10 @@ class StoredDataService extends Service
     private function retrieveBlogCategories($params = [])
     {
         try {
-            // get the tags from API
+            // get the blog categories from API
             return MPEBlog::categories();
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
+            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving blog categories from API_");
             Log::error($e);
 
             return false;
