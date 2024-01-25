@@ -71,6 +71,11 @@ return [
             'minutes' => env('ATTRIBUTES_CACHE_MINUTES', 10),
         ],
 
+        'blog_categories' => [
+            'key' => env('BLOG_CATEGORIES_CACHE_KEY', 'blog_categories'),
+            'minutes' => env('BLOG_CATEGORIES_CACHE_MINUTES', 10),
+        ],
+
         'categories' => [
             'key' => env('CATEGORIES_CACHE_KEY', 'categories'),
             'minutes' => env('CATEGORIES_CACHE_MINUTES', 10),
