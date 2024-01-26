@@ -42,7 +42,7 @@ class Service
         }
 
         // new http client with options expecting json from the api
-        $this->client = Http::withHeaders($this->headers)->withOptions($this->getOptions())->accept($contentType);
+        $this->client = Http::timeout(60)->withHeaders($this->headers)->withOptions($this->getOptions())->accept($contentType);
 
         // determine whether tokens already exist
         if (session()->has('oAuth') && isset(session('oAuth')['access_token'])) {
