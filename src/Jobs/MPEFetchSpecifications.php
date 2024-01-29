@@ -53,6 +53,7 @@ class MPEFetchSpecifications implements ShouldQueue
     {
         // check for required module
         if(Cache::get('modules')->contains('specifications')) {
+
             // check for slack alert suitability
             $slack = config('app.env') != 'local' && env('SLACK_ALERT_WEBHOOK');
 
@@ -80,7 +81,7 @@ class MPEFetchSpecifications implements ShouldQueue
             }
 
             // get params from config
-            $params = config('boilerplate.mpe_cache.specifications');
+            $params = config('boilerplate.mpe_cache.specifications.params');
 
             try {
                 // get specifications from API

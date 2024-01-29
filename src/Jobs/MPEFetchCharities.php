@@ -81,7 +81,7 @@ class MPEFetchCharities implements ShouldQueue
             }
 
             // get params from config
-            $params = config('boilerplate.mpe_cache.charities');
+            $params = config('boilerplate.mpe_cache.charities.params');
 
             try {
                 // get charities from API

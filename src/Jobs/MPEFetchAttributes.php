@@ -78,7 +78,7 @@ class MPEFetchAttributes implements ShouldQueue
         }
 
         // get params from config
-        $params = config('boilerplate.mpe_cache.attributes');
+        $params = config('boilerplate.mpe_cache.attributes.params');
 
         try {
             // get attributes from API

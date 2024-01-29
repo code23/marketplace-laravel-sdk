@@ -78,7 +78,7 @@ class MPEFetchCurrencies implements ShouldQueue
         }
 
         // get params from config
-        $params = config('boilerplate.mpe_cache.currencies');
+        $params = config('boilerplate.mpe_cache.currencies.params');
 
         try {
             // get currencies from API

@@ -85,7 +85,7 @@ class MPEFetchVendors implements ShouldQueue
         }
 
         // get params from config
-        $params = config('boilerplate.mpe_cache.vendors');
+        $params = config('boilerplate.mpe_cache.vendors.params');
 
         try {
             // get vendors from API

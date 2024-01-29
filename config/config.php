@@ -64,6 +64,7 @@ return [
         'email_verified_route_name' => env('EMAIL_VERIFIED_ROUTE_NAME', 'email-verified'),
     ],
 
+    // used by MPEStored
     'cache' => [
 
         'attributes' => [

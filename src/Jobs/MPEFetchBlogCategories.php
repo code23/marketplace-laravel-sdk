@@ -78,7 +78,7 @@ class MPEFetchBlogCategories implements ShouldQueue
         }
 
         // get params from config
-        $params = config('boilerplate.mpe_cache.blog_categories');
+        $params = config('boilerplate.mpe_cache.blog_categories.params');
 
         try {
             // get blog categories from API

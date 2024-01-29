@@ -78,7 +78,7 @@ class MPEFetchPopulatedCategories implements ShouldQueue
         }
 
         // get params from config
-        $params = config('boilerplate.mpe_cache.populated_categories');
+        $params = config('boilerplate.mpe_cache.populated_categories.params');
 
         try {
             // get categories from API

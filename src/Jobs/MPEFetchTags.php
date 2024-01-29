@@ -78,7 +78,7 @@ class MPEFetchTags implements ShouldQueue
         }
 
         // get params from config
-        $params = config('boilerplate.mpe_cache.tags');
+        $params = config('boilerplate.mpe_cache.tags.params');
 
         try {
             // get tags from API
