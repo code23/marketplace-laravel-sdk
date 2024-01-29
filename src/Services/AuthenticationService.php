@@ -171,10 +171,10 @@ class AuthenticationService extends Service
     /**
      * get the tenant's active modules
      */
-    public function getModules()
+    public function getModules($oauth = null)
     {
         // send request
-        $response = $this->http()->get($this->getPath() . '/auth/modules');
+        $response = $this->http($oauth)->get($this->getPath() . '/auth/modules');
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the request for tenant modules', 422);

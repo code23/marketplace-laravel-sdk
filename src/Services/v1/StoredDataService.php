@@ -21,6 +21,7 @@ class StoredDataService extends Service
 {
     /**
      * Retrieve stored MPE data
+     * - Updates stored data from the API if it's not found/expired
      * @param string $key The name of the cache key to retrieve
      * @param array $params Optional - parameters to pass to the API, contents depending on key's endpoint
      */
@@ -98,7 +99,7 @@ class StoredDataService extends Service
         return false;
     }
 
-    private function retrieveAttributes(
+    public function retrieveAttributes(
         $params = [
             'with' => 'values',
         ]
@@ -117,7 +118,7 @@ class StoredDataService extends Service
     /**
      * Retrieve nested categories and children
      */
-    private function retrieveCategories($params = [
+    public function retrieveCategories($params = [
         'with' => 'images,active_children_categories.images',
         'is_null' => 'top_id',
         'is_active' => true,
@@ -137,7 +138,7 @@ class StoredDataService extends Service
     /**
      * Retrieve nested categories and children, that have products assigned
      */
-    private function retrievePopulatedCategories($params = [
+    public function retrievePopulatedCategories($params = [
         'with' => 'images',
     ])
     {
@@ -152,7 +153,7 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveCurrencies($params = [
+    public function retrieveCurrencies($params = [
         'is_enabled' => true,
     ])
     {
@@ -167,7 +168,7 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveModules($params = [])
+    public function retrieveModules($params = [])
     {
         try {
             // get the active modules from API
@@ -180,7 +181,7 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveSpecifications($params = [
+    public function retrieveSpecifications($params = [
         'with' => 'values',
     ])
     {
@@ -195,7 +196,7 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveTags($params = [])
+    public function retrieveTags($params = [])
     {
         try {
             // get the tags from API
@@ -208,7 +209,7 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveVendors($params = [
+    public function retrieveVendors($params = [
         'is_onboarded' => true,
         'is_active' => true,
         'is_approved' => true,
@@ -225,7 +226,7 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveCharities($params = [
+    public function retrieveCharities($params = [
         'is_onboarded' => true,
         'is_live' => true,
         'is_approved' => true,
@@ -242,7 +243,7 @@ class StoredDataService extends Service
         }
     }
 
-    private function retrieveBlogCategories($params = [])
+    public function retrieveBlogCategories($params = [])
     {
         try {
             // get the blog categories from API

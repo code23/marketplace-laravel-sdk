@@ -64,11 +64,17 @@ return [
         'email_verified_route_name' => env('EMAIL_VERIFIED_ROUTE_NAME', 'email-verified'),
     ],
 
+    // used by MPEStored
     'cache' => [
 
         'attributes' => [
             'key' => env('ATTRIBUTES_CACHE_KEY', 'attributes'),
             'minutes' => env('ATTRIBUTES_CACHE_MINUTES', 10),
+        ],
+
+        'blog_categories' => [
+            'key' => env('BLOG_CATEGORIES_CACHE_KEY', 'blog_categories'),
+            'minutes' => env('BLOG_CATEGORIES_CACHE_MINUTES', 10),
         ],
 
         'categories' => [
