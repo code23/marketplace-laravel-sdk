@@ -113,8 +113,6 @@ class MPEFetchPopulatedCategories implements ShouldQueue
         // update cached data
         Cache::put('populated_categories', $categories);
 
-        Log::info('MPEFetchPopulatedCategories: Cached populated categories updated');
-
         if($this->command) {
             $this->command->info('Cached populated categories updated');
             $this->command->newLine();

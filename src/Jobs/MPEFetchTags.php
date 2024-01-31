@@ -113,8 +113,6 @@ class MPEFetchTags implements ShouldQueue
         // update cached data
         Cache::put('tags', $tags);
 
-        Log::info('MPEFetchTags: Cached tags updated');
-
         if($this->command) {
             $this->command->info('Cached tags updated');
             $this->command->newLine();

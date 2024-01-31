@@ -116,8 +116,6 @@ class MPEFetchCharities implements ShouldQueue
             // update cached data
             Cache::put('charities', $charities);
 
-            Log::info('MPEFetchCharities: Cached charities updated');
-
             if($this->command) {
                 $this->command->info('Cached charities updated');
                 $this->command->newLine();

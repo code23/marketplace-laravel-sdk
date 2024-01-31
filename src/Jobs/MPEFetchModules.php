@@ -113,8 +113,6 @@ class MPEFetchModules implements ShouldQueue
         // update cached data
         Cache::put('modules', $modules);
 
-        Log::info('MPEFetchModules: Cached modules updated');
-
         if($this->command) {
             $this->command->info('Cached modules updated');
             $this->command->newLine();

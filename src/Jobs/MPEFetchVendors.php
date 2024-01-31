@@ -120,8 +120,6 @@ class MPEFetchVendors implements ShouldQueue
         // update cached data
         Cache::put('vendors', $vendors);
 
-        Log::info('MPEFetchVendors: Cached vendors updated');
-
         if($this->command) {
             $this->command->info('Cached vendors updated');
             $this->command->newLine();

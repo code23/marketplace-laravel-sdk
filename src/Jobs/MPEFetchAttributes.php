@@ -113,8 +113,6 @@ class MPEFetchAttributes implements ShouldQueue
         // update cached data
         Cache::put('attributes', $attributes);
 
-        Log::info('MPEFetchAttributes: Cached attributes updated');
-
         if($this->command) {
             $this->command->info('Cached attributes updated');
             $this->command->newLine();

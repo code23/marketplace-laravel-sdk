@@ -116,8 +116,6 @@ class MPEFetchSpecifications implements ShouldQueue
             // update cached data
             Cache::put('specifications', $specifications);
 
-            Log::info('MPEFetchSpecifications: Cached specifications updated');
-
             if($this->command) {
                 $this->command->info('Cached specifications updated');
                 $this->command->newLine();

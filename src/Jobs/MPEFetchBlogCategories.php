@@ -113,8 +113,6 @@ class MPEFetchBlogCategories implements ShouldQueue
         // update cached data
         Cache::put('blog_categories', $blog_categories);
 
-        Log::info('MPEFetchBlogCategories: Cached blog categories updated');
-
         if($this->command) {
             $this->command->info('Cached blog categories updated');
             $this->command->newLine();

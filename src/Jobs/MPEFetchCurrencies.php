@@ -113,8 +113,6 @@ class MPEFetchCurrencies implements ShouldQueue
         // update cached data
         Cache::put('currencies', $currencies);
 
-        Log::info('MPEFetchCurrencies: Cached currencies updated');
-
         if($this->command) {
             $this->command->info('Cached currencies updated');
             $this->command->newLine();
