@@ -6,7 +6,7 @@ use Exception;
 
 class SettingsService extends Service
 {
-    public function getCommissionGroups($with = 'vendors')
+    public function getCommissionGroups($with = null)
     {
         // send request
         $response = $this->http()->get($this->getPath() . '/settings/commission-groups', ['with' => $with]);
