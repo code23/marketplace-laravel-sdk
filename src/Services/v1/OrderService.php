@@ -30,4 +30,20 @@ class OrderService extends Service
         // return orders list
         return $response->json() ? collect($response->json()) : collect();
     }
+
+    /**
+     * Get invoice by ID
+     *
+     * @param Int $id Invoice ID
+     */
+    public function getInvoiceByID(Int $id)
+    {
+        // call api
+        $response = $this->http(null, 'application/pdf')->get($this->getPath() . '/invoices/' . $id . '/download');
+
+        if ($response->failed()) throw new Exception('Unable to download the invoice!', 422);
+
+        // return order
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
 }
