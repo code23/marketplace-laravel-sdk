@@ -19,6 +19,12 @@ use Illuminate\Support\Facades\Log;
 
 class CacheService extends Service
 {
+    /**
+     * Retrieve stored MPE data from cache
+     * - Updates stored data from the API if it's not found
+     * @param string $key The name of the cache key to retrieve
+     * @return mixed
+     */
     function get($key)
     {
         if(Cache::has($key)) {
@@ -86,5 +92,23 @@ class CacheService extends Service
                 throw new Exception('Cache key not found');
             }
         }
+    }
+
+    /**
+     * Search active modules
+     * @param string $code The module code to search for
+     * @param array $params Additional parameters to pass to the API
+     * @return bool
+     */
+    public function hasModule(String $code, $params = [])
+    {
+        // if modules retrieved successfully
+        if ($modules = $this->get('modules', $params)) {
+            // check if string is in modules
+            if ($modules->contains($code)) return true;
+        }
+
+        // else return false
+        return false;
     }
 }
