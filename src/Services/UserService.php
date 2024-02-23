@@ -175,7 +175,7 @@ class UserService extends Service
      *
      * @return Authenticatable
      */
-    public function get($id = null): User
+    public function get(): User
     {
         // call
         $response = $this->http()->get($this->getPath() . '/user', [
@@ -184,6 +184,9 @@ class UserService extends Service
 
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the user!', 422);
+
+        // check for 404
+        if ($response->json()['code'] == '404') throw new Exception($response->json()['message'], 404);
 
         // return user as user model
         return static::auth((new User())->forceFill($response->json()['data']));
