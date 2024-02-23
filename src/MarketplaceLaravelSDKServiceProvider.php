@@ -7,8 +7,11 @@ use App\Models\User;
 use Code23\MarketplaceLaravelSDK\View\Components\Layout;
 use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
 use Code23\MarketplaceLaravelSDK\Console\MPECacheUpdate;
+use Illuminate\Queue\Events\JobFailed;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Queue;
+use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
 {
@@ -84,6 +87,15 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
                 Layout::class,
             ]);
         }
+
+        /**
+         * failed jobs slack notification
+         */
+        Queue::failing(function (JobFailed $event) {
+            if(env('SLACK_ALERT_WEBHOOK')) {
+                SlackAlert::message('*' . config('app.url') . '* ' . $event->job->resolveName() . ' failed: ' . $event->exception->getMessage());
+            }
+        });
     }
 
     /**
