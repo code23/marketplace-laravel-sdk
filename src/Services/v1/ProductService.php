@@ -75,17 +75,16 @@ class ProductService extends Service
 
         // check for up-sells
         if (isset($product['up_sells']) && count($product['up_sells'])) {
-            // convert to collection & filter by published status
             $products = collect($product['up_sells']);
         }
 
-        // if number of cross sells is greater than or equal to max return amount
+        // if number of up-sells is greater than or equal to max return amount
         if ($products->count() >= $limit) {
             // return in random order limited to return count
             return $products->shuffle()->take($limit);
         }
 
-        // if not enough cross sells…
+        // if not enough up-sells…
 
         // get array of category ids from the product
         $categoryIDs = collect($product['categories'])->pluck('id')->toArray();
@@ -117,6 +116,6 @@ class ProductService extends Service
         }
 
         // merge shortfall into products collection and return
-        return $products->merge($shortfall);
+        return $products->merge($shortfall['data']);
     }
 }
