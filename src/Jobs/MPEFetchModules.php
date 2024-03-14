@@ -52,7 +52,7 @@ class MPEFetchModules implements ShouldQueue
     public function handle(): void
     {
         // check for slack alert suitability
-        $slack = config('app.env') != 'local' && env('SLACK_ALERT_WEBHOOK');
+        $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
 
         if($this->command) {
             $this->command->newLine();

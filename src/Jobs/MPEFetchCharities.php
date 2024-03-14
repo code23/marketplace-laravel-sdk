@@ -55,7 +55,7 @@ class MPEFetchCharities implements ShouldQueue
         if(Cache::get('modules')->contains('charities')) {
 
             // check for slack alert suitability
-            $slack = config('app.env') != 'local' && env('SLACK_ALERT_WEBHOOK');
+            $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
 
             if($this->command) $this->command->line('Fetching charities…');
 

@@ -108,7 +108,7 @@ class StoredDataService extends Service
             // get the attributes from API
             return MPEAttributes::list($params);
         } catch (Exception $e) {
-            if (config('app.env') == 'production' && env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving attributes from API_");
+            if (config('app.env') == 'production' && config('boilerplate.slack.webhook_url')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving attributes from API_");
             Log::error($e);
 
             return false;
@@ -128,7 +128,7 @@ class StoredDataService extends Service
             // get the categories from API
             return MPECategories::list($params);
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving categories from API_");
+            if (config('boilerplate.slack.webhook_url')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving categories from API_");
             Log::error($e);
 
             return false;
@@ -146,7 +146,7 @@ class StoredDataService extends Service
             // get the categories from API
             return MPECategories::populatedList($params);
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving populated categories from API_");
+            if (config('boilerplate.slack.webhook_url')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving populated categories from API_");
             Log::error($e);
 
             return false;
@@ -161,7 +161,7 @@ class StoredDataService extends Service
             // get the currencies from API
             return MPECurrencies::list($params);
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving currencies from API_");
+            if (config('boilerplate.slack.webhook_url')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving currencies from API_");
             Log::error($e);
 
             return false;
@@ -174,7 +174,7 @@ class StoredDataService extends Service
             // get the active modules from API
             return MPEAuthentication::getModules($params);
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
+            if (config('boilerplate.slack.webhook_url')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
             Log::error($e);
 
             return false;
@@ -189,7 +189,7 @@ class StoredDataService extends Service
             // get the specifications from API
             return MPESpecifications::list($params);
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving specifications from API_");
+            if (config('boilerplate.slack.webhook_url')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving specifications from API_");
             Log::error($e);
 
             return false;
@@ -202,7 +202,7 @@ class StoredDataService extends Service
             // get the tags from API
             return MPETags::list($params);
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
+            if (config('boilerplate.slack.webhook_url')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving tags from API_");
             Log::error($e);
 
             return false;
@@ -219,7 +219,7 @@ class StoredDataService extends Service
             // get the vendors from API
             return MPEVendors::list($params);
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving vendors from API_");
+            if (config('boilerplate.slack.webhook_url')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving vendors from API_");
             Log::error($e);
 
             return false;
@@ -236,7 +236,7 @@ class StoredDataService extends Service
             // get the charities from API
             return MPECharities::list($params);
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving charities from API_");
+            if (config('boilerplate.slack.webhook_url')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving charities from API_");
             Log::error($e);
 
             return false;
@@ -249,7 +249,7 @@ class StoredDataService extends Service
             // get the blog categories from API
             return MPEBlog::categories();
         } catch (Exception $e) {
-            if (env('SLACK_ALERT_WEBHOOK')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving blog categories from API_");
+            if (config('boilerplate.slack.webhook_url')) SlackAlert::message('*' . config('app.url') . "* StoredDataService.php: _Error retrieving blog categories from API_");
             Log::error($e);
 
             return false;

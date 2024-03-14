@@ -92,7 +92,7 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
          * failed jobs slack notification
          */
         Queue::failing(function (JobFailed $event) {
-            if(env('SLACK_ALERT_WEBHOOK')) {
+            if(config('boilerplate.slack.webhook_url')) {
                 SlackAlert::message('*' . config('app.url') . '* ' . $event->job->resolveName() . ' failed: ' . $event->exception->getMessage());
             }
         });
