@@ -57,6 +57,38 @@ class ProductService extends Service
     }
 
     /**
+     * Get a list of products with filters and pagination
+     *
+     * @param Array $params
+     *
+     * @return Collection
+     */
+    public function listWithFilters(
+        Array $params = []
+    ) {
+        // if paginate is set, rename it to mpe_paginate
+        if(isset($params['paginate'])) {
+            $params['mpe_paginate'] = $params['paginate'];
+            unset($params['paginate']);
+        }
+
+        // call
+        $response = $this->http()->post($this->getPath() . '/products/filter', $params);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the products!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        // paginated
+        if (isset($params['mpe_paginate']) && $params['mpe_paginate']) return $response->json() ? collect($response->json()) : collect();
+        // non paginated
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * Get a given product's related products.
      * @param array $product The product to find related products for
      * @param int $limit max number of results to return
@@ -103,12 +135,12 @@ class ProductService extends Service
         // create api call parameters
         $params['has'] = $categoryString;
         $params['not_in'] = 'id,' . implode(',', $exclude);
-        $params['sort'] = 'random';
+        $params['sort'] = ['random'];
         $params['paginate'] = $limit - $products->count();
 
         // call api for the extra products required
         try {
-            $shortfall = $this->list($params);
+            $shortfall = $this->listWithFilters($params);
         } catch(Exception $e) {
             Log::error($e);
             // if error, return the products found so far
@@ -116,6 +148,6 @@ class ProductService extends Service
         }
 
         // merge shortfall into products collection and return
-        return $products->merge($shortfall['data']);
+        return $products->merge($shortfall['data']['products']['data']);
     }
 }
