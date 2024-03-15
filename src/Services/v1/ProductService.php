@@ -121,19 +121,11 @@ class ProductService extends Service
         // get array of category ids from the product
         $categoryIDs = collect($product['categories'])->pluck('id')->toArray();
 
-        // create string of category ids to include in api call
-        $categoryString = '';
-        foreach ($categoryIDs as $catId) {
-            $categoryString .= 'categories|category_id|' . $catId . '^';
-        }
-        // trim final ^ from string
-        $categoryString = rtrim($categoryString, '^');
-
         // create exclusion list of this product's id and that of products already found
         $exclude = collect($product['id'])->merge($products->pluck('id'))->toArray();
 
         // create api call parameters
-        $params['has'] = $categoryString;
+        $params['categories'] = $categoryIDs;
         $params['not_in'] = 'id,' . implode(',', $exclude);
         $params['sort'] = ['random'];
         $params['paginate'] = $limit - $products->count();
@@ -143,6 +135,7 @@ class ProductService extends Service
             $shortfall = $this->listWithFilters($params);
         } catch(Exception $e) {
             Log::error($e);
+
             // if error, return the products found so far
             return $products;
         }
