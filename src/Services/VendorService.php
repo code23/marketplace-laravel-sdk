@@ -101,7 +101,7 @@ class VendorService extends Service
      *      Vendor relationships (comma separated) to include
      * @param String $sort
      *     Sort vendors by field
-     * 
+     *
      * @return Collection of vendors
      */
     public function list($with = null, String $sort = null)
@@ -246,6 +246,31 @@ class VendorService extends Service
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // return updated followed list as collection
+        return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Retrieve all vendors that are within their radius from a given postcode
+     */
+    public function listByPostcode($postcode, $with = null, $sort = null)
+    {
+        // remove any spaces from the postcode
+        $postcode = str_replace(' ', '', $postcode);
+
+        // call to api
+        $response = $this->http()->get($this->getPath() . '/vendors/postcode/' . $postcode, [
+            'with' => $with,
+            'sort' => $sort,
+            'is_active' => true,
+        ]);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the request to retrieve vendors within a radius.', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // return the vendors
         return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
     }
 }
