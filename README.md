@@ -173,33 +173,6 @@ NOTE: requires your homepage route to be named `home`.
 
 Overwrite the route name using the env variable `EMAIL_VERIFIED_ROUTE_NAME` and adjust your route declaration to match.
 
-### DEPRECATED: Categories, Tags, Attributes (use MPEStored below instead)
-
-Add `MPESessionCategories` middleware _below_ the `MPESessionAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
-
-This middleware stores the available categories to an object in the user's session, to reduce API traffic.
-
-The rate at which the categories are updated can be set via the env var `CATEGORY_RETRIEVAL_RATE`, default 10 minutes.
-
-Tags has a separate middleware called `MPESessionTags` that functions the same way as categories, as does `MPESessionAttributes`.
-
-_Note_ session data cannot be used in views/templates that dont use middleware, such as the 404 page. To overcome this, add the following to the bottom of the web.php routes file:
-
-```
-// Adding this fallback route to the 404 view solves the issue of 404 page not having access to session data.
-// which is used to populate the header navigation with categories
-// https://laravel.com/docs/9.x/routing#fallback-routes
-Route::fallback(function () {
-    return view('errors/404');
-});
-```
-
-### DEPRECATED: Currencies (use MPEStored below instead)
-
-If you require multi-currency options, you'll need to include the `MPESessionCurrencies` middleware _below_ the `MPESessionAuthentication` class in your `web` middleware group in `App\Http\Kernel.php`.
-
-This middleware stores the available currencies to an object in the user's session.
-
 ## Filters & Cached Data
 
 To reduce data transfer and speed up frontend rendering, filters and other data that is used across multiple pages is cached. This data is updated on a schedule defined in the config file (default 10 minutes).
