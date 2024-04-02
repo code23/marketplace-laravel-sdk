@@ -36,9 +36,7 @@ class ProductService extends Service
      * @return Collection
      */
     public function list(
-        Array $params = [
-            'status' => 'published',
-        ],
+        Array $params = [],
     ) {
         // call
         $response = $this->http()->get($this->getPath() . '/products', $params);

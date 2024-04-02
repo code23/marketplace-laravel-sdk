@@ -46,7 +46,6 @@ class ProductService extends Service
         // call api
         $response = $this->http()->get($this->getPath() . '/vendor/' . $vendorSlug . '/product/' . $productSlug, [
             'with' => $with,
-            'status' => 'published',
         ]);
 
         // not found
@@ -80,7 +79,6 @@ class ProductService extends Service
         // call api
         $response = $this->http()->get($this->getPath() . '/products/' . $id, [
             'with' => $with,
-            'status' => 'published',
         ]);
 
         // not found
@@ -111,7 +109,6 @@ class ProductService extends Service
         // call api
         $response = $this->http()->get($this->getPath() . '/products/slug/' . $slug, [
             'with' => $with,
-            'status' => 'published',
         ]);
 
         // not found
@@ -144,9 +141,7 @@ class ProductService extends Service
         String $json_contains = null,
     ) {
         // set up params
-        $params = [
-            'status'   => 'published',
-        ];
+        $params = [];
         if ($with) $params['with'] = $with;
         if ($per_page) $params['paginate'] = $per_page;
         if ($page) $params['page'] = $page;
@@ -193,7 +188,6 @@ class ProductService extends Service
         String $radius = null,
     ) {
         $data = [
-            'status'        => 'published',
             'with'          => $with,
             'mpe_paginate'  => $per_page,
             'page'          => $page,
@@ -239,7 +233,6 @@ class ProductService extends Service
         // call to api
         $response = $this->http()->get($this->getPath() . '/products', [
             'sort' => 'created_at,desc',
-            'status' => 'published',
             'paginate' => $count,
             'page' => 1,
             'with' => $with,
@@ -271,9 +264,7 @@ class ProductService extends Service
 
         // first we check for product's cross-sells
         if ($product['has_cross_sells']) {
-
-            // filter by published status
-            $products = collect($product['cross_sells'])->where('status', 'published');
+            $products = collect($product['cross_sells']);
         }
 
         // if number of cross sells is greater than or equal to max return amount
@@ -299,7 +290,6 @@ class ProductService extends Service
             // exclude duplicates and restrict to amount required
             $categoryProducts = collect($category['products'])
                 ->whereNotIn('id', $exclude)
-                ->where('status', 'published')
                 ->take($returnCount - $products->count());
 
             // merge into products collection
