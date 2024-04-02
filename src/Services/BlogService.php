@@ -122,7 +122,7 @@ class BlogService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // return posts as collection
-        return $response->json()['data'] ? collect($response->json()['data']['blog_posts'])->where('status', 'published') : collect();
+        return $response->json()['data'] ? collect($response->json()['data']['blog_posts']) : collect();
     }
 
     /**
@@ -136,7 +136,6 @@ class BlogService extends Service
     {
         // send request
         $response = $this->http()->get($this->getPath() . '/blog/posts/' . $id, [
-            'status' => 'published',
             'with' => $with
         ]);
 
@@ -165,7 +164,6 @@ class BlogService extends Service
         // send request
         $response = $this->http()->get($this->getPath() . '/blog/posts/slug/' . $slug, [
             'with' => $with,
-            'status' => 'published'
         ]);
 
         // blog post not found
