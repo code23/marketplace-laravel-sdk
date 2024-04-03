@@ -117,4 +117,16 @@ class CacheService extends Service
         // else return false
         return false;
     }
+
+    /**
+     * Filter countries by sepa (european)
+     * @param Collection $countries
+     * @return Collection
+     */
+    public function filterCountriesBySepa($countries)
+    {
+        return $countries->filter(function ($country) {
+            return data_get($country, 'meta.sepaCountry') == 1;
+        });
+    }
 }
