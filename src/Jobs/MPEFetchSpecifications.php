@@ -52,7 +52,7 @@ class MPEFetchSpecifications implements ShouldQueue
     public function handle(): void
     {
         // check for required module
-        if(Cache::get('modules')->contains('specifications')) {
+        if(Cache::get('modules')->contains('product-specifications')) {
 
             // check for slack alert suitability
             $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
