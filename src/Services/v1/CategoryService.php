@@ -2,7 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Services\v1;
 
-use Code23\MarketplaceLaravelSDK\Facades\v1\MPEStored;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECache;
 use Code23\MarketplaceLaravelSDK\Services\Service;
 use Exception;
 
@@ -14,7 +14,7 @@ class CategoryService extends Service
     public function breadcrumb($id)
     {
         // get all categories from storage, or quit
-        if (!$categories = MPEStored::retrieve('categories')) return false;
+        if (!$categories = MPECache::get('categories')) return false;
 
         // flatten the categories
         $flat_categories = $this->flattenCategories($categories);

@@ -3,7 +3,7 @@
 namespace Code23\MarketplaceLaravelSDK\Http\Middleware\v1;
 
 use Closure;
-use Code23\MarketplaceLaravelSDK\Facades\v1\MPEStored;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECache;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -23,7 +23,7 @@ class MPESessionCurrencies
             // if active_currency_code not in session
             if(!session('active_currency_code')) {
                 // set to default currency for site
-                session(['active_currency_code' => collect(MPEStored::retrieve('currencies'))->firstWhere('is_default', true)['code']]);
+                session(['active_currency_code' => collect(MPECache::get('currencies'))->firstWhere('is_default', true)['code']]);
             }
         } catch (Exception $e) {
             Log::error($e);

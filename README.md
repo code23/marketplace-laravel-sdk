@@ -175,24 +175,21 @@ Overwrite the route name using the env variable `EMAIL_VERIFIED_ROUTE_NAME` and 
 
 ## Filters & Cached Data
 
-To reduce data transfer and speed up frontend rendering, filters and other data that is used across multiple pages is cached. This data is updated on a schedule defined in the config file (default 10 minutes).
+To reduce data transfer and improve performance, filters and other data that is used across multiple pages is cached via Jobs. This data is updated on a schedule defined in the app/Console/Kernel.php file. Queue workers should be run every minute on servers to ensure the cache is updated regularly, or use Horizon to manage the queue.
 
-The cached data is accessed via the `MPEStored` facade's `retrieve()` method, registered in the SDK service provider, so you can use it anywhere in your application.
+The cached data is accessed via the `MPECache` facade's `get()` method, registered in the SDK service provider, so you can use it anywhere in your application. Should the data not be present in the cache, the get method will retrieve the data from the API and store it in the cache for future use.
+
+MPECache data can be freshed manually by calling `php artisan mpe-cache:refresh` from the command line, fetching all possible cache data (not currently configurable to specific keys). However, this command accepts a `--key` option to refresh a specific cache key only, e.g. `php artisan mpe-cache:refresh --key=categories`.
 
 Examples:
 
 ```php
-use Code23\MarketplaceLaravelSDK\Facades\v1\MPEStored;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECache;
 
 // Get all categories
-MPEStored::retrieve('categories');
-
-// Get all specifications
-MPEStored::retrieve('specifications');
+MPECache::get('categories');
 
 ```
-
-The method first checks the cache for the requested data to return. If not found in cache, sends a request to the API to retrieve the data, and stores it in the cache for future requests. Cached data is stored for 10 minutes by default, but can be changed in the config file.
 
 ## Users
 
