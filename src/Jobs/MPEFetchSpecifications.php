@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Jobs;
 
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECache;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPESpecifications;
 use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
 use Exception;
@@ -52,7 +53,7 @@ class MPEFetchSpecifications implements ShouldQueue
     public function handle(): void
     {
         // check for required module
-        if(Cache::get('modules')->contains('product-specifications')) {
+        if(MPECache::get('modules')->contains('product-specifications')) {
 
             // check for slack alert suitability
             $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
