@@ -36,7 +36,7 @@ class ProductService extends Service
      * @return Collection
      */
     public function list(
-        Array $params = [],
+        array $params = [],
     ) {
         // call
         $response = $this->http()->get($this->getPath() . '/products', $params);
@@ -62,10 +62,10 @@ class ProductService extends Service
      * @return Collection
      */
     public function listWithFilters(
-        Array $params = []
+        array $params = []
     ) {
         // if paginate is set, rename it to mpe_paginate
-        if(isset($params['paginate'])) {
+        if (isset($params['paginate'])) {
             $params['mpe_paginate'] = $params['paginate'];
             unset($params['paginate']);
         }
@@ -98,8 +98,7 @@ class ProductService extends Service
         array $params = [
             'with' => 'images,vendor',
         ],
-    )
-    {
+    ) {
         // create empty products collection
         $products = collect();
 
@@ -131,7 +130,7 @@ class ProductService extends Service
         // call api for the extra products required
         try {
             $shortfall = $this->listWithFilters($params);
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             Log::error($e);
 
             // if error, return the products found so far
@@ -140,5 +139,35 @@ class ProductService extends Service
 
         // merge shortfall into products collection and return
         return $products->merge($shortfall['data']['products']['data']);
+    }
+
+    /**
+     * Get a single product by product & vendor slug, with optional relationships
+     *
+     * @param string $vendorSlug Vendor Slug
+     * @param string $productSlug Product Slug
+     * @param array $params API parameters to use
+     * 
+     * @return Collection
+     */
+    public function get(string $vendorSlug, string $productSlug, array $params = [])
+    {
+        // call api
+        $response = $this->http()->get($this->getPath() . '/vendor/' . $vendorSlug . '/product/' . $productSlug, $params);
+
+        // not found
+        if ($response->status() == 404) throw new Exception($response['message'], 404);
+
+        // not published
+        if (isset($response->json()['data']) && empty($response->json()['data']['products'])) throw new Exception('Product not published', 404);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the product!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 }
