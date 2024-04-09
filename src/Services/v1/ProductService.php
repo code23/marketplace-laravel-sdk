@@ -170,4 +170,29 @@ class ProductService extends Service
         // if successful, return collection of products or empty collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
+
+    /**
+     * Lookup product variant by code
+     *
+     * @param int $id
+     *      Product ID
+     * @param string $code
+     *      Variant code e.g. '1.4-2.12-6.7'
+     *
+     * @return Collection
+     */
+    public function variantLookup(int $id, string $code)
+    {
+        // call
+        $response = $this->http()->get($this->getPath() . '/product/' . $id . '/variants/lookup/' . $code);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to lookup the product variants!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // if successful, return collection of products or empty collection
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
 }
