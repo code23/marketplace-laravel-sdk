@@ -37,21 +37,18 @@ class ShippingService extends Service
     /**
      * get shipping services
      *
-     * @param array $vendorIds - optional array of vendor ids to filter by
-     * @return void
+     * @param array $params - optional array of API parameters
+     * @return collection
      */
     public function getZones($params)
     {
-        // add to cart
+        // get shipping zones
         $response = $this->http()->get($this->getPath() . '/shipping/zones', $params);
 
-        // api call failed
-        // if ($response->failed()) throw new Exception('Error attempting to update checkout', 422);
-
-        // any other errors
+        // any errors
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
-        // if successful, return cart as collection
+        // if successful, return shipping zones as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 }
