@@ -94,6 +94,7 @@ class MessageService extends Service
      */
     public function sendMessage(array $params = [
         'order_id' => null,
+        'event_id' => null,
         'is_update' => false,
     ])
     {
