@@ -6,6 +6,7 @@ use Code23\MarketplaceLaravelSDK\Facades\v1\MPECurrencies;
 use Code23\MarketplaceLaravelSDK\Facades\MPEUser;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class AuthenticationService extends Service
 {
@@ -148,6 +149,14 @@ class AuthenticationService extends Service
      */
     public function authenticateSite()
     {
+        // check if we have a cached oAuth token
+        if ($cached = Cache::get('oAuth')) {
+            // save it to session
+            session()->put('oAuth', $cached);
+
+            return $cached;
+        }
+
         // prepare payload
         $payload = [
             'grant_type'    => 'client_credentials',
@@ -155,16 +164,18 @@ class AuthenticationService extends Service
             'client_secret' => config('marketplace-laravel-sdk.api.client_credential_keys.secret'),
         ];
 
-        // retrieve oAuth tokens
+        // retrieve oAuth token
         $response = $this->http()->post($this->getAuthPath() . '/token', $payload);
 
         // any other error
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
-        // set session
+        // save to session
         session()->put('oAuth', $response->json());
 
-        // back to welcome - login succeeded
+        // save to cache, set to expire 500s before it actually does
+        Cache::put('oAuth', $response->json(), $response->json()['expires_in'] - 500);
+
         return $response->json();
     }
 

@@ -97,7 +97,7 @@ Before you can connect to the Marketplace Engine you'll need to add the followin
 ```bash
 # Marketplace
 MPE_VERSION=v1
-MPE_ORIGIN=marketplace.code23.co.uk
+MPE_ORIGIN=example.markko.me
 MPE_API_BASE_PATH=https://exquisite-brook-che6tcbbksr0.vapor-farm-d1.com
 MPE_PASSWORD_KEY=946786a6-bf7d-48e9-8c54-9e57e6365a76
 MPE_PASSWORD_SECRET=r7kiMYyqYTi9qpNRf33rLGFlME3oZlfptJ83sp2U
@@ -261,7 +261,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email dev@code23.com instead of using the issue tracker.
+If you discover any security related issues, please email dev@meetmarkko.com instead of using the issue tracker.
 
 ## Credits
 
