@@ -32,17 +32,16 @@ class CategoryService extends Service
     }
 
     /**
-     * Get a nested list of populated categories and subcategories
+     * Get a nested list of categories and subcategories
      *
      * @param array $params - See postman for available parameters
+     *                      - Use 'only_with_products' => true/false to filter categories with products only
      * @param $oauth - oauth token for when calling from artisan command
      */
-    public function populatedList($params = [
-        'with' => 'images',
-    ], $oauth = null)
+    public function listNested($params = [], $oauth = null)
     {
         // send request
-        $response = $this->http($oauth)->get($this->getPath() . '/categories/populated', $params);
+        $response = $this->http($oauth)->get($this->getPath() . '/categories/nested', $params);
 
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the categories.', 422);

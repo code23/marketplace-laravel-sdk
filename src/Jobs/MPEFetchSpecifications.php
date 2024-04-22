@@ -58,7 +58,7 @@ class MPEFetchSpecifications implements ShouldQueue
             // check for slack alert suitability
             $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
 
-            if($this->command) $this->command->line('Fetching populated categories…');
+            if($this->command) $this->command->line('Fetching specifications…');
 
             // We must authenticate the site manually because there is no user session, as we are running from a job / the command line…
             // Create an instance of the authentication service

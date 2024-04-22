@@ -9,7 +9,6 @@ use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchCategories;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchCharities;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchCountries;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchCurrencies;
-use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchPopulatedCategories;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchSpecifications;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchTags;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchVendors;
@@ -74,11 +73,6 @@ class MPECacheUpdate extends Command
 
         if($key == 'all' || $key == 'currencies') {
             $job = new MPEFetchCurrencies($this);
-            $job->handle();
-        }
-
-        if($key == 'all' || $key == 'populated_categories') {
-            $job = new MPEFetchPopulatedCategories($this);
             $job->handle();
         }
 

@@ -2,7 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Jobs;
 
-use Code23\MarketplaceLaravelSDK\Facades\MPECategories;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECategories;
 use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -84,7 +84,7 @@ class MPEFetchCategories implements ShouldQueue
 
         try {
             // get categories from API
-            $categories = MPECategories::list($params, $oauth);
+            $categories = MPECategories::listNested($params, $oauth);
 
             // if no categories returned, log this
             if(! count($categories)) {
