@@ -84,16 +84,9 @@ class MPEFetchCurrencies implements ShouldQueue
             // get currencies from API
             $currencies = MPECurrencies::list($params, $oauth);
 
-            // if no currencies returned, log this
-            if(! count($currencies)) {
-
-                Log::alert('MPEFetchCurrencies: Currencies empty');
-
-                if($this->command) {
-                    $this->command->error('Currencies data empty');
-                } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchCurrencies: _Currencies data empty_");
-                }
+            // if none returned
+            if(! count($currencies) && $this->command) {
+                $this->command->error('Currencies data empty');
             }
         } catch (Exception $e) {
 

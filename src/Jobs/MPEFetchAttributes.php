@@ -84,16 +84,9 @@ class MPEFetchAttributes implements ShouldQueue
             // get attributes from API
             $attributes = MPEAttributes::list($params, $oauth);
 
-            // if no attributes returned, log this
-            if(! count($attributes)) {
-
-                Log::alert('MPEFetchAttributes: Attributes empty!');
-
-                if($this->command) {
-                    $this->command->error('Attributes data empty');
-                } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchAttributes: _Attributes data empty_");
-                }
+            // if no attributes returned
+            if(! count($attributes) && $this->command) {
+                $this->command->error('Attributes data empty');
             }
         } catch (Exception $e) {
 

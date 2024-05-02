@@ -84,16 +84,9 @@ class MPEFetchCountries implements ShouldQueue
             // get countries from API
             $countries = MPEReferenceValues::byCategory($params, $oauth);
 
-            // if no countries returned, log this
-            if(! count($countries)) {
-
-                Log::alert('MPEFetchCountries: Countries empty');
-
-                if($this->command) {
-                    $this->command->error('Countries data empty');
-                } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchCountries: _Countries data empty_");
-                }
+            // if none returned
+            if(! count($countries) && $this->command) {
+                $this->command->error('Countries data empty');
             }
         } catch (Exception $e) {
 

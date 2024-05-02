@@ -86,16 +86,9 @@ class MPEFetchCategories implements ShouldQueue
             // get categories from API
             $categories = MPECategories::listNested($params, $oauth);
 
-            // if no categories returned, log this
-            if(! count($categories)) {
-
-                Log::alert('MPEFetchCategories: Categories empty');
-
-                if($this->command) {
-                    $this->command->error('Categories data empty');
-                } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchCategories: _Categories data empty_");
-                }
+            // if none returned
+            if(! count($categories) && $this->command) {
+                $this->command->error('Categories data empty');
             }
         } catch (Exception $e) {
 

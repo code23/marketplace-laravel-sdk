@@ -91,16 +91,9 @@ class MPEFetchTags implements ShouldQueue
             // get tags from API
             $tags = MPETags::list($params, $oauth);
 
-            // if no tags returned, log this
-            if(! count($tags)) {
-
-                Log::alert('MPEFetchTags: Tags empty');
-
-                if($this->command) {
-                    $this->command->error('Tags data empty');
-                } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchTags: _Tags data empty_");
-                }
+            // if none returned
+            if(! count($tags) && $this->command) {
+                $this->command->error('Tags data empty');
             }
         } catch (Exception $e) {
 

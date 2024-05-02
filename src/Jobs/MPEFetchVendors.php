@@ -91,16 +91,9 @@ class MPEFetchVendors implements ShouldQueue
             // get vendors from API
             $vendors = MPEVendors::list($params, $oauth);
 
-            // if no vendors returned, log this
-            if(! count($vendors)) {
-
-                Log::alert('MPEFetchVendors: Vendors empty!');
-
-                if($this->command) {
-                    $this->command->error('Vendors empty!');
-                } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchVendors: _Vendors data empty_");
-                }
+            // if none returned
+            if(! count($vendors) && $this->command) {
+                $this->command->error('Vendors data empty');
             }
         } catch (Exception $e) {
 

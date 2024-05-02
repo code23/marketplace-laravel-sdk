@@ -84,16 +84,9 @@ class MPEFetchBlogCategories implements ShouldQueue
             // get blog categories from API
             $blog_categories = MPEBlog::categories($params, $oauth);
 
-            // if no blog categories returned, log this
-            if(! count($blog_categories)) {
-
-                Log::alert('MPEFetchBlogCategories: Blog categories empty');
-
-                if($this->command) {
-                    $this->command->error('Blog categories data empty');
-                } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchBlogCategories: _Blog categories data empty_");
-                }
+            // if none returned
+            if(! count($blog_categories) && $this->command) {
+                $this->command->error('Blog categories data empty');
             }
         } catch (Exception $e) {
 

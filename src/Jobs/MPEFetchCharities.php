@@ -87,16 +87,9 @@ class MPEFetchCharities implements ShouldQueue
                 // get charities from API
                 $charities = MPECharities::list($params, $oauth);
 
-                // if no charities returned, log this
-                if(! count($charities)) {
-
-                    Log::alert('MPEFetchCharities: Charities empty');
-
-                    if($this->command) {
-                        $this->command->error('Charities data empty');
-                    } else {
-                        if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchCharities: _Charities data empty_");
-                    }
+                // if none returned
+                if(! count($charities) && $this->command) {
+                    $this->command->error('Charities data empty');
                 }
             } catch (Exception $e) {
 

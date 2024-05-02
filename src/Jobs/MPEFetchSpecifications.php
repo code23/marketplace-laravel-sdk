@@ -88,16 +88,9 @@ class MPEFetchSpecifications implements ShouldQueue
                 // get specifications from API
                 $specifications = MPESpecifications::list($params, $oauth);
 
-                // if no specifications returned, log this
-                if(! count($specifications)) {
-
-                    Log::alert('MPEFetchSpecifications: Specifications empty');
-
-                    if($this->command) {
-                        $this->command->error('Specifications data empty');
-                    } else {
-                        if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchSpecifications: _Specifications data empty_");
-                    }
+                // if none returned
+                if(! count($specifications) && $this->command) {
+                    $this->command->error('Specifications data empty');
                 }
             } catch (Exception $e) {
 

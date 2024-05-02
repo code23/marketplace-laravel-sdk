@@ -84,16 +84,9 @@ class MPEFetchModules implements ShouldQueue
             // get modules from API
             $modules = MPEAuthentication::getModules($oauth);
 
-            // if no modules returned, log this
-            if(! count($modules)) {
-
-                Log::alert('MPEFetchModules: Modules empty');
-
-                if($this->command) {
-                    $this->command->error('Modules data empty');
-                } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchModules: _Modules data empty_");
-                }
+            // if none returned
+            if(! count($modules) && $this->command) {
+                $this->command->error('Modules data empty');
             }
         } catch (Exception $e) {
 
