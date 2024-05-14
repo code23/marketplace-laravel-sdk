@@ -228,6 +228,28 @@ class UserService extends Service
     }
 
     /**
+     * Save basic user data to session, as an alternative to a full retrieval from the API
+     */
+    public function saveToSession()
+    {
+        // Get the authed user from the API
+        $originalUser = Auth::user();
+
+        // Create a new instance of the User model
+        $user = new User;
+
+        // Set only the required attributes
+        $user->id = $originalUser->profile['user_id'];
+        $user->email = $originalUser->email;
+        $user->first_name = $originalUser->first_name;
+        $user->last_name = $originalUser->last_name;
+        $user->profile = $originalUser->profile;
+
+        // Save the user to the session
+        return session(['user' => $user]);
+    }
+
+    /**
      * Send an email verification link to the user
      */
     public function sendEmailVerificationLink()
