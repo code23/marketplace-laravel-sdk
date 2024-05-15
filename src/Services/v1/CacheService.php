@@ -8,6 +8,7 @@ use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchCategories;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchCharities;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchCountries;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchCurrencies;
+use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchFeaturedProducts;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchModules;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchSpecifications;
 use Code23\MarketplaceLaravelSDK\Jobs\MPEFetchTags;
@@ -58,6 +59,11 @@ class CacheService extends Service
 
                 case 'currencies':
                     $job = new MPEFetchCurrencies();
+                    $job->handle();
+                    break;
+
+                case 'featured_products':
+                    $job = new MPEFetchFeaturedProducts();
                     $job->handle();
                     break;
 
