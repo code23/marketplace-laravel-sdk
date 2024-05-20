@@ -1,51 +1,22 @@
 # Marketplace Laravel SDK
 
-Marketplace Laravel SDK provides an easy interface to the Code23 Marketplace Engine API. Designed and developed for use with Laravel, it will reduce the work involved when integrating with the Markeplace Engine api from a new front-end application.
+Marketplace Laravel SDK provides an easy interface to the Markko API. Designed and developed for use with Laravel, it will reduce the work involved when integrating with the Markeplace Engine API from a new front-end application.
 
-Authentication is handled by installing the necessary models, views and components so you can use the Auth facade in the same way as traditional
-Laravel applications but but without the need for a database.
+Authentication is handled by installing the necessary models so you can use the Auth facade in the same way as traditional Laravel applications but without the need for a database.
 
 ## Server Requirements
 
-PHP 8
+PHP 8 or higher
 
 You may need to increase the server max file upload size to allow onboarding requests.
 
-Forge - click server's PHP tab:
+Laravel Forge - click server's PHP tab:
 
 Max File Upload Size: 100
 
 ## Before Installation
 
 Please be aware that installing the Marketplace Laravel SDK on a default Laravel installation will replace the base User model with the SDK User model developed to work directly with the API.
-
-<!-- The blade files provided by the SDK utilise Tailwind CSS so it's recommended that you install Tailwind on your Laravel instance :-
-```php
-npm install -D tailwindcss@latest postcss@latest autoprefixer@latest
-npx tailwindcss init
-``` -->
-
-<!-- Once installed add the following lines to your tailwind.config.js :- -->
-<!-- TODO: update this part for tailwind 3 & JIT -->
-<!-- ```php
-// tailwind.config.js
-module.exports = {
-   purge: [
-     './resources/**/*.blade.php',
-     './resources/**/*.js',
-     './resources/**/*.vue',
-   ],
-   ...
-``` -->
-
-<!-- And finally, configure Laravel Mix :-
-```php
-// webpack.mix.js
-mix.js("resources/js/app.js", "public/js")
-    .postCss("resources/css/app.css", "public/css", [
-        require("tailwindcss"),
-    ]);
-``` -->
 
 ## SDK Installation
 
@@ -70,7 +41,7 @@ Once you've provided composer with the location of the Marketplace Laravel SDK p
 composer require code23/marketplace-laravel-sdk
 ```
 
-Once the package is included in your project you can install the models, config, views and components by running the following install command:
+Once the package is included in your project you can install the models and config by running the following install command:
 
 ```bash
 php artisan marketplace-laravel-sdk:install
@@ -83,14 +54,12 @@ php artisan vendor:publish --tag=marketplace-laravel-sdk-config
 php artisan vendor:publish --tag=marketplace-laravel-sdk-controllers
 php artisan vendor:publish --tag=marketplace-laravel-sdk-middleware
 php artisan vendor:publish --tag=marketplace-laravel-sdk-models
-php artisan vendor:publish --tag=marketplace-laravel-sdk-views
-php artisan vendor:publish --tag=marketplace-laravel-sdk-view-components
 php artisan vendor:publish --tag=marketplace-laravel-sdk-livewire-traits
 ```
 
 ## SDK Configuration
 
-Before you can connect to the Marketplace Engine you'll need to add the following to your `.env` file. The API key and secret will be provided by a Marketplace Super Admin and the PAC key can be found in the Tenant admin dashboard. The PAC key combined with the Origin (site url TLD and host only) allows the website to authenticate with MPE without needing a user to login. This allows the website to consume certain endpoints e.g. product lists, categories etc.
+Before you can connect to the Marketplace Engine you'll need to add the following to your `.env` file. The API credentials will be provided by a Marketplace Super Admin.
 
 ### Authentication
 
@@ -173,24 +142,6 @@ NOTE: requires your homepage route to be named `home`.
 
 Overwrite the route name using the env variable `EMAIL_VERIFIED_ROUTE_NAME` and adjust your route declaration to match.
 
-## Filters & Cached Data
-
-To reduce data transfer and improve performance, filters and other data that is used across multiple pages is cached via Jobs. This data is updated on a schedule defined in the app/Console/Kernel.php file. Queue workers should be run every minute on servers to ensure the cache is updated regularly, or use Horizon to manage the queue.
-
-The cached data is accessed via the `MPECache` facade's `get()` method, registered in the SDK service provider, so you can use it anywhere in your application. Should the data not be present in the cache, the get method will retrieve the data from the API and store it in the cache for future use.
-
-MPECache data can be freshed manually by calling `php artisan mpe-cache:refresh` from the command line, fetching all possible cache data (not currently configurable to specific keys). However, this command accepts a `--key` option to refresh a specific cache key only, e.g. `php artisan mpe-cache:refresh --key=categories`.
-
-Examples:
-
-```php
-use Code23\MarketplaceLaravelSDK\Facades\v1\MPECache;
-
-// Get all categories
-MPECache::get('categories');
-
-```
-
 ## Users
 
 To ensure that your application authenticates using Marketplace Laravel SDK you'll need to ensure that Laravel knows where to look for users. To do this you'll need to update your config.auth by commenting out the current driver for `users` and adding the custom driver provided by Marketplace Laravel SDK
@@ -217,11 +168,31 @@ return [
 
 Remember to add the appropriate middleware outlined previously for user email verification.
 
+## Filters & Cached Data
+
+To reduce data transfer and improve performance, filters and other data from the API that is used across multiple pages is cached, via Jobs. This data is updated on a schedule defined in the app/Console/Kernel.php file. Queue workers should be run every minute on servers to ensure the scheduled jobs are running, or use Horizon to manage the queue.
+
+The cached data is accessed via the `MPECache` facade's `get()` method, registered in the SDK service provider, so you can use it anywhere in your application. Should the data not be present in the cache, the get method will retrieve the data from the API and store it in the cache for future use.
+
+MPECache data can be freshed manually by calling `php artisan mpe-cache:refresh` from the command line, fetching all possible cache data (not currently configurable to specific keys). However, this command accepts a `--key` option to refresh a specific cache key only, e.g. `php artisan mpe-cache:refresh --key=categories`.
+
+Examples:
+
+```php
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECache;
+
+// Get all categories
+$categories = MPECache::get('categories');
+
+```
+
 ## Onboarding images mixin
 
 <!-- TODO: include these files in package and make publishable -->
 
-Place images.js in resources/js and add to webpack.mix.js:
+Place images.js in resources/js and add to whichever asset manager you are using, Webpack, Vite, etc:
+
+Webpack example:
 
 ```js
 mix.js('resources/js/app.js', 'public/js')
@@ -265,7 +236,7 @@ If you discover any security related issues, please email dev@meetmarkko.com ins
 
 ## Credits
 
--   [Code23](https://github.com/code23)
+-   [Markko](https://github.com/code23)
 -   [All Contributors](../../contributors)
 
 ## License

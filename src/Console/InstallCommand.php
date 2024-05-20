@@ -51,18 +51,6 @@ class InstallCommand extends Command
             '--tag' => 'marketplace-laravel-sdk-models',
         ]);
 
-        // view components
-        $this->comment('Publishing view components...');
-        $this->callSilent('vendor:publish', [
-            '--tag' => 'marketplace-laravel-sdk-view-components',
-        ]);
-
-        // views
-        $this->comment('Publishing views...');
-        $this->callSilent('vendor:publish', [
-            '--tag' => 'marketplace-laravel-sdk-views',
-        ]);
-
         // prompt user
         $this->info('Marketplace Laravel SDK installed successfully.');
     }

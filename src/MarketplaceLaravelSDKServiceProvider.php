@@ -4,7 +4,6 @@ namespace Code23\MarketplaceLaravelSDK;
 
 use App\Models\User;
 
-use Code23\MarketplaceLaravelSDK\View\Components\Layout;
 use Code23\MarketplaceLaravelSDK\Console\InstallCommand;
 use Code23\MarketplaceLaravelSDK\Console\MPECacheUpdate;
 use Illuminate\Queue\Events\JobFailed;
@@ -23,7 +22,6 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         /*
          * load package assets
          */
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'marketplace-laravel-sdk');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         if ($this->app->runningInConsole()) {
@@ -52,16 +50,6 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
                 __DIR__ . '/../src/Rules' => app_path('Rules'),
             ], 'marketplace-laravel-sdk-rules');
 
-            // publish the authentication views
-            $this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/marketplace-laravel-sdk'),
-            ], 'marketplace-laravel-sdk-views');
-
-            // Publishing view components.
-            $this->publishes([
-                __DIR__.'/../src/View/Components' => app_path('View/Components'),
-            ], 'marketplace-laravel-sdk-view-components');
-
             // Publishing livewire traits.
             $this->publishes([
                 __DIR__.'/../src/Http/Livewire/Traits' => app_path('Http/Livewire/Traits'),
@@ -78,15 +66,6 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
          * custom singletons
          */
         $this->singletons();
-
-        /*
-         * load view components if they do not already exist
-         */
-        if (!class_exists(GuestLayout::class)) {
-            $this->loadViewComponentsAs('guest', [
-                Layout::class,
-            ]);
-        }
 
         /**
          * failed jobs slack notification
