@@ -51,64 +51,68 @@ class MPEFetchAttributes implements ShouldQueue
      */
     public function handle(): void
     {
-        // check for slack alert suitability
-        $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
+        // check for required module
+        if(MPECache::get('modules')->contains('product-attributes')) {
 
-        if($this->command) $this->command->line('Fetching attributes…');
+            // check for slack alert suitability
+            $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
 
-        // We must authenticate the site manually because there is no user session, as we are running from a job / the command line…
-        // Create an instance of the authentication service
-        $authenticationService = new AuthenticationService();
-        // Get the oAuth token
-        $oauth = $authenticationService->authenticateSite();
+            if($this->command) $this->command->line('Fetching attributes…');
 
-        // If the oAuth token request failed
-        if(!$oauth) {
+            // We must authenticate the site manually because there is no user session, as we are running from a job / the command line…
+            // Create an instance of the authentication service
+            $authenticationService = new AuthenticationService();
+            // Get the oAuth token
+            $oauth = $authenticationService->authenticateSite();
 
-            // report failure
+            // If the oAuth token request failed
+            if(!$oauth) {
+
+                // report failure
+                if($this->command) {
+                    $this->command->error('Auth failed');
+                } else {
+                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchAttributes: _Auth failed_");
+                }
+
+                Log::alert('MPEFetchAttributes: Auth failed');
+
+                throw new Exception('MPEFetchAttributes: MPE Auth failed');
+            }
+
+            // get params from config
+            $params = config('boilerplate.mpe_cache.attributes.params');
+
+            try {
+                // get attributes from API
+                $attributes = MPEAttributes::list($params, $oauth);
+
+                // if no attributes returned
+                if(! count($attributes) && $this->command) {
+                    $this->command->error('Attributes data empty');
+                }
+            } catch (Exception $e) {
+
+                // report failure
+                if($this->command) {
+                    $this->command->error('Retrieval error');
+                } else {
+                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchAttributes: _Attributes retrieval error_");
+                }
+
+                Log::alert('MPEFetchAttributes: Retrieval error');
+
+                // fail the job
+                throw new Exception('MPEFetchAttributes - Retrieval error - ' . $e);
+            }
+
+            // update cached data
+            Cache::put('attributes', $attributes);
+
             if($this->command) {
-                $this->command->error('Auth failed');
-            } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchAttributes: _Auth failed_");
+                $this->command->info('Cached attributes updated');
+                $this->command->newLine();
             }
-
-            Log::alert('MPEFetchAttributes: Auth failed');
-
-            throw new Exception('MPEFetchAttributes: MPE Auth failed');
-        }
-
-        // get params from config
-        $params = config('boilerplate.mpe_cache.attributes.params');
-
-        try {
-            // get attributes from API
-            $attributes = MPEAttributes::list($params, $oauth);
-
-            // if no attributes returned
-            if(! count($attributes) && $this->command) {
-                $this->command->error('Attributes data empty');
-            }
-        } catch (Exception $e) {
-
-            // report failure
-            if($this->command) {
-                $this->command->error('Retrieval error');
-            } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchAttributes: _Attributes retrieval error_");
-            }
-
-            Log::alert('MPEFetchAttributes: Retrieval error');
-
-            // fail the job
-            throw new Exception('MPEFetchAttributes - Retrieval error - ' . $e);
-        }
-
-        // update cached data
-        Cache::put('attributes', $attributes);
-
-        if($this->command) {
-            $this->command->info('Cached attributes updated');
-            $this->command->newLine();
         }
     }
 }
