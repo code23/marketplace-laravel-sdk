@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Jobs;
 
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECache;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPEProducts;
 use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
 use Exception;
@@ -58,64 +59,68 @@ class MPEFetchFeaturedProducts implements ShouldQueue
      */
     public function handle(): void
     {
-        // check for slack alert suitability
-        $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
+        // check for required module
+        if(MPECache::get('modules')->contains('product:physical') || MPECache::get('modules')->contains('product:digital')) {
 
-        if($this->command) $this->command->line('Fetching featured products…');
+            // check for slack alert suitability
+            $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
 
-        // We must authenticate the site manually because there is no user session, as we are running from a job / the command line…
-        // Create an instance of the authentication service
-        $authenticationService = new AuthenticationService();
-        // Get the oAuth token
-        $oauth = $authenticationService->authenticateSite();
+            if($this->command) $this->command->line('Fetching featured products…');
 
-        // If the oAuth token request failed
-        if(!$oauth) {
+            // We must authenticate the site manually because there is no user session, as we are running from a job / the command line…
+            // Create an instance of the authentication service
+            $authenticationService = new AuthenticationService();
+            // Get the oAuth token
+            $oauth = $authenticationService->authenticateSite();
 
-            // report failure
+            // If the oAuth token request failed
+            if(!$oauth) {
+
+                // report failure
+                if($this->command) {
+                    $this->command->error('Auth failed');
+                } else {
+                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchFeaturedProducts: _Auth failed_");
+                }
+
+                Log::alert('MPEFetchFeaturedProducts: Auth failed');
+
+                throw new Exception('MPEFetchFeaturedProducts: MPE Auth failed');
+            }
+
+            // get params from config
+            $params = config('boilerplate.mpe_cache.featured_products.params');
+
+            try {
+                // get featured products from API
+                $products = MPEProducts::listWithFilters($params)['data']['products']['data'];
+
+                // if none returned
+                if(! count($products) && $this->command) {
+                    $this->command->error('Tags data empty');
+                }
+            } catch (Exception $e) {
+
+                // report failure
+                if($this->command) {
+                    $this->command->error('Retrieval error');
+                } else {
+                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchFeaturedProducts: _Featured products retrieval error_");
+                }
+
+                Log::alert('MPEFetchFeaturedProducts: Retrieval error - ' . $e);
+
+                // fail the job
+                throw new Exception('MPEFetchFeaturedProducts - Retrieval error');
+            }
+
+            // update cached data
+            Cache::put('featured_products', $products);
+
             if($this->command) {
-                $this->command->error('Auth failed');
-            } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchFeaturedProducts: _Auth failed_");
+                $this->command->info('Cached featured products updated');
+                $this->command->newLine();
             }
-
-            Log::alert('MPEFetchFeaturedProducts: Auth failed');
-
-            throw new Exception('MPEFetchFeaturedProducts: MPE Auth failed');
-        }
-
-        // get params from config
-        $params = config('boilerplate.mpe_cache.featured_products.params');
-
-        try {
-            // get featured products from API
-            $products = MPEProducts::listWithFilters($params)['data']['products']['data'];
-
-            // if none returned
-            if(! count($products) && $this->command) {
-                $this->command->error('Tags data empty');
-            }
-        } catch (Exception $e) {
-
-            // report failure
-            if($this->command) {
-                $this->command->error('Retrieval error');
-            } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchFeaturedProducts: _Featured products retrieval error_");
-            }
-
-            Log::alert('MPEFetchFeaturedProducts: Retrieval error - ' . $e);
-
-            // fail the job
-            throw new Exception('MPEFetchFeaturedProducts - Retrieval error');
-        }
-
-        // update cached data
-        Cache::put('featured_products', $products);
-
-        if($this->command) {
-            $this->command->info('Cached featured products updated');
-            $this->command->newLine();
         }
     }
 }
