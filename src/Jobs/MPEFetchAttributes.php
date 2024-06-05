@@ -3,6 +3,7 @@
 namespace Code23\MarketplaceLaravelSDK\Jobs;
 
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPEAttributes;
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECache;
 use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
 use Exception;
 use Illuminate\Bus\Queueable;
