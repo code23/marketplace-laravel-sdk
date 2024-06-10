@@ -101,7 +101,7 @@ class CacheService extends Service
                 return Cache::get($key);
             } else {
                 Log::error('Cache key not found: ' . $key);
-                throw new Exception('Cache key not found');
+                return null;
             }
         }
     }
