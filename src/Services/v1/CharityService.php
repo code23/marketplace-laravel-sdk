@@ -72,6 +72,33 @@ class CharityService extends Service
     }
 
     /**
+     * Retrieve a charity by id
+     *
+     * @param int $id
+     *      Charity id to retrieve.
+     *
+     * @param String $with
+     *      Charity relationships (comma separated) to include
+     */
+    public function get($id, $params = [])
+    {
+        // retrieve charity
+        $response = $this->http()->get($this->getPath() . '/charities/' . $id, $params);
+
+        // charity not found
+        if ($response->status() == 404) throw new Exception($response['message'], 404);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the charity retrieval.', 422);
+
+        // any other errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+        // return the charity
+        return $response['data'];
+    }
+
+    /**
      * Retrieve a charity by slug
      *
      * @param String $slug
