@@ -52,4 +52,30 @@ class CategoryService extends Service
         // if successful, return categories as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
+
+    /**
+     * Flatten given categories
+     */
+    public function flattenCategories($categories, $include = ['id', 'name', 'slug', 'parent_id', 'top_id'])
+    {
+        $result = [];
+
+        foreach ($categories as $category) {
+            $hold_cat = $category;
+            foreach ($hold_cat as $key => $value) {
+                // only include the keys we want
+                if(!in_array($key, $include)) unset($hold_cat[$key]);
+            }
+
+            // add the category to the result array
+            $result[] = $hold_cat;
+
+            if (isset($category['children']) && !empty($category['children'])) {
+                $children = $this->flattenCategories($category['children']);
+                $result = array_merge($result, $children);
+            }
+        }
+
+        return $result;
+    }
 }
