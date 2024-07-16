@@ -114,6 +114,11 @@ class MPEFetchAttributes implements ShouldQueue
                 $this->command->info('Cached attributes updated');
                 $this->command->newLine();
             }
+        } else {
+            if($this->command) {
+                $this->command->line('Module "product-attributes" not active');
+                $this->command->newLine();
+            }
         }
     }
 }

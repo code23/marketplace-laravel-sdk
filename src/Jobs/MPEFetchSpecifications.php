@@ -114,6 +114,11 @@ class MPEFetchSpecifications implements ShouldQueue
                 $this->command->info('Cached specifications updated');
                 $this->command->newLine();
             }
+        } else {
+            if($this->command) {
+                $this->command->line('Module "product-specifications" not active');
+                $this->command->newLine();
+            }
         }
     }
 }

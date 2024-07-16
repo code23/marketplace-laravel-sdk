@@ -121,6 +121,11 @@ class MPEFetchFeaturedProducts implements ShouldQueue
                 $this->command->info('Cached featured products updated');
                 $this->command->newLine();
             }
+        } else {
+            if($this->command) {
+                $this->command->line('Neither "product:physical" or "product:digital" modules active');
+                $this->command->newLine();
+            }
         }
     }
 }

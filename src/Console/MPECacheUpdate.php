@@ -59,6 +59,8 @@ class MPECacheUpdate extends Command
             'vendors' => MPEFetchVendors::class,
         ];
 
+        // TODO - compare $jobs keys to those defined in site's config (boilerplate.mpe_cache) ?
+
         // run each job
         foreach ($jobs as $jobKey => $jobClass) {
             if ($key == 'all' || $key == $jobKey) {
