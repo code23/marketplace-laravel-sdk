@@ -96,15 +96,15 @@ class MPEFetchSpecifications implements ShouldQueue
 
                 // report failure
                 if($this->command) {
-                    $this->command->error('Retrieval error');
+                    $this->command->error('Retrieval error: ' . $e->getMessage());
                 } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchSpecifications: _Specifications retrieval error_");
+                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchSpecifications: _" . $e->getMessage() . "_");
                 }
 
                 Log::alert('MPEFetchSpecifications: Retrieval error - ' . $e);
 
                 // fail the job
-                throw new Exception('MPEFetchSpecifications - Retrieval error');
+                throw new Exception('MPEFetchSpecifications - ' . $e->getMessage());
             }
 
             // update cached data

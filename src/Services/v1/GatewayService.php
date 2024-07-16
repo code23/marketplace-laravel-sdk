@@ -17,11 +17,11 @@ class GatewayService extends Service
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/settings/gateway/paypal/status');
 
+        // errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the paypal gateway settings.', 422);
-
-        // any other errors
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // return as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();

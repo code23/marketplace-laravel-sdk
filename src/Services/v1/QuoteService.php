@@ -19,11 +19,11 @@ class QuoteService extends Service
             // retrieve quotes
             $response = $this->http($oauth)->get($this->getPath() . '/quotes', $params);
 
+            // errors
+            if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
             // api call failed
             if ($response->failed()) throw new Exception('A problem was encountered during the quotes retrieval.', 422);
-
-            // any other errors
-            if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
             // return the quotes
             return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
@@ -37,11 +37,11 @@ class QuoteService extends Service
             // retrieve quote
             $response = $this->http($oauth)->get($this->getPath() . '/quotes/' . $id, $params);
 
+            // errors
+            if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
             // api call failed
             if ($response->failed()) throw new Exception('A problem was encountered during the quote retrieval.', 422);
-
-            // any other errors
-            if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
             // return the quote
             return isset($response->json()['data']) ? collect($response->json()['data']) : collect();

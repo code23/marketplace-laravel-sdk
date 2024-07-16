@@ -19,11 +19,11 @@ class CharityService extends Service
         // retrieve charities
         $response = $this->http($oauth)->get($this->getPath() . '/charities', $params);
 
+        // errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the charities retrieval.', 422);
-
-        // any other errors
-        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // return the charity
         return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
@@ -37,11 +37,11 @@ class CharityService extends Service
         // send data
         $response = $this->http()->post($this->getPath() . '/charities/register', $data);
 
+        // error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new user & charity.', 422);
-
-        // any other error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         return true;
     }
@@ -61,11 +61,11 @@ class CharityService extends Service
             'name' => $name,
         ]);
 
+        // error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the request to check charity name is unique.', 422);
-
-        // any other error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // true/false
         return $response;
@@ -88,11 +88,11 @@ class CharityService extends Service
         // charity not found
         if ($response->status() == 404) throw new Exception($response['message'], 404);
 
+        // errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the charity retrieval.', 422);
-
-        // any other errors
-        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // return the charity
         return $response['data'];
@@ -115,11 +115,11 @@ class CharityService extends Service
         // charity not found
         if ($response->status() == 404) throw new Exception($response['message'], 404);
 
+        // errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the charity retrieval.', 422);
-
-        // any other errors
-        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // return the charity
         return $response['data'];

@@ -99,15 +99,15 @@ class MPEFetchLatestPosts implements ShouldQueue
 
             // report failure
             if($this->command) {
-                $this->command->error('Retrieval error');
+                $this->command->error('Retrieval error: ' . $e->getMessage());
             } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchLatestPosts: _Latest posts retrieval error_");
+                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchLatestPosts: _" . $e->getMessage() . "_");
             }
 
             Log::alert('MPEFetchLatestPosts: Retrieval error - ' . $e);
 
             // fail the job
-            throw new Exception('MPEFetchLatestPosts - Retrieval error');
+            throw new Exception('MPEFetchLatestPosts - ' . $e->getMessage());
         }
 
         // update cached data

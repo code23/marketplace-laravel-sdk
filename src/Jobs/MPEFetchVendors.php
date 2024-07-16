@@ -99,15 +99,15 @@ class MPEFetchVendors implements ShouldQueue
 
             // report failure
             if($this->command) {
-                $this->command->error('Retrieval error');
+                $this->command->error('Retrieval error: ' . $e->getMessage());
             } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchVendors: _Vendors retrieval error_");
+                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchVendors: _" . $e->getMessage() . "_");
             }
 
             Log::alert('MPEFetchVendors: Retrieval error - ' . $e);
 
             // fail the job
-            throw new Exception('MPEFetchVendors - Retrieval error');
+            throw new Exception('MPEFetchVendors - ' . $e->getMessage());
         }
 
         // update cached data

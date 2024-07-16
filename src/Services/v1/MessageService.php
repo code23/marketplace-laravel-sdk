@@ -23,14 +23,14 @@ class MessageService extends Service
         // send request
         $response = $this->http()->get($this->getPath().'/messaging', $params);
 
+        // errors
+        if ($response['error']) {
+            throw new Exception($response['message'], $response['code']);
+        }
+
         // api call failed
         if ($response->failed()) {
             throw new Exception($response->body(), 422);
-        }
-
-        // any other errors
-        if ($response['error']) {
-            throw new Exception($response['message'], $response['code']);
         }
 
         // if successful, return messages as collection
@@ -51,14 +51,14 @@ class MessageService extends Service
         // send request
         $response = $this->http()->get($this->getPath().'/messaging/view/'.$channelId, $params);
 
+        // errors
+        if ($response['error']) {
+            throw new Exception($response['message'], $response['code']);
+        }
+
         // api call failed
         if ($response->failed()) {
             throw new Exception($response->body(), 422);
-        }
-
-        // any other errors
-        if ($response['error']) {
-            throw new Exception($response['message'], $response['code']);
         }
 
         // if successful, return messages as collection
@@ -82,14 +82,14 @@ class MessageService extends Service
         // send request
         $response = $this->http()->get($this->getPath().'/messaging/'.$channelId.'/messages', $params);
 
+        // errors
+        if ($response['error']) {
+            throw new Exception($response['message'], $response['code']);
+        }
+
         // api call failed
         if ($response->failed()) {
             throw new Exception($response->body(), 422);
-        }
-
-        // any other errors
-        if ($response['error']) {
-            throw new Exception($response['message'], $response['code']);
         }
 
         // if successful, return messages as collection
@@ -113,14 +113,14 @@ class MessageService extends Service
         // send request
         $response = $this->http()->post($this->getPath().'/messaging', $params);
 
+        // errors
+        if ($response['error']) {
+            throw new Exception($response['message'], $response['code']);
+        }
+
         // api call failed
         if ($response->failed()) {
             throw new Exception($response->body(), 422);
-        }
-
-        // any other errors
-        if ($response['error']) {
-            throw new Exception($response['message'], $response['code']);
         }
 
         // if successful, return messages as collection
@@ -137,14 +137,14 @@ class MessageService extends Service
         // send request
         $response = $this->http()->patch($this->getPath().'/messaging/close/'.$channelId);
 
+        // errors
+        if ($response['error']) {
+            throw new Exception($response['message'], $response['code']);
+        }
+
         // api call failed
         if ($response->failed()) {
             throw new Exception($response->body(), 422);
-        }
-
-        // any other errors
-        if ($response['error']) {
-            throw new Exception($response['message'], $response['code']);
         }
 
         // if successful, return messages as collection

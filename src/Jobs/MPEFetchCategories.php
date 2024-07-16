@@ -94,15 +94,15 @@ class MPEFetchCategories implements ShouldQueue
 
             // report failure
             if($this->command) {
-                $this->command->error('Retrieval error');
+                $this->command->error('Retrieval error: ' . $e->getMessage());
             } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchCategories: _Categories retrieval error_");
+                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchCategories: _" . $e->getMessage() . "_");
             }
 
             Log::alert('MPEFetchCategories: Retrieval error - ' . $e);
 
             // fail the job
-            throw new Exception('MPEFetchCategories - Retrieval error…');
+            throw new Exception('MPEFetchCategories - ' . $e->getMessage());
         }
 
         // update cached data

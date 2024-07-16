@@ -99,15 +99,15 @@ class MPEFetchTags implements ShouldQueue
 
             // report failure
             if($this->command) {
-                $this->command->error('Retrieval error');
+                $this->command->error('Retrieval error: ' . $e->getMessage());
             } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchTags: _Tags retrieval error_");
+                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchTags: _" . $e->getMessage() . "_");
             }
 
             Log::alert('MPEFetchTags: Retrieval error - ' . $e);
 
             // fail the job
-            throw new Exception('MPEFetchTags - Retrieval error');
+            throw new Exception('MPEFetchTags - ' . $e->getMessage());
         }
 
         // update cached data

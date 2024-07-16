@@ -92,15 +92,15 @@ class MPEFetchModules implements ShouldQueue
 
             // report failure
             if($this->command) {
-                $this->command->error('Retrieval error');
+                $this->command->error('Retrieval error: ' . $e->getMessage());
             } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchModules: _Modules retrieval error_");
+                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchModules: _ " . $e->getMessage() . "_");
             }
 
             Log::alert('MPEFetchModules: Retrieval error - ' . $e);
 
             // fail the job
-            throw new Exception('MPEFetchModules - Retrieval error');
+            throw new Exception('MPEFetchModules - ' . $e->getMessage());
         }
 
         // update cached data

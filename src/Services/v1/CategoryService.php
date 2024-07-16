@@ -21,11 +21,11 @@ class CategoryService extends Service
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/categories', $params);
 
+        // errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the categories.', 422);
-
-        // any other errors
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return categories as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
@@ -43,11 +43,11 @@ class CategoryService extends Service
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/categories/nested', $params);
 
+        // errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the categories.', 422);
-
-        // any other errors
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return categories as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();

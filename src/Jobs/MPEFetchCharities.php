@@ -95,15 +95,15 @@ class MPEFetchCharities implements ShouldQueue
 
                 // report failure
                 if($this->command) {
-                    $this->command->error('Retrieval error');
+                    $this->command->error('Retrieval error: ' . $e->getMessage());
                 } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchCharities: _Charities retrieval error_");
+                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchCharities: _" . $e->getMessage() . "_");
                 }
 
                 Log::alert('MPEFetchCharities: Retrieval error - ' . $e);
 
                 // fail the job
-                throw new Exception('MPEFetchCharities - Retrieval error');
+                throw new Exception('MPEFetchCharities - ' . $e->getMessage());
             }
 
             // update cached data

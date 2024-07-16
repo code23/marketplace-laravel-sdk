@@ -29,11 +29,11 @@ class CurrencyService extends Service
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/settings/currencies', $params);
 
+        // errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Error retrieving the currencies.', 422);
-
-        // any other errors
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // return as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
