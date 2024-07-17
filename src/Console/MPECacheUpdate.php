@@ -22,6 +22,8 @@ class MPECacheUpdate extends Command
     /**
      * The name and signature of the console command.
      *
+     * Key defaults to 'all'.
+     *
      * @var string
      */
     protected $signature = 'mpe-cache:update {--key=all}';
@@ -31,76 +33,44 @@ class MPECacheUpdate extends Command
      *
      * @var string
      */
-    protected $description = 'Retrieve fresh cache data from the API';
+    protected $description = 'Retrieve and cache fresh data from the API';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
+        // get passed in key (defaults to 'all')
         $key = $this->option('key');
 
-        /**
-         * Do this one first, as it's required for module checks in later jobs
-         */
-        if($key == 'all' || $key == 'modules') {
-            $job = new MPEFetchModules($this);
-            $job->handle();
-        }
+        // available jobs
+        $jobs = [
+            'modules' => MPEFetchModules::class,
+            'attributes' => MPEFetchAttributes::class,
+            'blog_categories' => MPEFetchBlogCategories::class,
+            'categories' => MPEFetchCategories::class,
+            'charities' => MPEFetchCharities::class,
+            'countries' => MPEFetchCountries::class,
+            'currencies' => MPEFetchCurrencies::class,
+            'featured_products' => MPEFetchFeaturedProducts::class,
+            'latest_posts' => MPEFetchLatestPosts::class,
+            'specifications' => MPEFetchSpecifications::class,
+            'tags' => MPEFetchTags::class,
+            'vendors' => MPEFetchVendors::class,
+        ];
 
-        if($key == 'all' || $key == 'attributes') {
-            $job = new MPEFetchAttributes($this);
-            $job->handle();
-        }
+        // TODO - compare $jobs keys to those defined in site's config (boilerplate.mpe_cache) ?
 
-        if($key == 'all' || $key == 'blog_categories') {
-            $job = new MPEFetchBlogCategories($this);
-            $job->handle();
-        }
-
-        if($key == 'all' || $key == 'categories') {
-            $job = new MPEFetchCategories($this);
-            $job->handle();
-        }
-
-        if($key == 'all' || $key == 'charities') {
-            $job = new MPEFetchCharities($this);
-            $job->handle();
-        }
-
-        if($key == 'all' || $key == 'countries') {
-            $job = new MPEFetchCountries($this);
-            $job->handle();
-        }
-
-        if($key == 'all' || $key == 'currencies') {
-            $job = new MPEFetchCurrencies($this);
-            $job->handle();
-        }
-
-        if($key == 'all' || $key == 'featured_products') {
-            $job = new MPEFetchFeaturedProducts($this);
-            $job->handle();
-        }
-
-        if($key == 'all' || $key == 'latest_posts') {
-            $job = new MPEFetchLatestPosts($this);
-            $job->handle();
-        }
-
-        if($key == 'all' || $key == 'specifications') {
-            $job = new MPEFetchSpecifications($this);
-            $job->handle();
-        }
-
-        if($key == 'all' || $key == 'tags') {
-            $job = new MPEFetchTags($this);
-            $job->handle();
-        }
-
-        if($key == 'all' || $key == 'vendors') {
-            $job = new MPEFetchVendors($this);
-            $job->handle();
+        // run each job
+        foreach ($jobs as $jobKey => $jobClass) {
+            if ($key == 'all' || $key == $jobKey) {
+                try {
+                    $job = new $jobClass($this);
+                    $job->handle();
+                } catch (\Throwable $th) {
+                    $this->newLine();
+                }
+            }
         }
     }
 }

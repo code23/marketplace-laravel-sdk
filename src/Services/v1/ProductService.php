@@ -41,11 +41,11 @@ class ProductService extends Service
         // call
         $response = $this->http()->get($this->getPath() . '/products', $params);
 
+        // error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the products!', 422);
-
-        // any other error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if paginated, return collection of full response data or empty collection
         if (isset($params['paginate'])) return $response->json() ? collect($response->json()) : collect();
@@ -73,11 +73,11 @@ class ProductService extends Service
         // call
         $response = $this->http()->post($this->getPath() . '/products/filter', $params);
 
+        // error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the products!', 422);
-
-        // any other error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return collection of products or empty collection
         // paginated
@@ -147,7 +147,7 @@ class ProductService extends Service
      * @param string $vendorSlug Vendor Slug
      * @param string $productSlug Product Slug
      * @param array $params API parameters to use
-     * 
+     *
      * @return Collection
      */
     public function get(string $vendorSlug, string $productSlug, array $params = [])
@@ -161,11 +161,11 @@ class ProductService extends Service
         // not published
         if (isset($response->json()['data']) && empty($response->json()['data']['products'])) throw new Exception('Product not published', 404);
 
+        // error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the product!', 422);
-
-        // any other error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return collection of products or empty collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
@@ -186,11 +186,11 @@ class ProductService extends Service
         // call
         $response = $this->http()->get($this->getPath() . '/product/' . $id . '/variants/lookup/' . $code);
 
+        // error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Unable to lookup the product variants!', 422);
-
-        // any other error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return collection of products or empty collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();

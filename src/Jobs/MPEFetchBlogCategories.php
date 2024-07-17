@@ -92,15 +92,15 @@ class MPEFetchBlogCategories implements ShouldQueue
 
             // report failure
             if($this->command) {
-                $this->command->error('Retrieval error');
+                $this->command->error('Retrieval error: ' . $e->getMessage());
             } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchBlogCategories: _Retrieval error_");
+                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchBlogCategories: _" . $e->getMessage() . "_");
             }
 
             Log::alert('MPEFetchBlogCategories: Retrieval error - ' . $e);
 
             // fail the job
-            throw new Exception('MPEFetchBlogCategories - Retrieval error…');
+            throw new Exception('MPEFetchBlogCategories - ' . $e->getMessage());
         }
 
         // update cached data

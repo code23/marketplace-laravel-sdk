@@ -17,11 +17,11 @@ class ReferenceValuesService extends Service
         // call to api
         $response = $this->http($oauth)->get($this->getPath() . '/reference-values/lookup', $params);
 
+        // error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the reference value lookup.', 422);
-
-        // any other error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return collection of items or empty collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();

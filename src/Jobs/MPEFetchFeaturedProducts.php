@@ -103,15 +103,15 @@ class MPEFetchFeaturedProducts implements ShouldQueue
 
                 // report failure
                 if($this->command) {
-                    $this->command->error('Retrieval error');
+                    $this->command->error('Retrieval error: ' . $e->getMessage());
                 } else {
-                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchFeaturedProducts: _Featured products retrieval error_");
+                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchFeaturedProducts: _" . $e->getMessage() . "_");
                 }
 
                 Log::alert('MPEFetchFeaturedProducts: Retrieval error - ' . $e);
 
                 // fail the job
-                throw new Exception('MPEFetchFeaturedProducts - Retrieval error');
+                throw new Exception('MPEFetchFeaturedProducts - ' . $e->getMessage());
             }
 
             // update cached data
@@ -119,6 +119,11 @@ class MPEFetchFeaturedProducts implements ShouldQueue
 
             if($this->command) {
                 $this->command->info('Cached featured products updated');
+                $this->command->newLine();
+            }
+        } else {
+            if($this->command) {
+                $this->command->line('Neither "product:physical" or "product:digital" modules active');
                 $this->command->newLine();
             }
         }

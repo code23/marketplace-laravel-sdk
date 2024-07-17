@@ -19,11 +19,11 @@ class BlogService extends Service
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/blog/categories', $params);
 
+        // errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the blog categories.', 422);
-
-        // any other errors
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return blog categories as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
@@ -45,11 +45,11 @@ class BlogService extends Service
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/blog/posts', $params);
 
+        // errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception($response->body(), 422);
-
-        // any other errors
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return blog posts as collection
         if (isset($params['paginate']) && $params['paginate']) return $response->json() ? collect($response->json()) : collect();

@@ -92,15 +92,15 @@ class MPEFetchCountries implements ShouldQueue
 
             // report failure
             if($this->command) {
-                $this->command->error('Retrieval error');
+                $this->command->error('Retrieval error: ' . $e->getMessage());
             } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchCountries: _Countries retrieval error_");
+                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchCountries: _" . $e->getMessage() . "_");
             }
 
             Log::alert('MPEFetchCountries: Retrieval error - ' . $e);
 
             // fail the job
-            throw new Exception('MPEFetchCountries - Retrieval error');
+            throw new Exception('MPEFetchCountries - ' . $e->getMessage());
         }
 
         // update cached data

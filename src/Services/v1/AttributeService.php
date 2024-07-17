@@ -22,11 +22,11 @@ class AttributeService extends Service
         // send request
         $response = $this->http($oauth)->get($this->getPath() . '/attributes', $params);
 
+        // errors
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Error attempting to retrieve the attributes.', 422);
-
-        // any other errors
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // if successful, return categories as collection
         return $response->json()['data'] ? collect($response->json()['data']) : collect();

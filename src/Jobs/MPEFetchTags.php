@@ -2,6 +2,7 @@
 
 namespace Code23\MarketplaceLaravelSDK\Jobs;
 
+use Code23\MarketplaceLaravelSDK\Facades\v1\MPECache;
 use Code23\MarketplaceLaravelSDK\Facades\v1\MPETags;
 use Code23\MarketplaceLaravelSDK\Services\AuthenticationService;
 use Exception;
@@ -58,64 +59,75 @@ class MPEFetchTags implements ShouldQueue
      */
     public function handle(): void
     {
-        // check for slack alert suitability
-        $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
+        if(MPECache::get('modules')->contains('tags')) {
 
-        if($this->command) $this->command->line('Fetching tags…');
+            // check for slack alert suitability
+            $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
 
-        // We must authenticate the site manually because there is no user session, as we are running from a job / the command line…
-        // Create an instance of the authentication service
-        $authenticationService = new AuthenticationService();
-        // Get the oAuth token
-        $oauth = $authenticationService->authenticateSite();
+            if($this->command) $this->command->line('Fetching tags…');
 
-        // If the oAuth token request failed
-        if(!$oauth) {
+            // We must authenticate the site manually because there is no user session, as we are running from a job / the command line…
+            // Create an instance of the authentication service
+            $authenticationService = new AuthenticationService();
+            // Get the oAuth token
+            $oauth = $authenticationService->authenticateSite();
 
-            // report failure
+            // If the oAuth token request failed
+            if(!$oauth) {
+
+                // report failure
+                if($this->command) {
+                    $this->command->error('Auth failed');
+                } else {
+                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchTags: _Auth failed_");
+                }
+
+                Log::alert('MPEFetchTags: Auth failed');
+
+                throw new Exception('MPEFetchTags: MPE Auth failed');
+            }
+
+            // get params from config
+            $params = config('boilerplate.mpe_cache.tags.params');
+
+            try {
+                // get tags from API
+                $tags = MPETags::list($params, $oauth);
+
+                // if none returned
+                if(! count($tags) && $this->command) {
+                    $this->command->error('Tags data empty');
+                }
+            } catch (Exception $e) {
+
+                // report failure
+                if($this->command) {
+                    $this->command->error('Retrieval error: ' . $e->getMessage());
+                } else {
+                    if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchTags: _" . $e->getMessage() . "_");
+                }
+
+                Log::alert('MPEFetchTags: Retrieval error - ' . $e);
+
+                // fail the job
+                throw new Exception('MPEFetchTags - ' . $e->getMessage());
+            }
+
+            // update cached data
+            Cache::put('tags', $tags);
+
             if($this->command) {
-                $this->command->error('Auth failed');
-            } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchTags: _Auth failed_");
+                $this->command->info('Cached tags updated');
+                $this->command->newLine();
             }
 
-            Log::alert('MPEFetchTags: Auth failed');
+        } else {
 
-            throw new Exception('MPEFetchTags: MPE Auth failed');
-        }
-
-        // get params from config
-        $params = config('boilerplate.mpe_cache.tags.params');
-
-        try {
-            // get tags from API
-            $tags = MPETags::list($params, $oauth);
-
-            // if none returned
-            if(! count($tags) && $this->command) {
-                $this->command->error('Tags data empty');
-            }
-        } catch (Exception $e) {
-
-            // report failure
             if($this->command) {
-                $this->command->error('Retrieval error');
-            } else {
-                if ($slack) SlackAlert::message('*' . config('app.url') . "* MPEFetchTags: _Tags retrieval error_");
+                $this->command->line('Module "tags" not active');
+                $this->command->newLine();
             }
 
-            Log::alert('MPEFetchTags: Retrieval error - ' . $e);
-
-            // fail the job
-            throw new Exception('MPEFetchTags - Retrieval error');
-        }
-
-        // update cached data
-        Cache::put('tags', $tags);
-
-        if($this->command) {
-            $this->command->info('Cached tags updated');
-            $this->command->newLine();
         }
     }
 }

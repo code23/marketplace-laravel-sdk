@@ -21,11 +21,11 @@ class OrderService extends Service
         // call to api
         $response = $this->http()->get($this->getPath() . '/orders/customer', $params);
 
+        // error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
         // api call failed
         if ($response->failed()) throw new Exception('Unable to retrieve the orders!', 422);
-
-        // any other error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // return orders list
         return $response->json() ? collect($response->json()) : collect();

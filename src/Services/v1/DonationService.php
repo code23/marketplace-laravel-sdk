@@ -17,7 +17,7 @@ class DonationService extends Service
 		// error
 		if ($response->failed()) throw new Exception('Unable to create donation: ' . $response->body(), 422);
 
-		// any other errors
+		// errors
 		if (isset($response['error']) && $response['error'] == true) throw new Exception($response['message'], $response['code']);
 
 		// if successful
@@ -37,7 +37,7 @@ class DonationService extends Service
 		// error
 		if ($response->failed()) throw new Exception('Unable to get donation: ' . $response->body(), 422);
 
-		// any other errors
+		// errors
 		if (isset($response['error']) && $response['error'] == true) throw new Exception($response['message'], $response['code']);
 
 		// if successful
@@ -45,7 +45,7 @@ class DonationService extends Service
 	}
 
 	/**
-	 * Get donations 
+	 * Get donations
 	 */
 	public function list($params = [])
 	{
@@ -54,7 +54,7 @@ class DonationService extends Service
 		// error
 		if ($response->failed()) throw new Exception('Unable to get donations: ' . $response->body(), 422);
 
-		// any other errors
+		// errors
 		if (isset($response['error']) && $response['error'] == true) throw new Exception($response['message'], $response['code']);
 
 		// if successful
