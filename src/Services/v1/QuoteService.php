@@ -52,6 +52,17 @@ class QuoteService extends Service
          */
         public function decline($id, $params = [], $oauth = null)
         {
-            // @TODO: implement
+            $params = array_merge(['with' => ''], $params);
+
+            $response = $this->http($oauth)->patch($this->getPath() . '/quotes/' . $id . '/decline', ['with' => $params['with']]);
+
+            // api call failed
+            if ($response->failed()) throw new Exception('A problem was encountered during the quote retrieval.', 422);
+
+            // any other errors
+            if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+            // return the quote
+            return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
         }
     }
