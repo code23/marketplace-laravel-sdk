@@ -30,7 +30,7 @@ class QuoteService extends Service
         }
 
         /**
-         * Retrieve an quote by ID
+         * Retrieve a quote by ID
          */
         public function get($id, $params = [], $oauth = null)
         {
@@ -48,7 +48,7 @@ class QuoteService extends Service
         }
 
         /**
-         * Decline an quote
+         * Decline a quote
          */
         public function decline($id, $params = [], $oauth = null)
         {
@@ -58,6 +58,23 @@ class QuoteService extends Service
 
             // api call failed
             if ($response->failed()) throw new Exception('A problem was encountered during the quote retrieval.', 422);
+
+            // any other errors
+            if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+            // return the quote
+            return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
+        }
+
+        /**
+         * Request a quote
+         */
+        public function request($params = [], $oauth = null)
+        {
+            $response = $this->http($oauth)->get($this->getPath() . '/quotes/request', $params);
+
+            // api call failed
+            if ($response->failed()) throw new Exception('A problem was encountered during the quote request.', 422);
 
             // any other errors
             if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
