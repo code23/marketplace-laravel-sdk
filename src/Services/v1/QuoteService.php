@@ -80,4 +80,38 @@ class QuoteService extends Service
         // return the quote
         return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
     }
+
+    /**
+     * Process full payment
+     */
+    public function processFullPayment($id, $params = [])
+    {
+        $response = $this->http()->post($this->getPath() . '/quotes/' . $id . '/payment', $params ?? null);
+
+        // error
+        if ($response->failed()) throw new Exception('Unable to process payment: ' . $response->body(), 422);
+
+        // errors
+        if (isset($response['error']) && $response['error'] == true) throw new Exception($response['message'], $response['code']);
+
+        // if successful
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Process deposit payment
+     */
+    public function processDepositPayment($id, $params = [])
+    {
+        $response = $this->http()->post($this->getPath() . '/quotes/' . $id . '/payment/deposit', $params ?? null);
+
+        // error
+        if ($response->failed()) throw new Exception('Unable to to process deposit payment: ' . $response->body(), 422);
+
+        // errors
+        if (isset($response['error']) && $response['error'] == true) throw new Exception($response['message'], $response['code']);
+
+        // if successful
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
 }
