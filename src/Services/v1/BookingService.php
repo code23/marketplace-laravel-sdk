@@ -89,7 +89,7 @@ class BookingService extends Service
         $response = $this->http()->post($this->getPath() . '/bookings/' . $id . '/payment', $params ?? null);
 
         // error
-        if ($response->failed()) throw new Exception('Unable to create booking: ' . $response->body(), 422);
+        if ($response->failed()) throw new Exception('Unable to process payment for booking: ' . $response->body(), 422);
 
         // errors
         if (isset($response['error']) && $response['error'] == true) throw new Exception($response['message'], $response['code']);
