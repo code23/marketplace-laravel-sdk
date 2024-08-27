@@ -27,7 +27,7 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             // config
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('marketplace-laravel-sdk.php'),
+                __DIR__.'/../config/marketplace-laravel-sdk.php' => config_path('marketplace-laravel-sdk.php'),
             ], 'marketplace-laravel-sdk-config');
 
             // publish the controllers
@@ -83,7 +83,7 @@ class MarketplaceLaravelSDKServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'marketplace-laravel-sdk');
+        $this->mergeConfigFrom(__DIR__.'/../config/marketplace-laravel-sdk.php', 'marketplace-laravel-sdk');
     }
 
     /**
