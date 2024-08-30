@@ -43,7 +43,6 @@
             "aliases": {
                 "MPEAuthentication": "Code23\\MarketplaceLaravelSDK\\Facades\\MPEAuthentication",
                 "MPEVendors": "Code23\\MarketplaceLaravelSDK\\Facades\\MPEVendors",
-                "MPEPayments": "Code23\\MarketplaceLaravelSDK\\Facades\\v1\\MPEPayments",
                 "MPEQuotes": "Code23\\MarketplaceLaravelSDK\\Facades\\v1\\MPEQuotes",
                 "MPEBookings": "Code23\\MarketplaceLaravelSDK\\Facades\\v1\\MPEBookings",
                 "MPEEvents": "Code23\\MarketplaceLaravelSDK\\Facades\\v1\\MPEEvents"
