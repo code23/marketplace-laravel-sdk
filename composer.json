@@ -50,5 +50,8 @@
                 "MPEEvents": "Code23\\MarketplaceLaravelSDK\\Facades\\v1\\MPEEvents"
             }
         }
+    },
+    "require-dev": {
+        "vimeo/psalm": "^5.0"
     }
 }
