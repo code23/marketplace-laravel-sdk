@@ -3,23 +3,17 @@
 namespace Code23\MarketplaceLaravelSDK\Facades\v1;
 
 use Code23\MarketplaceLaravelSDK\Services\v1\QuoteService;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Facade;
 
-/**
- * @method static Authenticatable get() return user
- *
- * @see \Code23\MarketplaceLaravelSDK\Services\UserService
- */
 abstract class MPEQuotes extends Facade
 {
-	/**
-	 * get the registered name of the component
-	 *
-	 * @return string
-	 */
-	protected static function getFacadeAccessor()
-	{
-		return QuoteService::class;
-	}
+    /**
+     * get the registered name of the component
+     *
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return QuoteService::class;
+    }
 }
