@@ -8,14 +8,22 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Run PHP CS Fixer
-        uses: docker://oskarstark/php-cs-fixer-ga
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          args: --config=.php_cs.dist.php --allow-risky=yes
+          php-version: '8.3'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          coverage: none
+
+      - name: Install PHP CS Fixer
+        run: composer global require friendsofphp/php-cs-fixer
+
+      - name: Run PHP CS Fixer
+        run: php-cs-fixer fix --config=.php_cs.dist.php --allow-risky=yes
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
