@@ -10,7 +10,7 @@ class BookingService extends Service
     /**
      * Retrieve all bookings associated with the user
      *
-     * @return Collection of bookings
+     * @return Collection of data containing bookings and meta
      */
     public function list($params = [], $oauth = null)
     {
@@ -24,7 +24,18 @@ class BookingService extends Service
         if ($response->failed()) throw new Exception('A problem was encountered during the bookings retrieval.', 422);
 
         // return the bookings
-        return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
+        //return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
+
+        // Extract data and meta
+        $responseData = $response->json();
+        $data = isset($responseData['data']) ? collect($responseData['data']) : collect();
+        $meta = isset($responseData['meta']) ? $responseData['meta'] : [];
+
+        // Return both data and meta
+        return collect([
+            'data' => $data,
+            'meta' => $meta,
+        ]);
     }
 
     /**
