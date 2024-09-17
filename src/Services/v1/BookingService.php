@@ -24,18 +24,8 @@ class BookingService extends Service
         if ($response->failed()) throw new Exception('A problem was encountered during the bookings retrieval.', 422);
 
         // return the bookings
-        //return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
-
-        // Extract data and meta
-        $responseData = $response->json();
-        $data = isset($responseData['data']) ? collect($responseData['data']) : collect();
-        $meta = isset($responseData['meta']) ? $responseData['meta'] : [];
-
-        // Return both data and meta
-        return collect([
-            'data' => $data,
-            'meta' => $meta,
-        ]);
+        if (isset($params['paginate']) && $params['paginate']) return $response->json() ? collect($response->json()) : collect();
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 
     /**
@@ -110,19 +100,19 @@ class BookingService extends Service
     }
 
     /**
-	 * Cancel a booking
-	 */
-	public function cancel($id, $params = [], $oauth = null)
-	{
-		$response = $this->http($oauth)->delete($this->getPath() . '/bookings/' . $id, $params);
+     * Cancel a booking
+     */
+    public function cancel($id, $params = [], $oauth = null)
+    {
+        $response = $this->http($oauth)->delete($this->getPath() . '/bookings/' . $id, $params);
 
         // errors
         if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
-		// api call failed
-		if ($response->failed()) throw new Exception('A problem was encountered during the booking cancellation.', 422);
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the booking cancellation.', 422);
 
-		// return response
-		return $response;
-	}
+        // return response
+        return $response;
+    }
 }
