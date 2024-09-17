@@ -15,8 +15,8 @@ class EventService extends Service
 		// send data
 		$response = $this->http()->post($this->getPath() . '/events', $data);
 
-        // error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
+		// error
+		if ($response['error']) throw new Exception($response['message'], $response['code']);
 
 		// api call failed
 		if ($response->failed()) throw new Exception('A problem was encountered during submitting the event application.', 422);
@@ -36,14 +36,15 @@ class EventService extends Service
 		// retrieve events
 		$response = $this->http($oauth)->get($this->getPath() . '/events', $params);
 
-        // errors
-        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+		// errors
+		if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
 		// api call failed
 		if ($response->failed()) throw new Exception('A problem was encountered during the events retrieval.', 422);
 
 		// return the events
-		return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
+		if (isset($params['paginate']) && $params['paginate']) return $response->json() ? collect($response->json()) : collect();
+		return $response->json()['data'] ? collect($response->json()['data']) : collect();
 	}
 
 	/**
@@ -54,8 +55,8 @@ class EventService extends Service
 		// retrieve event
 		$response = $this->http($oauth)->get($this->getPath() . '/events/' . $id, $params);
 
-        // errors
-        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+		// errors
+		if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
 		// api call failed
 		if ($response->failed()) throw new Exception('A problem was encountered during the event retrieval.', 422);
@@ -72,8 +73,8 @@ class EventService extends Service
 		// cancel event
 		$response = $this->http($oauth)->delete($this->getPath() . '/events/' . $id, $params);
 
-        // errors
-        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+		// errors
+		if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
 		// api call failed
 		if ($response->failed()) throw new Exception('A problem was encountered during the event cancellation.', 422);
