@@ -48,4 +48,77 @@ class BookingReviewService extends Service
 
         return $response;
     }
+
+    /**
+     * Delete a review
+     *
+     * @param Int $id
+     * The review ID to delete.
+     */
+    public function delete(Int $id)
+    {
+        // call api
+        $response = $this->http()->delete($this->getPath() . '/booking-reviews/' . $id);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to delete the review!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // return response
+        return $response;
+    }
+
+    /**
+     * Return a list of reviews.
+     *
+     * By default returns all reviews.
+     *
+     * @param Array $ids
+     *      model and id pairs to filter by. E.g. ['booking_id' => 1]
+     *
+     * @param Int $paginate
+     *      Pagination items per page. Defaults to all.
+     *
+     * @param Int $page
+     *      Pagination page to retrieve. Defaults to 1.
+     *
+     * @param String $with
+     *      Relationships to include
+     *
+     * @param String $sort
+     *      sort results by
+
+     * @return Collection
+     */
+    public function list(Array $ids = [], $paginate = 0, $page = 1, $with = '', $sort = null)
+    {
+        // create params & include relationships
+        $params = ['with' => $with];
+
+        // conditionally include provided IDs
+        foreach ($ids as $key => $id) {
+            $params[$key] = $id;
+        }
+
+        // paginate results
+        if($paginate) $params['paginate'] = $paginate;
+        if($page > 1) $params['page'] = $page;
+
+        // sort results
+        if($sort) $params['sort'] = $sort;
+
+        // call to api
+        $response = $this->http()->get($this->getPath() . '/booking-reviews', $params);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the reviews!', 422);
+
+        // any other error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // return reviews list
+        return $response->json()['code'] == 200 ? collect($response->json()) : collect();
+    }
 }
