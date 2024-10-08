@@ -1,0 +1,19 @@
+<?php
+
+namespace Code23\MarketplaceLaravelSDK\Facades\v1;
+
+use Code23\MarketplaceLaravelSDK\Services\v1\BookingCalendarService;
+use Illuminate\Support\Facades\Facade;
+
+abstract class MPEBookingCalendar extends Facade
+{
+	/**
+	 * get the registered name of the component
+	 *
+	 * @return string
+	 */
+	protected static function getFacadeAccessor()
+	{
+		return BookingCalendarService::class;
+	}
+}
