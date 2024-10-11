@@ -23,4 +23,21 @@ class BookingCalendarService extends Service
         // if successful
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
+
+    /**
+     * Get availability slots
+     */
+    public function getAvailabilitySlots($vendor_id, $params = [])
+    {
+        $response = $this->http()->get($this->getPath() . '/booking-calendar/availabilities/vendors/' . $vendor_id . '/slots', $params ?? null);
+
+        // error
+        if ($response->failed()) throw new Exception('Unable to process enquiry : ' . $response->body(), 422);
+
+        // errors
+        if (isset($response['error']) && $response['error'] == true) throw new Exception($response['message'], $response['code']);
+
+        // if successful
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
 }
