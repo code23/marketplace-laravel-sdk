@@ -119,6 +119,7 @@ class BookingReviewService extends Service
         if ($response['error']) throw new Exception($response['message'], $response['code']);
 
         // return reviews list
-        return $response->json()['code'] == 200 ? collect($response->json()) : collect();
+        if (isset($params['paginate']) && $params['paginate']) return $response->json() ? collect($response->json()) : collect();
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
 }
