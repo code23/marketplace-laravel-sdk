@@ -40,4 +40,21 @@ class BookingCalendarService extends Service
         // if successful
         return $response->json()['data'] ? collect($response->json()['data']) : collect();
     }
+
+    /**
+     * Cancel a booking
+     */
+    public function cancel($id, $params = [], $oauth = null)
+    {
+        $response = $this->http($oauth)->delete($this->getPath() . '/booking-calendar/bookings/' . $id, $params);
+
+        // errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the booking cancellation.', 422);
+
+        // return response
+        return $response;
+    }
 }
