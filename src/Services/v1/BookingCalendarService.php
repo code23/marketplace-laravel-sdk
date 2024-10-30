@@ -25,6 +25,47 @@ class BookingCalendarService extends Service
     }
 
     /**
+     * Return a list of authenticated user's Booking Orders.
+     *
+     * @return Collection
+     */
+    public function list($params = [
+        'with' => 'currency',
+        'sort' => 'created_at,desc',
+        'paginate' => 10,
+    ])
+    {
+        // call to api
+        $response = $this->http()->get($this->getPath() . '/booking-calendar/bookings', $params);
+
+        // error
+        if ($response['error']) throw new Exception($response['message'], $response['code']);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to retrieve the booking orders!', 422);
+
+        // return orders list
+        return $response->json() ? collect($response->json()) : collect();
+    }
+
+    /**
+     * Get a single booking order
+     */
+    public function get($id, $params = [])
+    {
+        $response = $this->http()->get($this->getPath() . '/booking-calendar/bookings/' . $id, $params);
+
+        // error
+        if ($response->failed()) throw new Exception('Unable to retrieve the booking order!', 422);
+
+        // errors
+        if (isset($response['error']) && $response['error'] == true) throw new Exception($response['message'], $response['code']);
+
+        // if successful
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * Get availability slots
      */
     public function getAvailabilitySlots($vendor_id, $params = [])
