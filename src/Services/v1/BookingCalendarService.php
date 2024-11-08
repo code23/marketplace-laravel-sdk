@@ -66,6 +66,23 @@ class BookingCalendarService extends Service
     }
 
     /**
+     * Get vendor opening hours
+     */
+    public function getOpeningHours($vendor_id, $params = [])
+    {
+        $response = $this->http()->get($this->getPath() . '/booking-calendar/availabilities/vendors/' . $vendor_id);
+
+        // error
+        if ($response->failed()) throw new Exception('Unable to retrieve the vendor opening hours!', 422);
+
+        // errors
+        if (isset($response['error']) && $response['error'] == true) throw new Exception($response['message'], $response['code']);
+
+        // return opening hours
+        return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
+
+    /**
      * Get availability slots
      */
     public function getAvailabilitySlots($vendor_id, $params = [])
