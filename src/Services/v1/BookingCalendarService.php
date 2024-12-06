@@ -115,4 +115,21 @@ class BookingCalendarService extends Service
         // return response
         return $response;
     }
+
+    /**
+     * Download ICS file
+     */
+    public function downloadICS($id)
+    {
+        $response = $this->http()->get($this->getPath() . '/booking-calendar/bookings/' . $id . '/ics-url');
+
+        // errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], $response['code']);
+        
+        // api call failed
+        if ($response->failed()) throw new Exception('Unable to download the ICS file!', 422);
+
+         // if successful
+         return $response->json()['data'] ? collect($response->json()['data']) : collect();
+    }
 }
