@@ -37,9 +37,10 @@ class ProductService extends Service
      */
     public function list(
         array $params = [],
+        $oauth = null,
     ) {
         // call
-        $response = $this->http()->get($this->getPath() . '/products', $params);
+        $response = $this->http($oauth)->get($this->getPath() . '/products', $params);
 
         // error
         if ($response['error']) throw new Exception($response['message'], $response['code']);
