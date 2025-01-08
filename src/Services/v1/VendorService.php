@@ -37,8 +37,8 @@ class VendorService extends Service
         // send data
         $response = $this->http()->post($this->getPath() . '/vendors/register', $data);
 
-        // error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
+        // errors
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the request to create a new user & vendor.', 422);
