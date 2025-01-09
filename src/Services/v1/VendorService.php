@@ -45,4 +45,39 @@ class VendorService extends Service
 
         return true;
     }
+
+    /**
+     * Retrieve application
+     */
+    public function retrieveApplication(array $data)
+    {
+        // send data
+        $response = $this->http()->post($this->getPath() . '/vendors/retrieve-application', $data);
+
+        // error
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], $response['code']);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the request to resume application.', 422);
+
+        // return the application data
+        return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
+    }
+
+    /**
+     * Update application
+     */
+    public function update(array $data)
+    {
+        // send data
+        $response = $this->http()->patch($this->getPath() . '/vendors/resume-application', $data);
+
+        // error
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], $response['code']);
+
+        // api call failed
+        if ($response->failed()) throw new Exception('A problem was encountered during the request to update the application.', 422);
+
+        return true;
+    }
 }
