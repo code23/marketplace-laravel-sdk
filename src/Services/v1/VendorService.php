@@ -55,7 +55,7 @@ class VendorService extends Service
         $response = $this->http()->post($this->getPath() . '/vendors/retrieve-application', $data);
 
         // error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], $response['code']);
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the request to resume application.', 422);
@@ -73,7 +73,7 @@ class VendorService extends Service
         $response = $this->http()->patch($this->getPath() . '/vendors/resume-application', $data);
 
         // error
-        if ($response['error']) throw new Exception($response['message'], $response['code']);
+        if (isset($response['error']) && $response['error']) throw new Exception($response['message'], $response['code']);
 
         // api call failed
         if ($response->failed()) throw new Exception('A problem was encountered during the request to update the application.', 422);
