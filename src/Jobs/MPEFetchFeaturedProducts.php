@@ -60,7 +60,7 @@ class MPEFetchFeaturedProducts implements ShouldQueue
     public function handle(): void
     {
         // check for required module
-        if(MPECache::get('modules')->contains('product:physical') || MPECache::get('modules')->contains('product:digital')) {
+        if(MPECache::get('modules')->contains('product:physical') || MPECache::get('modules')->contains('product:digital') || MPECache::get('modules')->contains('product:service')) {
 
             // check for slack alert suitability
             $slack = config('app.env') != 'local' && config('boilerplate.slack.webhook_url');
@@ -123,7 +123,7 @@ class MPEFetchFeaturedProducts implements ShouldQueue
             }
         } else {
             if($this->command) {
-                $this->command->line('Neither "product:physical" or "product:digital" modules active');
+                $this->command->line('Neither "product:physical" or "product:digital" or "product:service" modules active');
                 $this->command->newLine();
             }
         }
