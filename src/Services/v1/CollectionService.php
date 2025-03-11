@@ -10,7 +10,7 @@ class CollectionService extends Service
 	/**
 	 * Retrieve all collections
 	 *
-	 * @return Collection of vendors
+	 * @return Collection of collections
 	 */
 	public function index(
 		$params = [],
@@ -29,6 +29,15 @@ class CollectionService extends Service
 		return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
 	}
 
+
+	/**
+	 * Retrieve a collection by id
+	 *
+	 * @param int $id
+	 * @param array $params
+	 * @param null $oauth
+	 * @return Collection 
+	 */
 	public function show($id, $params = [], $oauth = null)
 	{
 		// retrieve collection
