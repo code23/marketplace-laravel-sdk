@@ -52,4 +52,27 @@ class CollectionService extends Service
 		// return the collection
 		return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
 	}
+
+	/**
+	 * Retrieve a collection by slug
+	 *
+	 * @param string $slug
+	 * @param array $params
+	 * @param null $oauth
+	 * @return Collection
+	 */
+	public function showBySlug($slug, $params = [], $oauth = null)
+	{
+		// retrieve collection
+		$response = $this->http($oauth)->get($this->getPath() . '/collections/slug/' . $slug, $params);
+
+		// errors
+		if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
+
+		// api call failed
+		if ($response->failed()) throw new Exception('A problem was encountered during the collection retrieval.', 422);
+
+		// return the collection
+		return isset($response->json()['data']) ? collect($response->json()['data']) : collect();
+	}
 }
