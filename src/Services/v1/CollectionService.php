@@ -66,6 +66,9 @@ class CollectionService extends Service
 		// retrieve collection
 		$response = $this->http($oauth)->get($this->getPath() . '/collections/slug/' . $slug, $params);
 
+		// not found
+		if ($response->status() == 404) throw new Exception($response['message'], 404);
+
 		// errors
 		if (isset($response['error']) && $response['error']) throw new Exception($response['message'], 422);
 
